@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cremica Product Strategist – Problem–Solution Fit Simulation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        body { background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)), url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed; background-size: cover; }
+        .glass { backdrop-filter: blur(16px); background: rgba(245, 240, 230, 0.12); border: 1px solid rgba(255, 255, 255, 0.25); box-shadow: 0 12px 40px rgba(0,0,0,0.6); }
+        .accent-red { color: #c0392b; }
+        .accent-cream { color: #fdf6e6; }
+        .meter-bar { height: 10px; background: #3d2418; border-radius: 8px; overflow: hidden; }
+        .meter-fill { height: 100%; border-radius: 8px; }
+        .fill-satisfaction { background: #27ae60; }
+        .fill-cost { background: #e74c3c; }
+        .fill-equity { background: #f39c12; }
+        #fullscreen-btn { position: fixed; top: 24px; right: 24px; z-index: 50; }
+        .product-img { height: 180px; object-fit: cover; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
+    </style>
+</head>
+<body class="min-h-screen text-white font-sans antialiased flex flex-col items-center justify-center overflow-x-hidden">
+    <button id="fullscreen-btn" class="glass px-6 py-3 rounded-xl text-base font-medium">Go Fullscreen</button>
+    
+    <div id="progress" class="fixed top-0 left-0 w-full h-3 bg-black/40 z-40">
+        <div class="h-full bg-red-700 transition-all duration-700 ease-out" style="width: 0%;"></div>
+    </div>
+    
+    <div id="game" class="w-full max-w-5xl mx-auto p-6 md:p-12">
+        <h1 class="text-5xl md:text-7xl font-extrabold text-center mb-16 accent-red leading-tight">Cremica Product Strategist<br><span class="text-3xl md:text-4xl accent-cream opacity-90">Problem–Solution Fit Simulation</span></h1>
+        
+        <div id="phases" class="space-y-12">
+            <!-- Phase 1: Market Briefing -->
+            <section id="phase1" class="glass rounded-3xl p-10 md:p-12">
+                <h2 class="text-4xl font-bold mb-10 text-center">Market Briefing</h2>
+                <div class="grid md:grid-cols-3 gap-8" id="briefing-cards"></div>
+                <div class="text-center mt-12">
+                    <button class="next-btn bg-red-700 hover:bg-red-800 px-10 py-5 rounded-2xl text-xl font-bold transition transform hover:scale-105">Continue to Problem Identification</button>
+                </div>
+            </section>
+            
+            <!-- Phase 2: Problem Identification -->
+            <section id="phase2" class="glass rounded-3xl p-10 md:p-12 hidden">
+                <h2 class="text-4xl font-bold mb-10 text-center">Identify the Primary Problem</h2>
+                <p class="text-center text-lg mb-8 opacity-90">Select the most critical challenge in this market scenario.</p>
+                <div class="grid md:grid-cols-3 gap-8" id="problems"></div>
+                <div class="text-center mt-12">
+                    <button id="phase2-next" class="bg-red-700 hover:bg-red-800 px-10 py-5 rounded-2xl text-xl font-bold transition transform hover:scale-105 opacity-50 cursor-not-allowed" disabled>Continue to Strategy Building</button>
+                </div>
+            </section>
+            
+            <!-- Phase 3: Strategy Selection -->
+            <section id="phase3" class="glass rounded-3xl p-10 md:p-12 hidden">
+                <h2 class="text-4xl font-bold mb-10 text-center">Build Your Product Strategy</h2>
+                <div class="space-y-12">
+                    <div><h3 class="text-2xl font-semibold mb-6">1. Product Category</h3><div class="grid md:grid-cols-4 gap-6" id="category"></div></div>
+                    <div><h3 class="text-2xl font-semibold mb-6">2. Specific Offerings (Select multiple)</h3><div class="grid md:grid-cols-3 gap-6" id="offerings"></div></div>
+                    <div><h3 class="text-2xl font-semibold mb-6">3. Positioning</h3><div class="grid md:grid-cols-4 gap-6" id="positioning"></div></div>
+                    <div><h3 class="text-2xl font-semibold mb-6">4. Primary Channel</h3><div class="grid md:grid-cols-2 gap-6" id="channel"></div></div>
+                </div>
+                <div class="mt-12 grid md:grid-cols-3 gap-8">
+                    <div class="text-center"><p class="text-lg mb-2">Customer Satisfaction</p><div class="meter-bar"><div class="meter-fill fill-satisfaction" style="width:50%"></div></div></div>
+                    <div class="text-center"><p class="text-lg mb-2">Cost Impact <span class="text-sm opacity-70">(lower = better)</span></p><div class="meter-bar"><div class="meter-fill fill-cost" style="width:50%"></div></div></div>
+                    <div class="text-center"><p class="text-lg mb-2">Brand Equity</p><div class="meter-bar"><div class="meter-fill fill-equity" style="width:50%"></div></div></div>
+                </div>
+                <div class="text-center mt-12">
+                    <button class="next-btn bg-red-700 hover:bg-red-800 px-10 py-5 rounded-2xl text-xl font-bold transition transform hover:scale-105">Proceed to Pricing & Supply</button>
+                </div>
+            </section>
+            
+            <!-- Phase 4: Pricing & Supply -->
+            <section id="phase4" class="glass rounded-3xl p-10 md:p-12 hidden">
+                <h2 class="text-4xl font-bold mb-10 text-center">Pricing & Supply Decisions</h2>
+                <div class="space-y-12">
+                    <div><h3 class="text-2xl font-semibold mb-6">Price Tier</h3><div class="grid md:grid-cols-3 gap-6" id="price"></div></div>
+                    <div><h3 class="text-2xl font-semibold mb-6">Supply Chain Strategy</h3><div class="grid md:grid-cols-3 gap-6" id="supply"></div></div>
+                </div>
+                <div class="text-center mt-12">
+                    <button id="phase4-submit" class="bg-red-700 hover:bg-red-800 px-10 py-5 rounded-2xl text-xl font-bold transition transform hover:scale-105">Submit Full Strategy</button>
+                </div>
+            </section>
+            
+            <!-- Phase 5: Market Shock -->
+            <section id="phase5" class="glass rounded-3xl p-10 md:p-12 hidden text-center">
+                <h2 class="text-5xl font-bold mb-8 accent-red">Sudden Market Shock!</h2>
+                <p id="shock-text" class="text-3xl mb-10 leading-relaxed"></p>
+                <p class="text-2xl mb-8">You have <span id="timer" class="font-bold text-red-400">40</span> seconds to respond</p>
+                <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto" id="shock-options"></div>
+                <p class="text-lg mt-8 opacity-70">Click any option to respond immediately, or wait for auto-submit if time runs out.</p>
+            </section>
+            
+            <!-- Phase 6: Results -->
+            <section id="phase6" class="glass rounded-3xl p-10 md:p-12 hidden">
+                <h2 class="text-5xl font-bold text-center mb-12">Outcome Dashboard</h2>
+                <div id="results" class="space-y-12 text-lg"></div>
+                <div class="text-center mt-16">
+                    <button class="bg-red-700 hover:bg-red-800 px-12 py-6 rounded-2xl text-2xl font-bold transition transform hover:scale-105" onclick="location.reload()">Play Again with New Scenario</button>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        const state = {
+            segment: '', environment: {}, constraints: {}, problem: '', category: '', offerings: [], positioning: '', channel: '',
+            price: '', supply: '', shock: '', shockResponse: 'Timed out (no response)',
+            scores: { satisfaction: 50, cost: 50, equity: 50 }
+        };
+
+        const problems = ['Bland / boring products', 'Unhealthy perception', 'Inconsistent bulk quality', 'Supply chain disruption', 'Rising commodity costs'];
+        const categories = ['Biscuits', 'Condiments / Sauces', 'Syrups / Spreads', 'Combo Portfolio'];
+        const offeringsList = ['Digestive biscuits', 'Cream biscuits', 'BONHEUR syrups', 'Mayonnaise / specialty sauces', 'Indian chutneys'];
+        const positionings = ['Affordable Luxury', 'Health-Oriented', 'Customization for QSR', 'Operational Reliability'];
+        const channels = ['Retail', 'B2B/QSR'];
+        const prices = ['Low', 'Mid', 'Premium'];
+        const supplies = ['Vertical integration', 'Bulk contracts', 'Limited SKU optimization'];
+        const shocks = ['Wheat price surge', 'Health trend spike', 'QSR demand boom', 'Export logistics delay'];
+
+        const productImages = {
+            'Digestive biscuits': 'https://m.media-amazon.com/images/I/61z3jXCmFlL._AC_UF894,1000_QL80_.jpg',
+            'Cream biscuits': 'https://m.media-amazon.com/images/I/71IJ6yq31mL._AC_UF894,1000_QL80_.jpg',
+            'BONHEUR syrups': 'https://forum.valuepickr.com/uploads/default/original/3X/f/3/f3e78c99e95b078999cd22ae017b53d911713161.jpeg',
+            'Mayonnaise / specialty sauces': 'http://www.cremicashop.com/cdn/shop/articles/Cremica_Sauces_1024x1024.webp?v=1747983221',
+            'Indian chutneys': 'http://www.cremicashop.com/cdn/shop/articles/Cremica_Sauces_1024x1024.webp?v=1747983221',
+            'general-retail': 'https://www.shutterstock.com/image-photo/supermarket-aisle-biscuits-snacks-cookies-260nw-2010757265.jpg',
+            'general-qsr': 'https://i.ytimg.com/vi/OWec7lq6z4w/sddefault.jpg',
+            'factory': 'https://www.cremica.in/staging.cremica.in/img/about-us/manu-unit.jpg'
+        };
+
+        function randomChoice(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+        function initPhase1() {
+            state.segment = randomChoice(['Retail', 'B2B/QSR']);
+            state.environment = { priceSens: randomChoice(['High', 'Medium', 'Low']), healthTrend: randomChoice(['Rising', 'Stable', 'Declining']), supplyVol: randomChoice(['High', 'Stable', 'Low']) };
+            state.constraints = { costCeiling: randomChoice(['Tight', 'Moderate', 'Flexible']), marginTarget: randomChoice(['Aggressive', 'Balanced', 'Volume-driven']) };
+
+            const cards = document.getElementById('briefing-cards');
+            cards.innerHTML = `
+                <div class="glass p-8 rounded-2xl text-center">
+                    <h3 class="text-2xl font-bold accent-red mb-4">Consumer Segment</h3>
+                    <p class="text-3xl font-semibold">${state.segment}</p>
+                    <img src="${productImages[state.segment === 'Retail' ? 'general-retail' : 'general-qsr']}" class="product-img mx-auto mt-6">
+                </div>
+                <div class="glass p-8 rounded-2xl">
+                    <h3 class="text-2xl font-bold accent-red mb-4">Market Environment</h3>
+                    <p class="text-xl">Price Sensitivity: <span class="font-bold">${state.environment.priceSens}</span><br>
+                    Health Trend: <span class="font-bold">${state.environment.healthTrend}</span><br>
+                    Supply Volatility: <span class="font-bold">${state.environment.supplyVol}</span></p>
+                </div>
+                <div class="glass p-8 rounded-2xl">
+                    <h3 class="text-2xl font-bold accent-red mb-4">Business Constraints</h3>
+                    <p class="text-xl">Cost Ceiling: <span class="font-bold">${state.constraints.costCeiling}</span><br>
+                    Margin Target: <span class="font-bold">${state.constraints.marginTarget}</span></p>
+                    <img src="${productImages['factory']}" class="product-img mx-auto mt-6">
+                </div>
+            `;
+            gsap.from('#phase1 > *', { opacity: 0, y: 60, stagger: 0.3, duration: 1.2, ease: "power3.out" });
+        }
+
+        function createCard(title, imgUrl = null, type = 'radio', containerId) {
+            const card = document.createElement('div');
+            card.className = 'glass rounded-2xl overflow-hidden cursor-pointer transition transform hover:scale-105 hover:shadow-2xl';
+            card.innerHTML = `
+                ${imgUrl ? `<img src="${imgUrl}" class="product-img w-full">` : ''}
+                <div class="p-6 ${imgUrl ? '' : 'py-12'} text-center">
+                    <p class="text-xl md:text-2xl font-bold">${title}</p>
+                </div>
+            `;
+            card.onclick = () => {
+                if (type === 'radio') {
+                    document.querySelectorAll(`#${containerId} > div`).forEach(c => c.classList.remove('ring-8', 'ring-red-600'));
+                    card.classList.add('ring-8', 'ring-red-600');
+                    if (containerId === 'problems') { state.problem = title; document.getElementById('phase2-next').disabled = false; document.getElementById('phase2-next').classList.remove('opacity-50', 'cursor-not-allowed'); }
+                    else if (containerId === 'category') state.category = title;
+                    else if (containerId === 'positioning') state.positioning = title;
+                    else if (containerId === 'channel') state.channel = title;
+                    else if (containerId === 'price') state.price = title;
+                    else if (containerId === 'supply') state.supply = title;
+                    else if (containerId === 'shock-options') {
+                        state.shockResponse = title;
+                        showResults();  // Immediately go to results when choosing a response
+                    }
+                } else if (type === 'checkbox') {
+                    card.classList.toggle('ring-8', 'ring-red-600');
+                    if (state.offerings.includes(title)) state.offerings = state.offerings.filter(o => o !== title);
+                    else state.offerings.push(title);
+                }
+                updateMeters();
+            };
+            return card;
+        }
+
+        function createCardOptions(containerId, options, type = 'radio') {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            options.forEach(opt => {
+                const img = productImages[opt] || null;
+                container.appendChild(createCard(opt, img, type, containerId));
+            });
+        }
+
+        function updateMeters() {
+            let sat = 50, cost = 50, eq = 50;
+            if (state.positioning === 'Health-Oriented') sat += 25;
+            if (state.offerings.includes('Digestive biscuits')) sat += 20;
+            if (state.offerings.includes('Cream biscuits')) eq += 15;
+            if (state.category === 'Combo Portfolio') eq += 25;
+            if (state.price === 'Premium') { cost += 35; eq += 20; }
+            if (state.supply === 'Vertical integration') cost -= 25;
+            if (state.offerings.length > 3) cost += 20;
+
+            state.scores.satisfaction = Math.min(100, Math.max(0, sat));
+            state.scores.cost = Math.min(100, Math.max(0, cost));
+            state.scores.equity = Math.min(100, Math.max(0, eq));
+
+            gsap.to('.fill-satisfaction', { width: state.scores.satisfaction + '%', duration: 1 });
+            gsap.to('.fill-cost', { width: state.scores.cost + '%', duration: 1 });
+            gsap.to('.fill-equity', { width: state.scores.equity + '%', duration: 1 });
+        }
+
+        function calculateScores() {
+            let fit = 40, align = 40, margin = 50, risk = 50;
+            if (state.problem.includes('Unhealthy') && state.positioning === 'Health-Oriented') fit += 40;
+            if (state.problem.includes('Bland') && state.offerings.length >= 3) fit += 35;
+            if (state.problem.includes('Inconsistent') && state.positioning === 'Operational Reliability') fit += 40;
+            if (state.problem.includes('commodity costs') && state.supply === 'Vertical integration') fit += 40;
+            if (state.channel === state.segment) align += 35;
+            if (state.price === 'Low' && state.environment.priceSens === 'High') align += 25;
+            if (state.supply === 'Vertical integration') { margin += 25; risk += 30; }
+            if (state.price === 'Premium' && state.positioning === 'Affordable Luxury') margin += 20;
+
+            // Bonus for good shock response
+            if (state.shockResponse !== 'Timed out (no response)') risk += 15;
+
+            const totalScore = (fit * 0.3) + (align * 0.25) + (margin * 0.2) + (state.scores.satisfaction * 0.15) + (risk * 0.1);
+            const grade = totalScore >= 90 ? 'A+' : totalScore >= 85 ? 'A' : totalScore >= 75 ? 'B+' : totalScore >= 65 ? 'B' : totalScore >= 55 ? 'C' : 'D';
+
+            return { fit: Math.round(fit * 0.3), revenue: Math.round(totalScore), margin: Math.round(margin * 0.2 + 50), trust: Math.round(state.scores.equity + risk * 0.3), grade };
+        }
+
+        function transitionTo(nextSection) {
+            const sections = document.querySelectorAll('#phases > section');
+            const currentIndex = Array.from(sections).findIndex(s => !s.classList.contains('hidden'));
+            const progress = ((currentIndex + 1) / sections.length) * 100;
+            gsap.to('#progress > div', { width: progress + '%', duration: 1 });
+
+            const current = sections[currentIndex];
+            gsap.to(current, { opacity: 0, y: -80, duration: 0.8, onComplete: () => current.classList.add('hidden') });
+            nextSection.classList.remove('hidden');
+            gsap.fromTo(nextSection, { opacity: 0, y: 80 }, { opacity: 1, y: 0, duration: 1.2 });
+            gsap.from(nextSection.children, { opacity: 0, y: 50, stagger: 0.2, duration: 1, delay: 0.5 });
+        }
+
+        // General next buttons
+        document.querySelectorAll('.next-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const current = btn.closest('section');
+                const next = current.nextElementSibling;
+                if (next) transitionTo(next);
+            });
+        });
+
+        // Phase 2 continue
+        document.getElementById('phase2-next').addEventListener('click', () => {
+            if (state.problem) transitionTo(document.getElementById('phase3'));
+        });
+
+        // Phase 4 submit
+        document.getElementById('phase4-submit').addEventListener('click', () => {
+            if (!state.price || !state.supply) {
+                alert('Please select both a Price Tier and a Supply Chain Strategy.');
+                return;
+            }
+            state.shock = randomChoice(shocks);
+            document.getElementById('shock-text').textContent = state.shock;
+
+            let options = [];
+            if (state.shock === 'Wheat price surge') options = ['Raise prices immediately', 'Absorb costs short-term', 'Reformulate with alternatives'];
+            else if (state.shock === 'Health trend spike') options = ['Launch new health range fast', 'Aggressively promote existing healthy SKUs', 'Wait and observe'];
+            else if (state.shock === 'QSR demand boom') options = ['Ramp up B2B capacity', 'Protect retail supply', 'Negotiate premium contracts'];
+            else options = ['Diversify suppliers urgently', 'Build buffer stock', 'Pause export commitments'];
+
+            createCardOptions('shock-options', options, 'radio');
+
+            // Auto-submit after 40 seconds if no choice made
+            setTimeout(() => {
+                if (state.shockResponse === 'Timed out (no response)') {
+                    showResults();
+                }
+            }, 40000);
+
+            transitionTo(document.getElementById('phase5'));
+        });
+
+        function showResults() {
+            const scores = calculateScores();
+            const results = document.getElementById('results');
+            results.innerHTML = `
+                <div class="text-center mb-16">
+                    <p class="text-8xl font-extrabold accent-red">${scores.grade}</p>
+                    <p class="text-4xl mt-4">Strategic Alignment Grade</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-10 text-lg">
+                    <div class="glass p-10 rounded-2xl">
+                        <h3 class="text-3xl font-bold mb-4">Problem–Solution Fit: ${scores.fit}%</h3>
+                        <p>Your strategy tackled the core problem. Cremica innovates constantly with new flavors and healthier options to stay relevant.</p>
+                    </div>
+                    <div class="glass p-10 rounded-2xl">
+                        <h3 class="text-3xl font-bold mb-4">Projected Revenue Impact: ${scores.revenue}% Potential</h3>
+                        <p>Strong alignment drives growth. Cremica partners with global QSRs like McDonald's India.</p>
+                    </div>
+                    <div class="glass p-10 rounded-2xl">
+                        <h3 class="text-3xl font-bold mb-4">Margin Health: ${scores.margin}%</h3>
+                        <p>Cost control protects profits. Cremica uses scale and backward integration effectively.</p>
+                    </div>
+                    <div class="glass p-10 rounded-2xl">
+                        <h3 class="text-3xl font-bold mb-4">Brand Trust Index: ${scores.trust}%</h3>
+                        <p>Consistency and quality build loyalty. Responding quickly to shocks strengthens trust.</p>
+                    </div>
+                </div>
+                <div class="glass p-8 rounded-2xl mt-12 text-center">
+                    <p class="text-xl">Your response to the shock: <span class="font-bold">${state.shockResponse}</span></p>
+                </div>
+            `;
+            transitionTo(document.getElementById('phase6'));
+            gsap.to('#progress > div', { width: '100%', duration: 1 });
+        }
+
+        document.getElementById('fullscreen-btn').onclick = () => document.documentElement.requestFullscreen?.();
+
+        // Initialization
+        initPhase1();
+        createCardOptions('problems', problems, 'radio');
+        createCardOptions('category', categories, 'radio');
+        createCardOptions('offerings', offeringsList, 'checkbox');
+        createCardOptions('positioning', positionings, 'radio');
+        createCardOptions('channel', channels, 'radio');
+        createCardOptions('price', prices, 'radio');
+        createCardOptions('supply', supplies, 'radio');
+
+        gsap.from('#game > h1', { opacity: 0, y: -50, duration: 1.5 });
+        gsap.from('#phase1', { opacity: 0, scale: 0.95, duration: 1.5, delay: 0.5 });
+    </script>
+</body>
+</html>
