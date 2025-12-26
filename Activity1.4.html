@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mission, Vision & Core Values – Cremica in Action</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        body { background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)), url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed; background-size: cover; }
+        .glass { backdrop-filter: blur(16px); background: rgba(245, 240, 230, 0.12); border: 1px solid rgba(255, 255, 255, 0.25); box-shadow: 0 12px 40px rgba(0,0,0,0.6); }
+        .accent-red { color: #c0392b; }
+        .accent-cream { color: #fdf6e6; }
+        .accent-green { color: #27ae60; }
+        .meter-bar { height: 12px; background: #3d2418; border-radius: 8px; overflow: hidden; }
+        .meter-fill { height: 100%; border-radius: 8px; }
+        .fill-rev { background: #f39c12; }
+        .fill-trust { background: #9b59b6; }
+        .fill-sat { background: #3498db; }
+        .fill-qual { background: #e67e22; }
+        .fill-margin { background: #e74c3c; }
+        .fill-ctrust { background: #2ecc71; }
+        .fill-loyal { background: #1abc9c; }
+        .fill-rep { background: #34495e; }
+        .fill-carbon { background: #27ae60; }
+        .fill-cost { background: #c0392b; }
+        .fill-esg { background: #8e44ad; }
+        .fill-growth { background: #f1c40f; }
+        .fill-innov { background: #d35400; }
+        .fill-global { background: #2980b9; }
+        #fullscreen-btn { position: fixed; top: 24px; right: 24px; z-index: 50; }
+        .alloc-input { width: 120px; padding: 8px 12px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; color: white; text-align: center; }
+        .alloc-input:focus { outline: none; border-color: #27ae60; box-shadow: 0 0 0 3px rgba(39,174,96,0.3); }
+        .era-img { height: 220px; object-fit: cover; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
+        .phase-desc { background: rgba(0,0,0,0.3); padding: 20px; border-radius: 16px; margin-bottom: 32px; }
+    </style>
+</head>
+<body class="min-h-screen text-white font-sans antialiased flex flex-col items-center justify-center overflow-x-hidden">
+    <button id="fullscreen-btn" class="glass px-6 py-3 rounded-xl text-base font-medium">Go Fullscreen</button>
+    
+    <div id="progress" class="fixed top-0 left-0 w-full h-3 bg-black/40 z-40">
+        <div class="h-full bg-green-700 transition-all duration-700 ease-out" style="width: 0%;"></div>
+    </div>
+    
+    <div id="game" class="w-full max-w-6xl mx-auto p-6 md:p-12">
+        <h1 class="text-5xl md:text-7xl font-extrabold text-center mb-16 accent-red leading-tight">Mission, Vision & Core Values<br><span class="text-3xl md:text-4xl accent-cream opacity-90">Cremica in Action</span></h1>
+        
+        <div id="phases" class="space-y-12">
+            <section id="intro" class="glass rounded-3xl p-10 md:p-16 text-center">
+                <h2 class="text-5xl font-bold mb-12 accent-green">How to Play & Purpose</h2>
+                <div class="max-w-4xl mx-auto space-y-10 text-xl leading-relaxed">
+                    <div class="glass p-10 rounded-2xl">
+                        <h3 class="text-3xl font-bold mb-6 accent-cream">Purpose of this Activity</h3>
+                        <p>This immersive simulation lets you experience how Cremica’s Mission, Vision, and Core Values are not just words on a wall — they are lived every day through tough business decisions.</p>
+                        <p class="mt-4">You will step into different leadership roles and face real-world dilemmas. Your choices will show how aligning decisions with values creates long-term competitive advantage, builds trust, and drives sustainable growth.</p>
+                        <p class="mt-4 font-semibold">There are no lectures. You learn by seeing the consequences of your decisions — just like in real business.</p>
+                    </div>
+                    <div class="glass p-10 rounded-2xl">
+                        <h3 class="text-3xl font-bold mb-6 accent-cream">How to Play</h3>
+                        <ul class="space-y-4 text-left max-w-3xl mx-auto">
+                            <li>• You will go through 5 phases, each placing you in a different role.</li>
+                            <li>• Read the phase description and scenario carefully.</li>
+                            <li>• Make decisions by entering numbers or selecting cards.</li>
+                            <li>• Live meters show immediate impact of your choices.</li>
+                            <li>• Allocation phases require exactly 100 points total.</li>
+                            <li>• At the end, view your overall Values Execution Grade.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="mt-16">
+                    <button id="start-btn" class="bg-green-700 hover:bg-green-800 px-12 py-6 rounded-2xl text-2xl font-bold transition transform hover:scale-105">Start the Simulation</button>
+                </div>
+            </section>
+
+            <section id="phase1" class="glass rounded-3xl p-10 md:p-12 hidden">
+                <h2 class="text-4xl font-bold mb-8 text-center">Phase 1: Defining the Mission</h2>
+                <p class="text-center text-xl mb-4 opacity-90">Role: Strategy Team Member</p>
+                <div class="phase-desc text-lg leading-relaxed max-w-4xl mx-auto">
+                    <p>You are part of the core strategy team defining Cremica's mission priorities for the next 5 years.</p>
+                    <p class="mt-4">Resources are limited due to market competition and rising costs. You must allocate exactly 100 focus points across four key areas. Higher allocation means more resources, attention, and investment in that area.</p>
+                    <p class="mt-4">Your choices will directly impact revenue potential, brand trust, and customer satisfaction.</p>
+                </div>
+                <img src="https://images.unsplash.com/photo-1600880292089-90a7e8598f67?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="era-img mx-auto mb-12">
+                <div class="space-y-10 max-w-3xl mx-auto" id="alloc1"></div>
+                <p class="text-center text-3xl mt-8 alloc-total accent-green">Total: <span id="total1">0</span>/100</p>
+                <div class="mt-12 grid md:grid-cols-3 gap-8">
+                    <div class="text-center"><p class="text-lg mb-2">Revenue Projection</p><div class="meter-bar"><div class="meter-fill fill-rev" style="width:50%"></div></div></div>
+                    <div class="text-center"><p class="text-lg mb-2">Brand Trust</p><div class="meter-bar"><div class="meter-fill fill-trust" style="width:50%"></div></div></div>
+                    <div class="text-center"><p class="text-lg mb-2">Customer Satisfaction</p><div class="meter-bar"><div class="meter-fill fill-sat" style="width:50%"></div></div></div>
+                </div>
+                <div class="text-center mt-12">
+                    <button id="phase1-next" class="bg-green-700 hover:bg-green-800 px-10 py-5 rounded-2xl text-xl font-bold transition transform hover:scale-105 opacity-50 cursor-not-allowed" disabled>Continue to Quality Pressure</button>
+                </div>
+            </section>
+
+            <section id="phase2" class="glass rounded-3xl p-10 md:p-12 hidden">
+                <h2 class="text-4xl font-bold mb-8 text-center">Phase 2: Quality Under Pressure</h2>
+                <p class="text-center text-xl mb-4 opacity-90">Role: Operations Head</p>
+                <div class="phase-desc text-lg leading-relaxed max-w-4xl mx-auto">
+                    <p>Raw material costs have surged 35% due to global supply disruptions. At the same time, major QSR clients are demanding price reductions to maintain their margins.</p>
+                    <p class="mt-4">The board is watching margins closely. You must choose the primary response strategy — only one approach can be prioritized right now.</p>
+                    <p class="mt-4">Your decision will affect quality standards, profitability, and long-term customer trust.</p>
+                </div>
+                <img src="https://images.unsplash.com/photo-1581093450021-4a7360e9a6b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="era-img mx-auto mb-12">
+                <div class="grid md:grid-cols-2 gap-8" id="phase2-options"></div>
+                <div class="mt-12 grid md:grid-cols-3 gap-8">
+                    <div class="text-center"><p class="text-lg mb-2">Quality Integrity</p><div class="meter-bar"><div class="meter-fill fill-qual" style="width:50%"></div></div></div>
+                    <div class="text-center"><p class="text-lg mb-2">Margin Health</p><div class="meter-bar"><div class="meter-fill fill-margin" style="width:50%"></div></div></div>
+                    <div class="text-center"><p class="text-lg mb-2">Customer Trust</p><div class="meter-bar"><div class="meter-fill fill-ctrust" style="width:50%"></div></div></div>
+                </div>
+                <div class="text-center mt-12">
+                    <button class="next-btn bg-green-700 hover:bg-green-800 px-10 py-5 rounded-2xl text-xl font-bold transition transform hover:scale-105">Continue to Customer Dilemma</button>
+                </div>
+            </section>
+
+            <section id="phase3" class="glass rounded-3xl p-10 md:p-12 hidden">
+                <h2 class="text-4xl font-bold mb-8 text-center">Phase 3: Customer First Dilemma</h2>
+                <p class="text-center text-xl mb-4 opacity-90">Role: CX & Marketing Lead</p>
+                <div class="phase-desc text-lg leading-relaxed max-w-4xl mx-auto">
+                    <p>A batch variation has triggered a spike in customer complaints across retail channels. Negative posts are going viral on social media, threatening brand reputation.</p>
+                    <p class="mt-4">The team has limited bandwidth. You can select multiple response actions, but deeper fixes take more time and resources.</p>
+                    <p class="mt-4">How you respond will shape customer satisfaction, loyalty, and long-term reputation.</p>
+                </div>
+                <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="era-img mx-auto mb-12">
+                <div class="grid md:grid-cols-3 gap-8" id="phase3-options"></div>
+                <div class="mt-12 grid md:grid-cols-3 gap-8">
+                    <div class="text-center"><p class="text-lg mb-2">Satisfaction Score</p><div class="meter-bar"><div class="meter-fill fill-sat" style="width:50%"></div></div></div>
+                    <div class="text-center"><p class="text-lg mb-2">Loyalty Index</p><div class="meter-bar"><div class="meter-fill fill-loyal" style="width:50%"></div></div></div>
+                    <div class="text-center"><p class="text-lg mb-2">Brand Reputation</p><div class="meter-bar"><div class="meter-fill fill-rep" style="width:50%"></div></div></div>
+                </div>
+                <div class="text-center mt-12">
+                    <button class="next-btn bg-green-700 hover:bg-green-800 px-10 py-5 rounded-2xl text-xl font-bold transition transform hover:scale-105">Continue to Sustainability</button>
+                </div>
+            </section>
+
+            <section id="phase4" class="glass rounded-3xl p-10 md:p-12 hidden">
+                <h2 class="text-4xl font-bold mb-8 text-center">Phase 4: Sustainability Trade-Off</h2>
+                <p class="text-center text-xl mb-4 opacity-90">Role: ESG Committee Member</p>
+                <div class="phase-desc text-lg leading-relaxed max-w-4xl mx-auto">
+                    <p>Investors and consumers are increasingly demanding stronger ESG performance. The board has approved a dedicated sustainability budget.</p>
+                    <p class="mt-4">You must allocate exactly 100 points across four initiatives. Higher investment yields greater progress but also higher short-term costs.</p>
+                    <p class="mt-4">Your allocation will determine carbon reduction, cost impact, and overall ESG credibility.</p>
+                </div>
+                <img src="https://images.unsplash.com/photo-1570545788044-3e6e1384e8c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="era-img mx-auto mb-12">
+                <div class="space-y-10 max-w-3xl mx-auto" id="alloc4"></div>
+                <p class="text-center text-3xl mt-8 alloc-total accent-green">Total: <span id="total4">0</span>/100</p>
+                <div class="mt-12 grid md:grid-cols-3 gap-8">
+                    <div class="text-center"><p class="text-lg mb-2">Carbon Reduction</p><div class="meter-bar"><div class="meter-fill fill-carbon" style="width:50%"></div></div></div>
+                    <div class="text-center"><p class="text-lg mb-2">Cost Impact <span class="text-sm opacity-70">(lower better)</span></p><div class="meter-bar"><div class="meter-fill fill-cost" style="width:50%"></div></div></div>
+                    <div class="text-center"><p class="text-lg mb-2">ESG Credibility</p><div class="meter-bar"><div class="meter-fill fill-esg" style="width:50%"></div></div></div>
+                </div>
+                <div class="text-center mt-12">
+                    <button id="phase4-next" class="bg-green-700 hover:bg-green-800 px-10 py-5 rounded-2xl text-xl font-bold transition transform hover:scale-105 opacity-50 cursor-not-allowed" disabled>Continue to Vision Bets</button>
+                </div>
+            </section>
+
+            <section id="phase5" class="glass rounded-3xl p-10 md:p-12 hidden">
+                <h2 class="text-4xl font-bold mb-8 text-center">Phase 5: Vision & Future Bets</h2>
+                <p class="text-center text-xl mb-4 opacity-90">Role: Leadership Council</p>
+                <div class="phase-desc text-lg leading-relaxed max-w-4xl mx-auto">
+                    <p>Cremica is at a growth inflection point. Capital is available but limited — you must choose one primary strategic bet for the next decade.</p>
+                    <p class="mt-4">Each direction carries different risks and rewards in innovation, growth potential, and global positioning.</p>
+                    <p class="mt-4">Select the future path that best aligns with Cremica’s long-term vision.</p>
+                </div>
+                <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="era-img mx-auto mb-12">
+                <div class="grid md:grid-cols-2 gap-8" id="phase5-options"></div>
+                <div class="mt-12 grid md:grid-cols-3 gap-8">
+                    <div class="text-center"><p class="text-lg mb-2">Long-term Growth</p><div class="meter-bar"><div class="meter-fill fill-growth" style="width:50%"></div></div></div>
+                    <div class="text-center"><p class="text-lg mb-2">Innovation Index</p><div class="meter-bar"><div class="meter-fill fill-innov" style="width:50%"></div></div></div>
+                    <div class="text-center"><p class="text-lg mb-2">Global Readiness</p><div class="meter-bar"><div class="meter-fill fill-global" style="width:50%"></div></div></div>
+                </div>
+                <div class="text-center mt-12">
+                    <button id="final-btn" class="bg-green-700 hover:bg-green-800 px-10 py-5 rounded-2xl text-xl font-bold transition transform hover:scale-105">See Values Outcome</button>
+                </div>
+            </section>
+
+            <section id="phase6" class="glass rounded-3xl p-10 md:p-12 hidden">
+                <h2 class="text-5xl font-bold text-center mb-12 accent-green">Values in Action Outcome</h2>
+                <div id="results" class="space-y-12 text-lg max-w-5xl mx-auto"></div>
+                <div class="text-center mt-16">
+                    <button class="bg-green-700 hover:bg-green-800 px-12 py-6 rounded-2xl text-2xl font-bold transition transform hover:scale-105" onclick="location.reload()">Play Again</button>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        const state = {
+            alloc1: { quality: 0, satisfaction: 0, sustainable: 0, growth: 0 },
+            phase2: '',
+            phase3: [],
+            alloc4: { renewable: 0, waste: 0, sourcing: 0, marketing: 0 },
+            phase5: '',
+            meters: {
+                rev: 50, trust: 50, sat: 50,
+                qual: 50, margin: 50, ctrust: 50,
+                loyal: 50, rep: 50,
+                carbon: 50, cost: 50, esg: 50,
+                growth: 50, innov: 50, global: 50
+            }
+        };
+
+        function createAllocRow(label, id) {
+            const div = document.createElement('div');
+            div.className = 'glass p-8 rounded-2xl flex items-center justify-between';
+            div.innerHTML = `
+                <p class="text-2xl font-semibold">${label}</p>
+                <input type="number" min="0" max="100" value="0" class="alloc-input" id="${id}" placeholder="0">
+            `;
+            const input = div.querySelector(`#${id}`);
+            input.addEventListener('input', () => {
+                let val = parseInt(input.value) || 0;
+                if (val < 0) val = 0;
+                if (val > 100) val = 100;
+                input.value = val;
+                state.alloc1[id] = val;
+                updateAlloc('phase1');
+            });
+            return div;
+        }
+
+        function createAllocRow4(label, id) {
+            const div = document.createElement('div');
+            div.className = 'glass p-8 rounded-2xl flex items-center justify-between';
+            div.innerHTML = `
+                <p class="text-2xl font-semibold">${label}</p>
+                <input type="number" min="0" max="100" value="0" class="alloc-input" id="${id}" placeholder="0">
+            `;
+            const input = div.querySelector(`#${id}`);
+            input.addEventListener('input', () => {
+                let val = parseInt(input.value) || 0;
+                if (val < 0) val = 0;
+                if (val > 100) val = 100;
+                input.value = val;
+                state.alloc4[id] = val;
+                updateAlloc('phase4');
+            });
+            return div;
+        }
+
+        function updateAlloc(phase) {
+            if (phase === 'phase1') {
+                const total = Object.values(state.alloc1).reduce((a,b)=>a+b,0);
+                document.getElementById('total1').textContent = total;
+                const btn = document.getElementById('phase1-next');
+                btn.disabled = total !== 100;
+                btn.classList.toggle('opacity-50', total !== 100);
+                btn.classList.toggle('cursor-not-allowed', total !== 100);
+                updateMetersPhase1();
+            } else if (phase === 'phase4') {
+                const total = Object.values(state.alloc4).reduce((a,b)=>a+b,0);
+                document.getElementById('total4').textContent = total;
+                const btn = document.getElementById('phase4-next');
+                btn.disabled = total !== 100;
+                btn.classList.toggle('opacity-50', total !== 100);
+                btn.classList.toggle('cursor-not-allowed', total !== 100);
+                updateMetersPhase4();
+            }
+        }
+
+        function updateMetersPhase1() {
+            gsap.to('.fill-rev', { width: (30 + state.alloc1.growth * 0.7) + '%', duration: 1 });
+            gsap.to('.fill-trust', { width: (40 + state.alloc1.quality * 0.6 + state.alloc1.sustainable * 0.3) + '%', duration: 1 });
+            gsap.to('.fill-sat', { width: (35 + state.alloc1.satisfaction * 0.65) + '%', duration: 1 });
+        }
+
+        function updateMetersPhase4() {
+            gsap.to('.fill-carbon', { width: (20 + state.alloc4.renewable * 0.5 + state.alloc4.waste * 0.3) + '%', duration: 1 });
+            gsap.to('.fill-cost', { width: (80 - state.alloc4.renewable * 0.4 - state.alloc4.sourcing * 0.3) + '%', duration: 1 });
+            gsap.to('.fill-esg', { width: (30 + state.alloc4.sourcing * 0.4 + state.alloc4.marketing * 0.5) + '%', duration: 1 });
+        }
+
+        function createCard(title, desc, containerId, multi = false) {
+            const card = document.createElement('div');
+            card.className = 'glass rounded-2xl p-8 cursor-pointer transition transform hover:scale-105 hover:shadow-2xl';
+            card.innerHTML = `<p class="text-2xl font-bold mb-3">${title}</p><p class="text-lg opacity-90">${desc}</p>`;
+            card.onclick = () => {
+                if (!multi) {
+                    document.querySelectorAll(`#${containerId} > div`).forEach(c => c.classList.remove('ring-8', 'ring-green-600'));
+                    card.classList.add('ring-8', 'ring-green-600');
+                    state[containerId.split('-')[0]] = title;
+                } else {
+                    card.classList.toggle('ring-8', 'ring-green-600');
+                    if (state.phase3.includes(title)) state.phase3 = state.phase3.filter(t => t !== title);
+                    else state.phase3.push(title);
+                }
+                updateMeters(containerId);
+            };
+            return card;
+        }
+
+        function updateMeters(phase) {
+            if (phase === 'phase2') {
+                if (state.phase2 === 'Maintain ISO-grade inputs') { state.meters.qual += 40; state.meters.margin -= 20; state.meters.ctrust += 30; }
+                if (state.phase2 === 'Invest in automation') { state.meters.qual += 25; state.meters.margin -= 10; }
+                if (state.phase2 === 'Increase prices') state.meters.margin += 30;
+            } else if (phase === 'phase3') {
+                if (state.phase3.includes('Depth over speed')) state.meters.loyal += 35;
+                if (state.phase3.includes('Process fixes')) state.meters.sat += 30;
+                if (state.phase3.includes('Product changes')) state.meters.rep += 25;
+            } else if (phase === 'phase5') {
+                if (state.phase5 === 'R&D investment') { state.meters.innov += 40; state.meters.growth += 20; }
+                if (state.phase5 === 'Global expansion') state.meters.global += 45;
+                if (state.phase5 === 'New product launches') { state.meters.growth += 35; state.meters.innov += 25; }
+            }
+            Object.keys(state.meters).forEach(k => gsap.to(`.fill-${k}`, { width: Math.min(100, Math.max(0, state.meters[k])) + '%', duration: 1 }));
+        }
+
+        function transitionTo(nextSection) {
+            const sections = document.querySelectorAll('#phases > section');
+            const currentIndex = Array.from(sections).findIndex(s => !s.classList.contains('hidden'));
+            const progress = ((currentIndex + 1) / (sections.length - 1)) * 100;
+            gsap.to('#progress > div', { width: progress + '%', duration: 1 });
+            const current = sections[currentIndex];
+            gsap.to(current, { opacity: 0, y: -80, duration: 0.8, onComplete: () => current.classList.add('hidden') });
+            nextSection.classList.remove('hidden');
+            gsap.fromTo(nextSection, { opacity: 0, y: 80 }, { opacity: 1, y: 0, duration: 1.2 });
+            gsap.from(nextSection.children, { opacity: 0, y: 50, stagger: 0.2, duration: 1, delay: 0.5 });
+        }
+
+        document.querySelectorAll('.next-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const current = btn.closest('section');
+                updateMeters(current.id);
+                const next = current.nextElementSibling;
+                transitionTo(next);
+            });
+        });
+
+        document.getElementById('start-btn').addEventListener('click', () => transitionTo(document.getElementById('phase1')));
+
+        document.getElementById('phase1-next').addEventListener('click', () => {
+            updateMetersPhase1();
+            transitionTo(document.getElementById('phase2'));
+        });
+
+        document.getElementById('phase4-next').addEventListener('click', () => {
+            updateMetersPhase4();
+            transitionTo(document.getElementById('phase5'));
+        });
+
+        document.getElementById('final-btn').addEventListener('click', () => {
+            updateMeters('phase5');
+            showResults();
+        });
+
+        function initPhase1() {
+            const container = document.getElementById('alloc1');
+            const items = [
+                {label: 'Quality Products', id: 'quality'},
+                {label: 'Customer Satisfaction', id: 'satisfaction'},
+                {label: 'Sustainable Practices', id: 'sustainable'},
+                {label: 'Growth & Revenue', id: 'growth'}
+            ];
+            items.forEach(item => container.appendChild(createAllocRow(item.label, item.id)));
+        }
+
+        function initPhase2() {
+            const container = document.getElementById('phase2-options');
+            const opts = [
+                {title: 'Maintain ISO-grade inputs', desc: 'Absorb cost increase'},
+                {title: 'Compromise short-term quality', desc: 'Switch to cheaper alternatives'},
+                {title: 'Invest in automation', desc: 'Long-term efficiency gain'},
+                {title: 'Increase prices', desc: 'Pass cost to clients'}
+            ];
+            opts.forEach(o => container.appendChild(createCard(o.title, o.desc, 'phase2')));
+        }
+
+        function initPhase3() {
+            const container = document.getElementById('phase3-options');
+            const opts = [
+                {title: 'Depth over speed', desc: 'Thorough investigation of each case'},
+                {title: 'Refunds vs process fixes', desc: 'Immediate refunds to calm situation'},
+                {title: 'Product changes', desc: 'Rapid feedback-driven reformulation'}
+            ];
+            opts.forEach(o => container.appendChild(createCard(o.title, o.desc, 'phase3', true)));
+        }
+
+        function initPhase4() {
+            const container = document.getElementById('alloc4');
+            const items = [
+                {label: 'Renewable Energy (Solar)', id: 'renewable'},
+                {label: 'Waste Reduction', id: 'waste'},
+                {label: 'Ethical Supplier Sourcing', id: 'sourcing'},
+                {label: 'ESG Marketing Claims', id: 'marketing'}
+            ];
+            items.forEach(item => container.appendChild(createAllocRow4(item.label, item.id)));
+        }
+
+        function initPhase5() {
+            const container = document.getElementById('phase5-options');
+            const opts = [
+                {title: 'Global expansion', desc: 'Enter new international markets'},
+                {title: 'R&D investment', desc: 'New product innovation pipeline'},
+                {title: 'New product launches', desc: 'Aggressive domestic rollout'},
+                {title: 'Market share expansion', desc: 'Heavy promotional spending'}
+            ];
+            opts.forEach(o => container.appendChild(createCard(o.title, o.desc, 'phase5')));
+        }
+
+        function calculateOutcome() {
+            let mission = 50, values = 50, customer = 50, sustain = 50;
+            mission += state.alloc1.quality * 0.4 + state.alloc1.satisfaction * 0.4;
+            values += state.meters.qual * 0.6 + (state.phase2 === 'Maintain ISO-grade inputs' ? 30 : 0);
+            customer += state.meters.sat * 0.5 + state.meters.loyal * 0.5;
+            sustain += state.meters.carbon * 0.4 + state.meters.esg * 0.6;
+            const total = (mission + values + customer + sustain) / 4;
+            const grade = total >= 90 ? 'A' : total >= 80 ? 'A-' : total >= 70 ? 'B+' : total >= 60 ? 'B' : 'C';
+            return {mission: Math.round(mission), values: Math.round(values), customer: Math.round(customer), sustain: Math.round(sustain), grade, total: Math.round(total)};
+        }
+
+        function showResults() {
+            const scores = calculateOutcome();
+            const results = document.getElementById('results');
+            results.innerHTML = `
+                <div class="text-center mb-16">
+                    <p class="text-8xl font-extrabold accent-green">${scores.grade}</p>
+                    <p class="text-4xl mt-4">Vision Execution Grade</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-10 text-lg">
+                    <div class="glass p-10 rounded-2xl">
+                        <h3 class="text-3xl font-bold mb-4">Mission Alignment: ${scores.mission}%</h3>
+                        <p>Balanced focus on quality and customers builds sustainable revenue. Cremica prioritizes these even under pressure.</p>
+                    </div>
+                    <div class="glass p-10 rounded-2xl">
+                        <h3 class="text-3xl font-bold mb-4">Values Consistency: ${scores.values}%</h3>
+                        <p>Never compromising quality is core. Cremica maintains standards that earned global QSR partnerships.</p>
+                    </div>
+                    <div class="glass p-10 rounded-2xl">
+                        <h3 class="text-3xl font-bold mb-4">Customer-Centricity: ${scores.customer}%</h3>
+                        <p>Deep responses and process fixes drive loyalty. Cremica resolves issues within 48 hours.</p>
+                    </div>
+                    <div class="glass p-10 rounded-2xl">
+                        <h3 class="text-3xl font-bold mb-4">Sustainability Impact: ${scores.sustain}%</h3>
+                        <p>Real investment in sourcing and energy reduction builds credibility. Cremica targets carbon neutrality milestones.</p>
+                    </div>
+                </div>
+            `;
+            transitionTo(document.getElementById('phase6'));
+            gsap.to('#progress > div', { width: '100%', duration: 1 });
+        }
+
+        document.getElementById('fullscreen-btn').onclick = () => document.documentElement.requestFullscreen?.();
+
+        initPhase1();
+        initPhase2();
+        initPhase3();
+        initPhase4();
+        initPhase5();
+
+        gsap.from('#game > h1', { opacity: 0, y: -50, duration: 1.5 });
+        gsap.from('#intro', { opacity: 0, scale: 0.95, duration: 1.5, delay: 0.5 });
+        gsap.from('#intro > *', { opacity: 0, y: 60, stagger: 0.3, duration: 1.2, delay: 1 });
+    </script>
+</body>
+</html>
