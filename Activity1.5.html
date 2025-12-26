@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cremica Product Strategist – CSR, Sustainability & Ethics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        body { background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)), url('https://images.unsplash.com/photo-1570545788044-3e6e1384e8c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed; background-size: cover; }
+        .glass { backdrop-filter: blur(16px); background: rgba(245, 240, 230, 0.12); border: 1px solid rgba(255, 255, 255, 0.25); box-shadow: 0 12px 40px rgba(0,0,0,0.6); }
+        .accent-red { color: #c0392b; }
+        .accent-cream { color: #fdf6e6; }
+        .accent-green { color: #27ae60; }
+        .meter-bar { height: 12px; background: #3d2418; border-radius: 8px; overflow: hidden; }
+        .meter-fill { height: 100%; border-radius: 8px; }
+        .fill-esg { background: #27ae60; }
+        .fill-carbon { background: #3498db; }
+        .fill-trust { background: #9b59b6; }
+        .fill-cost { background: #e74c3c; }
+        .fill-csr { background: #f39c12; }
+        .fill-risk { background: #e67e22; }
+        .fill-global { background: #2980b9; }
+        #fullscreen-btn { position: fixed; top: 24px; right: 24px; z-index: 50; }
+        .alloc-input { width: 140px; padding: 10px 14px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; color: white; text-align: center; font-size: 1.1rem; }
+        .alloc-input:focus { outline: none; border-color: #27ae60; box-shadow: 0 0 0 3px rgba(39,174,96,0.3); }
+        .era-img { height: 240px; object-fit: cover; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
+        .phase-desc { background: rgba(0,0,0,0.3); padding: 24px; border-radius: 16px; margin-bottom: 40px; }
+        .alert-red { background: rgba(231,76,60,0.2); border-left: 6px solid #e74c3c; }
+        .alert-amber { background: rgba(243,156,18,0.2); border-left: 6px solid #f39c12; }
+        .alert-green { background: rgba(39,174,96,0.2); border-left: 6px solid #27ae60; }
+    </style>
+</head>
+<body class="min-h-screen text-white font-sans antialiased flex flex-col items-center justify-center overflow-x-hidden">
+    <button id="fullscreen-btn" class="glass px-6 py-3 rounded-xl text-base font-medium">Go Fullscreen</button>
+    
+    <div id="progress" class="fixed top-0 left-0 w-full h-3 bg-black/40 z-40">
+        <div class="h-full bg-green-700 transition-all duration-700 ease-out" style="width: 0%;"></div>
+    </div>
+    
+    <div id="game" class="w-full max-w-6xl mx-auto p-6 md:p-12">
+        <h1 class="text-5xl md:text-7xl font-extrabold text-center mb-16 accent-red leading-tight">Cremica Product Strategist<br><span class="text-3xl md:text-4xl accent-cream opacity-90">CSR, Sustainability & Ethics</span></h1>
+        
+        <div id="phases" class="space-y-12">
+            <!-- Mission Brief -->
+            <section id="intro" class="glass rounded-3xl p-10 md:p-16 text-center">
+                <h2 class="text-5xl font-bold mb-12 accent-green">Mission Brief</h2>
+                <div class="max-w-4xl mx-auto text-xl leading-relaxed space-y-8">
+                    <p>FY 2024–2026. You have just been appointed <span class="font-bold accent-cream">Head of CSR, Sustainability & Ethics</span> at Mrs. Bectors Food Specialties Ltd (Cremica).</p>
+                    <div class="grid md:grid-cols-3 gap-8 my-12">
+                        <div class="glass p-8 rounded-2xl">
+                            <p class="text-lg opacity-80">CSR Budget (Sec 135)</p>
+                            <p class="text-4xl font-bold accent-green mt-2">₹5.2 crore</p>
+                        </div>
+                        <div class="glass p-8 rounded-2xl">
+                            <p class="text-lg opacity-80">Current ESG Risk Rating</p>
+                            <p class="text-4xl font-bold accent-red mt-2">Medium</p>
+                        </div>
+                        <div class="glass p-8 rounded-2xl">
+                            <p class="text-lg opacity-80">Key Supply Risks</p>
+                            <p class="text-2xl mt-2">Wheat, Sugar, Edible Oil<br>Climate Volatility</p>
+                        </div>
+                    </div>
+                    <p class="text-2xl">Your mandate: Improve ESG performance, ensure full compliance, strengthen farmer and community relationships, while maintaining financial discipline.</p>
+                    <p class="text-xl mt-8 font-semibold">Win Condition: Achieve ESG rating improvement, grow brand trust, ensure compliance, and maintain cost efficiency.</p>
+                </div>
+                <div class="mt-16">
+                    <button id="start-btn" class="bg-green-700 hover:bg-green-800 px-12 py-6 rounded-2xl text-2xl font-bold transition transform hover:scale-105">Begin Strategy Rounds</button>
+                </div>
+            </section>
+
+            <!-- Round 1: Sustainability Strategy -->
+            <section id="round1" class="glass rounded-3xl p-10 md:p-12 hidden">
+                <h2 class="text-4xl font-bold mb-8 text-center">Round 1: Sustainability Strategy</h2>
+                <p class="text-center text-xl mb-4 opacity-90">Focus: Supply Chain & Operations</p>
+                <div class="phase-desc text-lg leading-relaxed max-w-4xl mx-auto">
+                    <p>Climate volatility is impacting raw material availability and costs. Investors and retail partners are demanding measurable progress on carbon and water footprint.</p>
+                    <p class="mt-4">Choose your primary sustainability investments for the next 2 years.</p>
+                </div>
+                <img src="https://images.unsplash.com/photo-1581093450021-4a7360e9a6b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="era-img mx-auto mb-12">
+                <div class="grid md:grid-cols-2 gap-8" id="r1-options"></div>
+                <div class="mt-16 grid md:grid-cols-3 gap-8">
+                    <div class="text-center"><p class="text-lg mb-2">Carbon Reduction %</p><div class="meter-bar"><div class="meter-fill fill-carbon" style="width:0%"></div></div></div>
+                    <div class="text-center"><p class="text-lg mb-2">Supply Resilience</p><div class="meter-bar"><div class="meter-fill fill-trust" style="width:0%"></div></div></div>
+                    <div class="text-center"><p class="text-lg mb-2">Cost Impact</p><div class="meter-bar"><div class="meter-fill fill-cost" style="width:50%"></div></div></div>
+                </div>
+                <div class="text-center mt-12">
+                    <button class="next-btn bg-green-700 hover:bg-green-800 px-10 py-5 rounded-2xl text-xl font-bold transition transform hover:scale-105">Proceed to CSR Allocation</button>
+                </div>
+            </section>
+
+            <!-- Round 2: Community & CSR Allocation -->
+            <section id="round2" class="glass rounded-3xl p-10 md:p-12 hidden">
+                <h2 class="text-4xl font-bold mb-8 text-center">Round 2: CSR Budget Allocation</h2>
+                <p class="text-center text-xl mb-4 opacity-90">₹5.2 crore mandatory spend</p>
+                <div class="phase-desc text-lg leading-relaxed max-w-4xl mx-auto">
+                    <p>You must fully utilise the ₹5.2 crore CSR budget as per Section 135 of Companies Act 2013.</p>
+                    <p class="mt-4">Allocate across ongoing and new initiatives. An unexpected government audit has been announced — compliance documentation will be scrutinised.</p>
+                </div>
+                <img src="https://images.unsplash.com/photo-1593113598332-cd25a5d7b65f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="era-img mx-auto mb-12">
+                <div class="space-y-10 max-w-4xl mx-auto" id="csr-alloc"></div>
+                <p class="text-center text-3xl mt-8 alloc-total accent-green">Allocated: <span id="csr-total">0</span> / ₹5.2 crore</p>
+                <div id="audit-alert" class="hidden max-w-4xl mx-auto p-6 rounded-2xl alert-amber mt-8">
+                    <p class="text-xl font-semibold">Government CSR Audit Announced</p>
+                    <p>Documentation and impact measurement for all projects will be reviewed in 6 months.</p>
+                </div>
+                <div class="mt-16 grid md:grid-cols-3 gap-8">
+                    <div class="text-center"><p class="text-lg mb-2">CSR Compliance Score</p><div class="meter-bar"><div class="meter-fill fill-csr" style="width:50%"></div></div></div>
+                    <div class="text-center"><p class="text-lg mb-2">Community Impact</p><div class="meter-bar"><div class="meter-fill fill-trust" style="width:0%"></div></div></div>
+                    <div class="text-center"><p class="text-lg mb-2">Public Trust</p><div class="meter-bar"><div class="meter-fill fill-esg" style="width:50%"></div></div></div>
+                </div>
+                <div class="text-center mt-12">
+                    <button id="r2-next" class="bg-green-700 hover:bg-green-800 px-10 py-5 rounded-2xl text-xl font-bold transition transform hover:scale-105 opacity-50 cursor-not-allowed" disabled>Proceed to Ethical Sourcing</button>
+                </div>
+            </section>
+
+            <!-- Round 3: Ethical Sourcing & Governance -->
+            <section id="round3" class="glass rounded-3xl p-10 md:p-12 hidden">
+                <h2 class="text-4xl font-bold mb-8 text-center">Round 3: Ethical Sourcing & Governance</h2>
+                <p class="text-center text-xl mb-4 opacity-90">Focus: Supply Chain Ethics</p>
+                <div class="phase-desc text-lg leading-relaxed max-w-4xl mx-auto">
+                    <p>Export partners (EU, US) are tightening requirements on traceability and farmer welfare. A cheaper supplier offers 12% lower wheat cost but lacks certification.</p>
+                    <p class="mt-4">Make final decisions on ethical sourcing and governance strengthening.</p>
+                </div>
+                <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="era-img mx-auto mb-12">
+                <div class="grid md:grid-cols-2 gap-8" id="r3-options"></div>
+                <div class="mt-16 grid md:grid-cols-3 gap-8">
+                    <div class="text-center"><p class="text-lg mb-2">ESG Rating Progress</p><div class="meter-bar"><div class="meter-fill fill-esg" style="width:50%"></div></div></div>
+                    <div class="text-center"><p class="text-lg mb-2">Export Readiness</p><div class="meter-bar"><div class="meter-fill fill-global" style="width:0%"></div></div></div>
+                    <div class="text-center"><p class="text-lg mb-2">Risk Level</p><div class="meter-bar"><div class="meter-fill fill-risk" style="width:50%"></div></div></div>
+                </div>
+                <div class="text-center mt-12">
+                    <button id="final-btn" class="bg-green-700 hover:bg-green-800 px-10 py-5 rounded-2xl text-xl font-bold transition transform hover:scale-105">View Final Outcome</button>
+                </div>
+            </section>
+
+            <!-- Outcome -->
+            <section id="outcome" class="glass rounded-3xl p-10 md:p-12 hidden">
+                <h2 class="text-5xl font-bold text-center mb-12 accent-green">Strategic Outcome</h2>
+                <div id="final-results" class="space-y-12 text-lg max-w-5xl mx-auto"></div>
+                <div class="text-center mt-16">
+                    <button class="bg-green-700 hover:bg-green-800 px-12 py-6 rounded-2xl text-2xl font-bold transition transform hover:scale-105" onclick="location.reload()">Play Again</button>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        const state = {
+            r1: '',
+            csr: { sports: 0, education: 0, health: 0, village: 0 },
+            r3: [],
+            meters: {
+                esg: 50, carbon: 0, trust: 50, cost: 50, csr: 50, risk: 50, global: 0
+            }
+        };
+
+        function createCard(title, desc, impact, containerId, multi = false) {
+            const card = document.createElement('div');
+            card.className = 'glass rounded-2xl p-8 cursor-pointer transition transform hover:scale-105 hover:shadow-2xl';
+            card.innerHTML = `<p class="text-2xl font-bold mb-3">${title}</p><p class="text-lg opacity-90">${desc}</p><p class="text-sm mt-4 opacity-70">${impact}</p>`;
+            card.onclick = () => {
+                if (!multi) {
+                    document.querySelectorAll(`#${containerId} > div`).forEach(c => c.classList.remove('ring-8', 'ring-green-600'));
+                    card.classList.add('ring-8', 'ring-green-600');
+                    state[containerId.split('-')[0]] = title;
+                } else {
+                    card.classList.toggle('ring-8', 'ring-green-600');
+                    if (state.r3.includes(title)) state.r3 = state.r3.filter(t => t !== title);
+                    else state.r3.push(title);
+                }
+                updateMeters(containerId);
+            };
+            return card;
+        }
+
+        function createCSRRow(label, id) {
+            const div = document.createElement('div');
+            div.className = 'glass p-8 rounded-2xl flex items-center justify-between';
+            div.innerHTML = `
+                <p class="text-2xl font-semibold">${label}</p>
+                <div class="flex items-center gap-4">
+                    <span class="text-xl">₹</span>
+                    <input type="number" min="0" max="5.2" step="0.1" value="0" class="alloc-input" id="${id}" placeholder="0">
+                    <span class="text-xl">crore</span>
+                </div>
+            `;
+            const input = div.querySelector(`#${id}`);
+            input.addEventListener('input', () => {
+                let val = parseFloat(input.value) || 0;
+                if (val < 0) val = 0;
+                if (val > 5.2) val = 5.2;
+                input.value = val.toFixed(1);
+                state.csr[id] = val;
+                updateCSR();
+            });
+            return div;
+        }
+
+        function updateCSR() {
+            const total = Object.values(state.csr).reduce((a,b)=>a+b,0);
+            document.getElementById('csr-total').textContent = total.toFixed(1);
+            const btn = document.getElementById('r2-next');
+            btn.disabled = Math.abs(total - 5.2) > 0.05;
+            btn.classList.toggle('opacity-50', Math.abs(total - 5.2) > 0.05);
+            btn.classList.toggle('cursor-not-allowed', Math.abs(total - 5.2) > 0.05);
+            document.getElementById('audit-alert').classList.toggle('hidden', total < 4.5);
+            state.meters.csr = 50 + (total >= 5.1 ? 30 : total >= 4.0 ? 15 : -20);
+            state.meters.trust += state.csr.education * 8 + state.csr.village * 10;
+            gsap.to('.fill-csr', { width: Math.min(100, state.meters.csr) + '%', duration: 1 });
+            gsap.to('.fill-trust', { width: Math.min(100, state.meters.trust) + '%', duration: 1 });
+        }
+
+        function updateMeters(container) {
+            if (container === 'r1') {
+                if (state.r1.includes('Solar')) { state.meters.carbon += 35; state.meters.cost += 20; }
+                if (state.r1.includes('Rainwater')) { state.meters.carbon += 20; state.meters.trust += 25; }
+                if (state.r1.includes('Biodegradable')) { state.meters.carbon += 15; state.meters.esg += 30; }
+                if (state.r1.includes('Delay')) { state.meters.cost -= 30; state.meters.risk += 40; }
+            } else if (container === 'r3') {
+                if (state.r3.includes('Farmer premium')) { state.meters.trust += 40; state.meters.cost += 25; }
+                if (state.r3.includes('Blockchain')) { state.meters.esg += 35; state.meters.global += 40; }
+                if (state.r3.includes('anti-corruption')) { state.meters.esg += 20; state.meters.risk -= 20; }
+                if (state.r3.includes('Cheaper supplier')) { state.meters.cost -= 30; state.meters.risk += 50; state.meters.global -= 30; }
+            }
+            gsap.to('.fill-esg', { width: Math.min(100, state.meters.esg) + '%', duration: 1 });
+            gsap.to('.fill-carbon', { width: Math.min(100, state.meters.carbon) + '%', duration: 1 });
+            gsap.to('.fill-trust', { width: Math.min(100, state.meters.trust) + '%', duration: 1 });
+            gsap.to('.fill-cost', { width: Math.min(100, state.meters.cost) + '%', duration: 1 });
+            gsap.to('.fill-risk', { width: Math.min(100, state.meters.risk) + '%', duration: 1 });
+            gsap.to('.fill-global', { width: Math.min(100, state.meters.global) + '%', duration: 1 });
+        }
+
+        function transitionTo(nextSection) {
+            const sections = document.querySelectorAll('#phases > section');
+            const currentIndex = Array.from(sections).findIndex(s => !s.classList.contains('hidden'));
+            const progress = ((currentIndex + 1) / (sections.length - 1)) * 100;
+            gsap.to('#progress > div', { width: progress + '%', duration: 1 });
+            const current = sections[currentIndex];
+            gsap.to(current, { opacity: 0, y: -80, duration: 0.8, onComplete: () => current.classList.add('hidden') });
+            nextSection.classList.remove('hidden');
+            gsap.fromTo(nextSection, { opacity: 0, y: 80 }, { opacity: 1, y: 0, duration: 1.2 });
+            gsap.from(nextSection.children, { opacity: 0, y: 50, stagger: 0.2, duration: 1, delay: 0.5 });
+        }
+
+        document.querySelectorAll('.next-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const current = btn.closest('section');
+                updateMeters(current.querySelector('[id$="-options"]')?.id || '');
+                const next = current.nextElementSibling;
+                transitionTo(next);
+            });
+        });
+
+        document.getElementById('start-btn').addEventListener('click', () => transitionTo(document.getElementById('round1')));
+
+        document.getElementById('r2-next').addEventListener('click', () => transitionTo(document.getElementById('round3')));
+
+        document.getElementById('final-btn').addEventListener('click', () => {
+            updateMeters('r3');
+            showOutcome();
+        });
+
+        function initRound1() {
+            const container = document.getElementById('r1-options');
+            const opts = [
+                {title: 'Invest in solar at Rajpura plant', desc: '50% renewable energy target', impact: '+35% carbon reduction, +₹1.8 cr capex'},
+                {title: 'Expand rainwater harvesting', desc: 'Across all manufacturing units', impact: '+20% water security, +farmer goodwill'},
+                {title: 'Scale biodegradable packaging', desc: 'Shift 60% portfolio', impact: '+30 ESG score, +₹0.9 cr cost'},
+                {title: 'Delay major sustainability spend', desc: 'Prioritise margins', impact: '-40 risk increase, cost savings'}
+            ];
+            opts.forEach(o => container.appendChild(createCard(o.title, o.desc, o.impact, 'r1')));
+        }
+
+        function initRound2() {
+            const container = document.getElementById('csr-alloc');
+            const items = [
+                {label: 'Sports Infrastructure (Punjab gymnasium expansion)', id: 'sports'},
+                {label: 'Education (Cremica Scholarships & school support)', id: 'education'},
+                {label: 'Health & Nutrition Programs', id: 'health'},
+                {label: 'Adopt-a-Village Program', id: 'village'}
+            ];
+            items.forEach(item => container.appendChild(createCSRRow(item.label, item.id)));
+        }
+
+        function initRound3() {
+            const container = document.getElementById('r3-options');
+            const opts = [
+                {title: 'Pay farmers 8% premium for sustainable wheat', desc: 'Certified ethical farms only', impact: '+40 trust, +cost'},
+                {title: 'Invest in blockchain traceability', desc: 'Full farm-to-fork visibility', impact: '+35 ESG, +export readiness'},
+                {title: 'Strengthen anti-corruption & diversity policy', desc: 'Third-party audits', impact: '+governance score'},
+                {title: 'Switch to cheaper uncertified supplier', desc: '12% cost reduction', impact: '-50 risk, -export confidence'}
+            ];
+            opts.forEach(o => container.appendChild(createCard(o.title, o.desc, o.impact, 'r3', true)));
+        }
+
+        function calculateOutcome() {
+            let esgFinal = state.meters.esg + (state.meters.csr > 70 ? 20 : 0);
+            let trustFinal = state.meters.trust;
+            let riskFinal = state.meters.risk;
+            let ending = '';
+            if (esgFinal >= 90 && trustFinal >= 85 && riskFinal <= 40) {
+                ending = 'Sustainable Growth Leader';
+            } else if (esgFinal >= 60 && state.meters.csr >= 70) {
+                ending = 'Compliance-Only Survivor';
+            } else {
+                ending = 'Reputational Risk Scenario';
+            }
+            return {esg: esgFinal, trust: trustFinal, risk: riskFinal, ending};
+        }
+
+        function showOutcome() {
+            const scores = calculateOutcome();
+            const results = document.getElementById('final-results');
+            results.innerHTML = `
+                <div class="text-center mb-16">
+                    <p class="text-8xl font-extrabold accent-green">${scores.ending}</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-10 text-lg">
+                    <div class="glass p-10 rounded-2xl text-center">
+                        <h3 class="text-3xl font-bold mb-4">ESG Rating</h3>
+                        <p class="text-5xl">${scores.esg >= 90 ? 'Improved' : scores.esg >= 60 ? 'Medium' : 'High Risk'}</p>
+                    </div>
+                    <div class="glass p-10 rounded-2xl text-center">
+                        <h3 class="text-3xl font-bold mb-4">Brand & Community Trust</h3>
+                        <p class="text-5xl">${Math.round(scores.trust)}%</p>
+                    </div>
+                    <div class="glass p-10 rounded-2xl text-center">
+                        <h3 class="text-3xl font-bold mb-4">Overall Risk Exposure</h3>
+                        <p class="text-5xl">${scores.risk <= 40 ? 'Low' : scores.risk <= 70 ? 'Medium' : 'High'}</p>
+                    </div>
+                </div>
+                <div class="glass p-10 rounded-2xl mt-12 text-center">
+                    <p class="text-2xl">${scores.ending === 'Sustainable Growth Leader' ? 'Cremica emerges as an ESG leader in Indian FMCG with stronger supply chain, export growth, and stakeholder trust.' : scores.ending === 'Compliance-Only Survivor' ? 'Basic compliance achieved, but missed opportunity to build competitive advantage through sustainability and community leadership.' : 'Reputational challenges and export delays impact long-term growth potential.'}</p>
+                </div>
+            `;
+            transitionTo(document.getElementById('outcome'));
+            gsap.to('#progress > div', { width: '100%', duration: 1 });
+        }
+
+        document.getElementById('fullscreen-btn').onclick = () => document.documentElement.requestFullscreen?.();
+
+        initRound1();
+        initRound2();
+        initRound3();
+
+        gsap.from('#game > h1', { opacity: 0, y: -50, duration: 1.5 });
+        gsap.from('#intro', { opacity: 0, scale: 0.95, duration: 1.5, delay: 0.5 });
+        gsap.from('#intro > *', { opacity: 0, y: 60, stagger: 0.3, duration: 1.2, delay: 1 });
+    </script>
+</body>
+</html>
