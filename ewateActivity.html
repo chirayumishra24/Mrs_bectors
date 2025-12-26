@@ -11,17 +11,28 @@
   html,body{
     margin:0;padding:0;min-height:100vh;
     color:#1e293b;font-family:'Segoe UI', system-ui, sans-serif;
-    overflow-x:hidden;line-height:1.8;font-size:18px;
+    overflow-x:hidden;line-height:1.8;font-size:16px;
     background:#0f172a;
   }
  
-  .neon-title{
-    font-size:clamp(3rem,7vw,48px);font-weight:900;
+  /* Main title reduced to 24px as requested */
+  h1.neon-title{
+    font-size:24px !important;font-weight:900;
     background:linear-gradient(90deg,#2563eb,#3b82f6,#60a5fa,#2563eb);background-size:300%;
     -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
-    animation:glow 8s ease-in-out infinite;text-shadow:0 0 30px rgba(37,99,235,0.4);
+    animation:glow 8s ease-in-out infinite;text-shadow:0 0 20px rgba(37,99,235,0.4);
   }
   @keyframes glow{0%,100%{background-position:0%}50%{background-position:300%}}
+ 
+  h2, h3, .subtitle, .dustbin-label{
+    font-size:24px !important;
+    font-weight:bold;
+  }
+ 
+  p, li, .instruction-text, .modal-message, .start-purpose, .feedback-list{
+    font-size:16px;
+    line-height:1.7;
+  }
  
   .content-card{
     position:relative;background:white;border:4px solid #2563eb;border-radius:2rem;
@@ -33,23 +44,22 @@
   }
  
   .subtitle{
-    font-size:clamp(1.8rem,5vw,3rem);font-weight:bold;color:#60a5fa;
-    text-shadow:0 0 20px rgba(96,165,250,0.4);margin-top:1.5rem;
+    color:#60a5fa;text-shadow:0 0 20px rgba(96,165,250,0.4);margin-top:1rem;
   }
  
   /* DRAGGABLE ITEMS */
   .draggable-item{
-    padding:1.2rem;background:#f0f9ff;border:3px dashed #3b82f6;
+    padding:1rem;background:#f0f9ff;border:3px dashed #3b82f6;
     border-radius:1.5rem;margin:1rem 0;cursor:grab;font-weight:bold;text-align:center;
-    transition:all .3s;user-select:none;font-size:1.3rem;box-shadow:0 8px 20px rgba(0,0,0,0.08);
+    transition:all .3s;user-select:none;font-size:16px;box-shadow:0 8px 20px rgba(0,0,0,0.08);
   }
   .draggable-item:active{cursor:grabbing;opacity:0.8;transform:scale(1.05);}
   .draggable-item:hover{transform:translateY(-8px);box-shadow:0 15px 30px rgba(59,130,246,0.2);}
  
-  /* DROPPED ITEM INSIDE BIN */
+  /* DROPPED ITEM */
   .dropped-item{
     background:#ffffffcc;border:2px solid #64748b;border-radius:1rem;
-    padding:0.8rem 1.2rem;margin:0.5rem;font-size:1.1rem;
+    padding:0.7rem 1rem;margin:0.5rem;font-size:16px;
   }
   .dropped-item.wrong-placement{
     border-color:#ef4444;background:#fee2e2;color:#991b1b;
@@ -91,18 +101,11 @@
   .hazardous .bin-lid{background:#fecaca;}
   .hazardous .bin-handle{background:#ef4444;}
  
-  .dustbin-label{font-size:1.8rem;font-weight:900;color:#1e293b;margin-top:2rem;}
-  .dustbin-sublabel{font-size:1.2rem;color:#64748b;margin-top:0.5rem;}
- 
-  /* FEEDBACK */
-  .feedback-list{
-    margin-top:1rem;padding:1rem;background:#fee2e2;border-radius:1rem;
-    border:2px solid #ef4444;max-width:600px;
-  }
+  .dustbin-sublabel{font-size:16px;color:#64748b;margin-top:0.5rem;}
  
   /* BUTTONS */
   .activity-btn{
-    padding:1rem 2.5rem;font-size:1.5rem;border-radius:2rem;
+    padding:1rem 2.5rem;font-size:24px;border-radius:2rem;
     transition:all 0.3s;box-shadow:0 10px 30px rgba(0,0,0,0.15);
     font-weight:bold;
   }
@@ -110,25 +113,47 @@
   .activity-btn-primary{background:#2563eb;color:white;}
   .activity-btn-secondary{background:#e2e8f0;color:#1e293b;}
  
-  /* MODAL */
+  /* START SCREEN */
+  #startScreen{
+    position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:9998;
+    display:flex;align-items:center;justify-content:center;flex-direction:column;
+    text-align:center;padding:2rem;
+  }
+  .start-title{
+    font-size:24px !important;font-weight:900; /* Also reduced on start screen */
+    background:linear-gradient(90deg,#2563eb,#3b82f6,#60a5fa,#2563eb);
+    background-size:300%;-webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;animation:glow 8s ease-in-out infinite;
+    margin-bottom:1.5rem;
+  }
+ 
+  /* VICTORY MODAL */
   #victoryModal{
     display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:9999;
-    align-items:center;justify-content:center;flex-direction:column;opacity:0;
+    align-items:center;justify-content:center;flex-direction:column;opacity:0;padding:1rem;
   }
   .modal-content{
     background:linear-gradient(135deg,#1e293b,#0f172a);border:6px solid #2563eb;
-    border-radius:3rem;padding:4rem;max-width:90%;text-align:center;
+    border-radius:3rem;padding:3rem;max-width:95%;text-align:center;
     box-shadow:0 0 100px rgba(37,99,235,0.8);transform:scale(0.8);
   }
   .modal-title{
-    font-size:clamp(3rem,8vw,5rem);font-weight:900;
+    font-size:clamp(2.2rem,6vw,3.5rem);font-weight:900;
     background:linear-gradient(90deg,#60a5fa,#3b82f6,#2563eb,#60a5fa);
     background-size:300%;-webkit-background-clip:text;background-clip:text;
     -webkit-text-fill-color:transparent;animation:glow 6s ease-in-out infinite;
+    margin-bottom:1.5rem;
   }
-  .modal-message{
-    font-size:1.8rem;color:#e2e8f0;margin:2rem 0;line-height:1.6;
+ 
+  /* FULLSCREEN BUTTON */
+  #fullscreenBtn{
+    position:fixed;top:20px;right:20px;z-index:9999;
+    background:#2563eb/90;color:white;padding:1rem;border-radius:50%;
+    width:60px;height:60px;display:flex;align-items:center;justify-content:center;
+    font-size:2rem;box-shadow:0 0 20px rgba(37,99,235,0.6);
+    cursor:pointer;transition:all 0.3s;
   }
+  #fullscreenBtn:hover{transform:scale(1.15);background:#2563eb;}
 </style>
 </head>
 <body class="bg-slate-900">
@@ -138,16 +163,32 @@
   <img alt="background" class="w-full h-full object-cover" src="/s/articles/6927da4e2869b1081116dd9e/images/1two.gif" />
 </div>
 
-<!-- Main Activity Section -->
-<section class="py-24 px-6">
-  <div class="content-card mx-auto max-w-7xl text-center relative overflow-hidden">
+<!-- Fullscreen Button -->
+<button id="fullscreenBtn" onclick="toggleFullScreen()" title="Toggle Fullscreen">⛶</button>
+
+<!-- Start Screen -->
+<div id="startScreen">
+  <h1 class="start-title">Final Challenge: E-Waste Segregation Showdown</h1>
+  <p class="start-purpose text-white max-w-4xl mx-auto">
+    Welcome to the final boss level of the E-Waste Management chapter!<br><br>
+    In this challenge, you will demonstrate your understanding of responsible e-waste disposal by correctly segregating common electronic items.<br><br>
+    • Items that can be recovered and recycled go into the <strong>Recyclable E-Waste</strong> bin.<br>
+    • Items containing hazardous materials go into the <strong>Hazardous E-Waste</strong> bin.<br><br>
+    Only perfect segregation will defeat the chaos and prove you are a true E-Waste Guardian.<br><br>
+    Click the button below to begin the challenge.
+  </p>
+  <button onclick="startActivity()" class="activity-btn activity-btn-primary mt-12">START ACTIVITY</button>
+</div>
+
+<!-- Main Activity -->
+<section id="activitySection" class="py-24 px-6 hidden">
+  <div class="content-card mx-auto max-w-7xl text-center">
     
     <h1 class="neon-title">Final Challenge: E-Waste Segregation Showdown</h1>
-    <p class="subtitle">Only the true E-Waste Guardian can restore balance.</p>
+    <h2 class="subtitle">Only the true E-Waste Guardian can restore balance.</h2>
     
-    <p class="mt-12 text-xl text-[#64748b] max-w-4xl mx-auto">
-      Drag each e-waste item into the correct disposal bin.<br>
-      Recyclable items belong in the green-blue bin. Hazardous items require special handling.
+    <p class="mt-12 instruction-text text-[#64748b] max-w-4xl mx-auto">
+      Drag each e-waste item into the correct disposal bin.
     </p>
     
     <!-- Draggable Items -->
@@ -167,22 +208,22 @@
       <div id="recyclableBin" class="dustbin">
         <div class="bin-lid"><div class="bin-handle"></div></div>
         <div class="bin-body"></div>
-        <div class="dustbin-label text-[#2563eb]">Recyclable E-Waste</div>
-        <div class="dustbin-sublabel">Recover • Reuse • Recycle</div>
+        <h3 class="dustbin-label text-[#2563eb]">Recyclable E-Waste</h3>
+        <p class="dustbin-sublabel">Recover • Reuse • Recycle</p>
       </div>
       
       <div id="hazardousBin" class="dustbin hazardous">
         <div class="bin-lid"><div class="bin-handle"></div></div>
         <div class="bin-body"></div>
-        <div class="dustbin-label text-[#ef4444]">Hazardous E-Waste</div>
-        <div class="dustbin-sublabel">Handle With Care • Special Disposal</div>
+        <h3 class="dustbin-label text-[#ef4444]">Hazardous E-Waste</h3>
+        <p class="dustbin-sublabel">Handle With Care • Special Disposal</p>
       </div>
     </div>
     
     <!-- Buttons -->
-    <div class="mt-20 flex justify-center gap-8">
-      <button id="checkBtn" class="activity-btn activity-btn-primary text-2xl px-12 py-5">CHECK SEGREGATION</button>
-      <button id="resetBtn" class="activity-btn activity-btn-secondary text-2xl px-12 py-5">RESET</button>
+    <div class="mt-20 flex justify-center gap-12">
+      <button id="checkBtn" class="activity-btn activity-btn-primary">CHECK SEGREGATION</button>
+      <button id="resetBtn" class="activity-btn activity-btn-secondary">RESET</button>
     </div>
     
     <div id="feedbackArea" class="mt-12 max-w-4xl mx-auto"></div>
@@ -201,8 +242,8 @@
       The future is safeguarded by guardians like you.
     </p>
     <div class="mt-12 space-x-8">
-      <button onclick="replayLevel()" class="activity-btn activity-btn-primary text-xl px-10 py-4">REPLAY BOSS LEVEL</button>
-      <button onclick="proceedNext()" class="activity-btn activity-btn-secondary text-xl px-10 py-4">PROCEED TO NEXT CHAPTER</button>
+      <button onclick="replayLevel()" class="activity-btn activity-btn-primary">REPLAY BOSS LEVEL</button>
+      <button onclick="proceedNext()" class="activity-btn activity-btn-secondary">PROCEED TO NEXT CHAPTER</button>
     </div>
   </div>
 </div>
@@ -213,7 +254,20 @@
 </audio>
 
 <script>
-// Drag & Drop Logic + Lid Animation
+function toggleFullScreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen();
+  } else {
+    document.exitFullscreen();
+  }
+}
+
+function startActivity() {
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('activitySection').classList.remove('hidden');
+}
+
+// Drag & Drop + Lid Animation
 let draggedItem = null;
 const recyclables = ["Old Mobile Phone", "Broken Laptop", "Circuit Boards", "Charger & Cables", "CRT Monitor"];
 const hazardous = ["Used Batteries", "Fluorescent Lamp", "Printer Cartridges"];
@@ -264,7 +318,7 @@ document.querySelectorAll('.draggable-item').forEach(item => {
   });
 });
 
-// Check Segregation
+// Check & Reset
 document.getElementById('checkBtn').addEventListener('click', () => {
   let correct = 0;
   const total = 8;
@@ -281,9 +335,8 @@ document.getElementById('checkBtn').addEventListener('click', () => {
   
   recBin.querySelectorAll('.dropped-item').forEach(child => {
     const text = child.textContent.trim();
-    if (recyclables.includes(text)) {
-      correct++;
-    } else {
+    if (recyclables.includes(text)) correct++;
+    else {
       child.classList.add('wrong-placement');
       misplaced.push(`<strong>${text}</strong> should go to <strong>Hazardous E-Waste</strong>`);
     }
@@ -291,9 +344,8 @@ document.getElementById('checkBtn').addEventListener('click', () => {
   
   hazBin.querySelectorAll('.dropped-item').forEach(child => {
     const text = child.textContent.trim();
-    if (hazardous.includes(text)) {
-      correct++;
-    } else {
+    if (hazardous.includes(text)) correct++;
+    else {
       child.classList.add('wrong-placement');
       misplaced.push(`<strong>${text}</strong> should go to <strong>Recyclable E-Waste</strong>`);
     }
@@ -307,41 +359,35 @@ document.getElementById('checkBtn').addEventListener('click', () => {
     if (recBin.querySelector('.wrong-placement')) recBin.classList.add('wrong');
     if (hazBin.querySelector('.wrong-placement')) hazBin.classList.add('wrong');
     
-    let feedbackHTML = `<p class="text-4xl font-bold text-orange-500 mb-6">${correct}/${total} Correct</p>`;
+    let feedbackHTML = `<p class="text-3xl font-bold text-orange-500 mb-6">${correct}/${total} Correct</p>`;
     if (misplaced.length > 0) {
-      feedbackHTML += `<div class="feedback-list text-lg"><p class="font-bold mb-3">Misplaced items:</p><ul class="list-disc list-inside space-y-2 text-left">`;
-      misplaced.forEach(item => {
-        feedbackHTML += `<li>${item}</li>`;
-      });
+      feedbackHTML += `<div class="feedback-list"><p class="font-bold mb-3">Misplaced items:</p><ul class="list-disc list-inside space-y-2 text-left">`;
+      misplaced.forEach(item => feedbackHTML += `<li>${item}</li>`);
       feedbackHTML += `</ul></div>`;
     }
     feedbackArea.innerHTML = feedbackHTML;
   }
 });
 
-// Reset Button
 document.getElementById('resetBtn').addEventListener('click', () => {
-  // Show all draggable items again
   document.querySelectorAll('.draggable-item').forEach(item => {
     item.style.display = 'block';
     item.style.opacity = '1';
   });
   
-  // Clear both bins
   document.getElementById('recyclableBin').innerHTML = `
     <div class="bin-lid"><div class="bin-handle"></div></div>
     <div class="bin-body"></div>
-    <div class="dustbin-label text-[#2563eb]">Recyclable E-Waste</div>
-    <div class="dustbin-sublabel">Recover • Reuse • Recycle</div>
+    <h3 class="dustbin-label text-[#2563eb]">Recyclable E-Waste</h3>
+    <p class="dustbin-sublabel">Recover • Reuse • Recycle</p>
   `;
   document.getElementById('hazardousBin').innerHTML = `
     <div class="bin-lid"><div class="bin-handle"></div></div>
     <div class="bin-body"></div>
-    <div class="dustbin-label text-[#ef4444]">Hazardous E-Waste</div>
-    <div class="dustbin-sublabel">Handle With Care • Special Disposal</div>
+    <h3 class="dustbin-label text-[#ef4444]">Hazardous E-Waste</h3>
+    <p class="dustbin-sublabel">Handle With Care • Special Disposal</p>
   `;
   
-  // Clear feedback and bin states
   document.getElementById('feedbackArea').innerHTML = '';
   document.getElementById('recyclableBin').classList.remove('correct', 'wrong', 'over');
   document.getElementById('hazardousBin').classList.remove('correct', 'wrong', 'over');
@@ -360,12 +406,8 @@ function triggerVictory() {
   document.getElementById('victoryAudio').play().catch(() => {});
   
   tsParticles.confetti('tsparticles', {
-    particles: {
-      number: {value: 200},
-      color: {value: ['#2563eb', '#3b82f6', '#60a5fa', '#22c55e']},
-      shape: {type: 'circle'},
-      opacity: {value: 1},
-      size: {value: {min: 4, max: 12}},
+    particles: {number: {value: 200}, color: {value: ['#2563eb', '#3b82f6', '#60a5fa', '#22c55e']},
+      shape: {type: 'circle'}, opacity: {value: 1}, size: {value: {min: 4, max: 12}},
       move: {enable: true, speed: 6, direction: 'none', outModes: 'out'}
     },
     duration: 3,
@@ -378,7 +420,7 @@ function replayLevel() {
 }
 
 function proceedNext() {
-  alert("Proceeding to the next chapter... (Placeholder)");
+  alert("Congratulations! Proceeding to the next chapter...");
 }
 </script>
 
