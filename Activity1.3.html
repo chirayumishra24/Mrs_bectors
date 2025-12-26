@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cremica Leadership Legacy – From Kitchen to Boardroom</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        body { background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)), url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed; background-size: cover; }
+        .glass { backdrop-filter: blur(16px); background: rgba(245, 240, 230, 0.12); border: 1px solid rgba(255, 255, 255, 0.25); box-shadow: 0 12px 40px rgba(0,0,0,0.6); }
+        .accent-red { color: #c0392b; }
+        .accent-cream { color: #fdf6e6; }
+        .meter-bar { height: 12px; background: #3d2418; border-radius: 8px; overflow: hidden; }
+        .meter-fill { height: 100%; border-radius: 8px; }
+        .fill-rep { background: #e67e22; }
+        .fill-cash { background: #27ae60; }
+        .fill-stress { background: #e74c3c; }
+        .fill-trust { background: #9b59b6; }
+        .fill-stab { background: #3498db; }
+        .fill-growth { background: #f1c40f; }
+        .fill-org { background: #1abc9c; }
+        .fill-cred { background: #34495e; }
+        .fill-cult { background: #d35400; }
+        .fill-conf { background: #2ecc71; }
+        .fill-gov { background: #8e44ad; }
+        .fill-ctrl { background: #c0392b; }
+        .fill-legacy { background: #f39c12; }
+        .fill-mat { background: #16a085; }
+        .fill-lead { background: #2980b9; }
+        #fullscreen-btn { position: fixed; top: 24px; right: 24px; z-index: 50; }
+        #audio-btn { position: fixed; top: 24px; left: 24px; z-index: 50; }
+        .era-img { height: 200px; object-fit: cover; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
+        .drag-item { cursor: grab; transition: transform 0.3s; }
+        .drag-item:active { cursor: grabbing; }
+        .drop-zone { min-height: 120px; border: 3px dashed rgba(255,255,255,0.3); border-radius: 12px; }
+        .drop-zone.active { border-color: #c0392b; background: rgba(192,57,43,0.2); }
+    </style>
+</head>
+<body class="min-h-screen text-white font-sans antialiased flex flex-col items-center justify-center overflow-x-hidden">
+    <button id="fullscreen-btn" class="glass px-6 py-3 rounded-xl text-base font-medium">Go Fullscreen</button>
+    <button id="audio-btn" class="glass px-6 py-3 rounded-xl text-base font-medium">Audio Off</button>
+    
+    <div id="progress" class="fixed top-0 left-0 w-full h-3 bg-black/40 z-40">
+        <div class="h-full bg-red-700 transition-all duration-700 ease-out" style="width: 0%;"></div>
+    </div>
+    
+    <div id="game" class="w-full max-w-6xl mx-auto p-6 md:p-12">
+        <h1 class="text-5xl md:text-7xl font-extrabold text-center mb-16 accent-red leading-tight">Cremica Leadership Legacy<br><span class="text-3xl md:text-4xl accent-cream opacity-90">From Kitchen to Boardroom</span></h1>
+        
+        <div id="phases" class="space-y-12">
+            <section id="phase1" class="glass rounded-3xl p-10 md:p-12">
+                <h2 class="text-4xl font-bold mb-8 text-center">Phase 1: The Backyard Beginning (1978–1985)</h2>
+                <p class="text-center text-xl mb-10 opacity-90">Role: Mrs. Rajni Bector – Founder</p>
+                <div class="grid md:grid-cols-3 gap-8 mb-12">
+                    <div class="glass p-8 rounded-2xl text-center">
+                        <p class="text-lg mb-2">Starting Capital</p><p class="text-3xl font-bold accent-red">₹20,000</p>
+                    </div>
+                    <div class="glass p-8 rounded-2xl text-center">
+                        <p class="text-lg mb-2">Market</p><p class="text-2xl font-bold">Local weddings & bakeries</p>
+                    </div>
+                    <div class="glass p-8 rounded-2xl text-center">
+                        <p class="text-lg mb-2">Resources</p><p class="text-2xl font-bold">Personal skill & word-of-mouth</p>
+                    </div>
+                </div>
+                <img src="https://images.unsplash.com/photo-1576618148400-f54bed99fcfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="era-img mx-auto mb-12">
+                <div class="space-y-12" id="phase1-decisions"></div>
+                <div class="mt-12 grid md:grid-cols-3 gap-8">
+                    <div class="text-center"><p class="text-lg mb-2">Reputation</p><div class="meter-bar"><div class="meter-fill fill-rep" style="width:50%"></div></div></div>
+                    <div class="text-center"><p class="text-lg mb-2">Cash Flow</p><div class="meter-bar"><div class="meter-fill fill-cash" style="width:50%"></div></div></div>
+                    <div class="text-center"><p class="text-lg mb-2">Stress Level <span class="text-sm opacity-70">(lower better)</span></p><div class="meter-bar"><div class="meter-fill fill-stress" style="width:50%"></div></div></div>
+                </div>
+                <div class="text-center mt-12">
+                    <button id="phase1-next" class="bg-red-700 hover:bg-red-800 px-10 py-5 rounded-2xl text-xl font-bold transition transform hover:scale-105 opacity-50 cursor-not-allowed" disabled>Continue to QSR Era</button>
+                </div>
+            </section>
+
+            <section id="phase2" class="glass rounded-3xl p-10 md:p-12 hidden">
+                <h2 class="text-4xl font-bold mb-8 text-center">Phase 2: The QSR Bet (1990–1996)</h2>
+                <p class="text-center text-xl mb-10 opacity-90">Role: Founder-CEO</p>
+                <p class="text-2xl text-center mb-12">McDonald’s India approaches for condiment supply with strict global standards.</p>
+                <img src="https://images.unsplash.com/photo-1565299507177-b0ac667ebd8a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="era-img mx-auto mb-12">
+                <div class="space-y-12" id="phase2-decisions"></div>
+                <div class="mt-12 grid md:grid-cols-3 gap-8">
+                    <div class="text-center"><p class="text-lg mb-2">Institutional Trust</p><div class="meter-bar"><div class="meter-fill fill-trust" style="width:50%"></div></div></div>
+                    <div class="text-center"><p class="text-lg mb-2">Long-term Stability</p><div class="meter-bar"><div class="meter-fill fill-stab" style="width:50%"></div></div></div>
+                    <div class="text-center"><p class="text-lg mb-2">Growth Speed</p><div class="meter-bar"><div class="meter-fill fill-growth" style="width:50%"></div></div></div>
+                </div>
+                <div class="text-center mt-12">
+                    <button class="next-btn bg-red-700 hover:bg-red-800 px-10 py-5 rounded-2xl text-xl font-bold transition transform hover:scale-105">Continue to Succession Era</button>
+                </div>
+            </section>
+
+            <section id="phase3" class="glass rounded-3xl p-10 md:p-12 hidden">
+                <h2 class="text-4xl font-bold mb-8 text-center">Phase 3: Family Succession (2005–2018)</h2>
+                <p class="text-center text-xl mb-10 opacity-90">Role: Promoter Transitioning Leadership</p>
+                <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="era-img mx-auto mb-12">
+                <div class="space-y-12">
+                    <div><h3 class="text-2xl font-semibold mb-6">Drag to Build Leadership Structure</h3>
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <div class="glass p-8 rounded-2xl">
+                                <p class="text-lg mb-4 text-center">Available Roles</p>
+                                <div id="roles-source" class="space-y-4"></div>
+                            </div>
+                            <div class="glass p-8 rounded-2xl">
+                                <p class="text-lg mb-4 text-center">Organization Chart</p>
+                                <div id="org-drop" class="drop-zone p-6"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div><h3 class="text-2xl font-semibold mb-6">Governance Intensity</h3><div class="grid md:grid-cols-3 gap-6" id="governance"></div></div>
+                </div>
+                <div class="mt-12 grid md:grid-cols-3 gap-8">
+                    <div class="text-center"><p class="text-lg mb-2">Organizational Stability</p><div class="meter-bar"><div class="meter-fill fill-org" style="width:50%"></div></div></div>
+                    <div class="text-center"><p class="text-lg mb-2">Professional Credibility</p><div class="meter-bar"><div class="meter-fill fill-cred" style="width:50%"></div></div></div>
+                    <div class="text-center"><p class="text-lg mb-2">Cultural Continuity</p><div class="meter-bar"><div class="meter-fill fill-cult" style="width:50%"></div></div></div>
+                </div>
+                <div class="text-center mt-12">
+                    <button class="next-btn bg-red-700 hover:bg-red-800 px-10 py-5 rounded-2xl text-xl font-bold transition transform hover:scale-105">Continue to IPO Crossroads</button>
+                </div>
+            </section>
+
+            <section id="phase4" class="glass rounded-3xl p-10 md:p-12 hidden">
+                <h2 class="text-4xl font-bold mb-8 text-center">Phase 4: IPO Crossroads (2018–2020)</h2>
+                <p class="text-center text-xl mb-10 opacity-90">Role: Board-level Leader</p>
+                <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="era-img mx-auto mb-12">
+                <div class="space-y-12" id="phase4-decisions"></div>
+                <div class="mt-12 grid md:grid-cols-3 gap-8">
+                    <div class="text-center"><p class="text-lg mb-2">Investor Confidence</p><div class="meter-bar"><div class="meter-fill fill-conf" style="width:50%"></div></div></div>
+                    <div class="text-center"><p class="text-lg mb-2">Governance Score</p><div class="meter-bar"><div class="meter-fill fill-gov" style="width:50%"></div></div></div>
+                    <div class="text-center"><p class="text-lg mb-2">Control Retention</p><div class="meter-bar"><div class="meter-fill fill-ctrl" style="width:50%"></div></div></div>
+                </div>
+                <div class="text-center mt-12">
+                    <button class="next-btn bg-red-700 hover:bg-red-800 px-10 py-5 rounded-2xl text-xl font-bold transition transform hover:scale-105">Continue to Post-IPO Era</button>
+                </div>
+            </section>
+
+            <section id="phase5" class="glass rounded-3xl p-10 md:p-12 hidden text-center">
+                <h2 class="text-5xl font-bold mb-8 accent-red">Post-IPO Challenge</h2>
+                <p class="text-center text-xl mb-10 opacity-90">Role: Strategic Board Member</p>
+                <p id="challenge-text" class="text-3xl mb-10 leading-relaxed"></p>
+                <p class="text-2xl mb-8">Respond within <span id="timer" class="font-bold text-red-400">30</span> seconds</p>
+                <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto" id="challenge-options"></div>
+            </section>
+
+            <section id="phase6" class="glass rounded-3xl p-10 md:p-12 hidden">
+                <h2 class="text-5xl font-bold text-center mb-12">Legacy Outcome</h2>
+                <div id="results" class="space-y-12 text-lg"></div>
+                <div class="text-center mt-16">
+                    <button class="bg-red-700 hover:bg-red-800 px-12 py-6 rounded-2xl text-2xl font-bold transition transform hover:scale-105" onclick="location.reload()">Play Again</button>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        const state = {
+            decisions: {},
+            meters: {
+                rep: 50, cash: 50, stress: 50,
+                trust: 50, stab: 50, growth: 50,
+                org: 50, cred: 50, cult: 50,
+                conf: 50, gov: 50, ctrl: 50,
+                legacy: 50, mat: 50, lead: 50
+            },
+            orgStructure: [],
+            challengeResponse: 'Timed out'
+        };
+
+        const phases = [
+            {id: 'phase1', decisions: [
+                {q: "Quality vs Cost", opts: ["Prioritize premium ingredients", "Optimize for cost efficiency"], feedback: ["Built lifelong reputation for taste", "Kept cash flow healthy early on"]},
+                {q: "Scale Approach", opts: ["Scale slowly with control", "Take every bulk order"], feedback: ["Avoided quality slips", "Generated early revenue"]},
+                {q: "Initial Product Focus", opts: ["Ice creams (high margin)", "Breads & cakes (steady demand)"], feedback: ["Ice cream became iconic", "Built stable foundation"]}
+            ]},
+            {id: 'phase2', decisions: [
+                {q: "Global Standards", opts: ["Accept strict standards", "Stay local & flexible"], feedback: ["Unlocked institutional credibility", "Preserved short-term margins"]},
+                {q: "Production Investment", opts: ["Invest in automation", "Scale manually"], feedback: ["Enabled consistent quality", "Preserved cash"]},
+                {q: "Client Strategy", opts: ["Exclusive McDonald’s focus", "Diversify clients"], feedback: ["Deep partnership built trust", "Reduced dependency risk"]}
+            ]},
+            {id: 'phase4', decisions: [
+                {q: "Independent Directors", opts: ["Appoint early", "Delay for control"], feedback: ["Strengthened governance", "Retained family influence"]},
+                {q: "Promoter Holding", opts: ["Reduce significantly", "Retain high stake"], feedback: ["Signaled confidence to market", "Maintained strategic control"]},
+                {q: "Governance Investment", opts: ["High compliance spend", "Minimize costs"], feedback: ["Built investor trust", "Protected margins"]}
+            ]}
+        ];
+
+        function createCard(title, containerId, type = 'radio') {
+            const card = document.createElement('div');
+            card.className = 'glass rounded-2xl p-8 cursor-pointer transition transform hover:scale-105 hover:shadow-2xl text-center';
+            card.innerHTML = `<p class="text-xl md:text-2xl font-bold">${title}</p>`;
+            card.onclick = () => {
+                if (type === 'radio') {
+                    document.querySelectorAll(`#${containerId} > div`).forEach(c => c.classList.remove('ring-8', 'ring-red-600'));
+                    card.classList.add('ring-8', 'ring-red-600');
+                    state.decisions[containerId] = title;
+                    checkPhaseComplete();
+                }
+            };
+            return card;
+        }
+
+        function initPhase1() {
+            const container = document.getElementById('phase1-decisions');
+            phases[0].decisions.forEach((d, i) => {
+                const div = document.createElement('div');
+                div.innerHTML = `<h3 class="text-2xl font-semibold mb-6">${i+1}. ${d.q}</h3>`;
+                const opts = document.createElement('div');
+                opts.className = 'grid md:grid-cols-2 gap-6';
+                opts.id = `p1-${i}`;
+                d.opts.forEach(opt => opts.appendChild(createCard(opt, `p1-${i}`)));
+                div.appendChild(opts);
+                const fb = document.createElement('p');
+                fb.className = 'mt-4 text-lg opacity-70 hidden';
+                fb.id = `fb-p1-${i}`;
+                div.appendChild(fb);
+                container.appendChild(div);
+            });
+            gsap.from('#phase1 > *', { opacity: 0, y: 60, stagger: 0.3, duration: 1.2, ease: "power3.out" });
+        }
+
+        function updateMeters(phase) {
+            let base = 50;
+            if (phase === 1) {
+                if (state.decisions['p1-0'] === "Prioritize premium ingredients") state.meters.rep += 30;
+                if (state.decisions['p1-0'] === "Optimize for cost efficiency") state.meters.cash += 25;
+                if (state.decisions['p1-1'] === "Scale slowly with control") { state.meters.rep += 20; state.meters.stress -= 15; }
+                if (state.decisions['p1-2'] === "Ice creams (high margin)") state.meters.cash += 30;
+            } else if (phase === 2) {
+                if (state.decisions['p2-0'] === "Accept strict standards") { state.meters.trust += 40; state.meters.stab += 30; }
+                if (state.decisions['p2-1'] === "Invest in automation") state.meters.stab += 35;
+                if (state.decisions['p2-0'] === "Accept strict standards") state.meters.growth -= 10;
+            } else if (phase === 3) {
+                if (state.orgStructure.length >= 3) state.meters.cred += 30;
+                if (state.orgStructure.includes('Family CEO')) state.meters.cult += 25;
+                if (state.decisions['governance'] === "Strong board oversight") { state.meters.org += 30; state.meters.cred += 20; }
+            } else if (phase === 4) {
+                if (state.decisions['p4-0'] === "Appoint early") state.meters.gov += 40;
+                if (state.decisions['p4-1'] === "Retain high stake") state.meters.ctrl += 35;
+                if (state.decisions['p4-2'] === "High compliance spend") state.meters.conf += 30;
+            }
+            Object.keys(state.meters).forEach(k => {
+                gsap.to(`.fill-${k}`, { width: Math.min(100, Math.max(0, state.meters[k])) + '%', duration: 1 });
+            });
+        }
+
+        function checkPhaseComplete() {
+            const current = document.querySelector('#phases > section:not(.hidden)');
+            const required = current.id === 'phase1' ? 3 : current.id === 'phase2' ? 3 : current.id === 'phase4' ? 3 : 0;
+            const made = Object.keys(state.decisions).filter(k => k.startsWith(current.id === 'phase1' ? 'p1' : current.id === 'phase2' ? 'p2' : 'p4')).length;
+            if (current.id === 'phase1' && made === required) {
+                document.getElementById('phase1-next').disabled = false;
+                document.getElementById('phase1-next').classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        }
+
+        function transitionTo(nextSection) {
+            const sections = document.querySelectorAll('#phases > section');
+            const currentIndex = Array.from(sections).findIndex(s => !s.classList.contains('hidden'));
+            const progress = ((currentIndex + 1) / (sections.length - 1)) * 100;
+            gsap.to('#progress > div', { width: progress + '%', duration: 1 });
+            const current = sections[currentIndex];
+            gsap.to(current, { opacity: 0, y: -80, duration: 0.8, onComplete: () => current.classList.add('hidden') });
+            nextSection.classList.remove('hidden');
+            gsap.fromTo(nextSection, { opacity: 0, y: 80 }, { opacity: 1, y: 0, duration: 1.2 });
+            gsap.from(nextSection.children, { opacity: 0, y: 50, stagger: 0.2, duration: 1, delay: 0.5 });
+        }
+
+        document.querySelectorAll('.next-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const current = btn.closest('section');
+                const next = current.nextElementSibling;
+                if (next && !next.classList.contains('hidden')) return;
+                if (current.id === 'phase1') updateMeters(1);
+                if (current.id === 'phase2') updateMeters(2);
+                if (current.id === 'phase3') updateMeters(3);
+                if (current.id === 'phase4') updateMeters(4);
+                transitionTo(next || document.getElementById(current.id === 'phase4' ? 'phase5' : 'phase2'));
+            });
+        });
+
+        document.getElementById('phase1-next').addEventListener('click', () => {
+            updateMeters(1);
+            const container = document.getElementById('phase2-decisions');
+            phases[1].decisions.forEach((d, i) => {
+                const div = document.createElement('div');
+                div.innerHTML = `<h3 class="text-2xl font-semibold mb-6">${d.q}</h3>`;
+                const opts = document.createElement('div');
+                opts.className = 'grid md:grid-cols-2 gap-6';
+                opts.id = `p2-${i}`;
+                d.opts.forEach(opt => opts.appendChild(createCard(opt, `p2-${i}`)));
+                div.appendChild(opts);
+                container.appendChild(div);
+            });
+            transitionTo(document.getElementById('phase2'));
+        });
+
+        function initPhase3() {
+            const roles = ['Professional CEO', 'Family CEO', 'Professional CFO', 'Independent Director'];
+            const source = document.getElementById('roles-source');
+            roles.forEach(r => {
+                const item = document.createElement('div');
+                item.className = 'drag-item glass p-6 rounded-xl text-center';
+                item.textContent = r;
+                item.draggable = true;
+                item.addEventListener('dragstart', e => e.dataTransfer.setData('text', r));
+                source.appendChild(item);
+            });
+            const drop = document.getElementById('org-drop');
+            drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('active'); });
+            drop.addEventListener('dragleave', () => drop.classList.remove('active'));
+            drop.addEventListener('drop', e => {
+                e.preventDefault();
+                drop.classList.remove('active');
+                const role = e.dataTransfer.getData('text');
+                if (!state.orgStructure.includes(role)) {
+                    state.orgStructure.push(role);
+                    const el = document.createElement('div');
+                    el.className = 'glass p-4 rounded-xl mt-4 text-center';
+                    el.textContent = role;
+                    drop.appendChild(el);
+                    updateMeters(3);
+                }
+            });
+            const govOpts = ['Light family oversight', 'Balanced approach', 'Strong board oversight'];
+            const govContainer = document.getElementById('governance');
+            govOpts.forEach(opt => govContainer.appendChild(createCard(opt, 'governance')));
+        }
+
+        function initPhase4() {
+            const container = document.getElementById('phase4-decisions');
+            phases[2].decisions.forEach((d, i) => {
+                const div = document.createElement('div');
+                div.innerHTML = `<h3 class="text-2xl font-semibold mb-6">${d.q}</h3>`;
+                const opts = document.createElement('div');
+                opts.className = 'grid md:grid-cols-2 gap-6';
+                opts.id = `p4-${i}`;
+                d.opts.forEach(opt => opts.appendChild(createCard(opt, `p4-${i}`)));
+                div.appendChild(opts);
+                container.appendChild(div);
+            });
+        }
+
+        function launchChallenge() {
+            const challenges = [
+                {text: "Analysts demand aggressive margin expansion", opts: ["Cut quality spend", "Optimize efficiently", "Invest in brand"]},
+                {text: "Commodity prices spike 40%", opts: ["Pass on to consumers", "Absorb temporarily", "Reformulate products"]},
+                {text: "Quarterly results miss estimates", opts: ["Aggressive promotion", "Conservative guidance", "Focus on long-term"]}
+            ];
+            const challenge = challenges[Math.floor(Math.random() * challenges.length)];
+            document.getElementById('challenge-text').textContent = challenge.text;
+            const container = document.getElementById('challenge-options');
+            challenge.opts.forEach(opt => {
+                const card = createCard(opt, 'challenge', 'radio');
+                card.onclick = () => {
+                    state.challengeResponse = opt;
+                    showResults();
+                };
+                container.appendChild(card);
+            });
+            let time = 30;
+            const timer = document.getElementById('timer');
+            const interval = setInterval(() => {
+                time--;
+                timer.textContent = time;
+                if (time <= 0) {
+                    clearInterval(interval);
+                    showResults();
+                }
+            }, 1000);
+        }
+
+        function calculateLegacy() {
+            let integrity = 50, strength = 50, sustain = 50, preserve = 50;
+            if (state.decisions['p1-0'] === "Prioritize premium ingredients") integrity += 25;
+            if (state.decisions['p2-0'] === "Accept strict standards") integrity += 30;
+            if (state.orgStructure.includes('Professional CEO')) strength += 30;
+            if (state.decisions['p4-0'] === "Appoint early") strength += 35;
+            if (state.challengeResponse.includes('long-term') || state.challengeResponse.includes('brand')) sustain += 40;
+            if (state.orgStructure.includes('Family CEO')) preserve += 30;
+            const total = (integrity + strength + sustain + preserve) / 4;
+            const grade = total >= 85 ? 'Founder-Class' : total >= 70 ? 'Steward-Class' : 'Short-Termist';
+            return {integrity: Math.round(integrity), strength: Math.round(strength), sustain: Math.round(sustain), preserve: Math.round(preserve), grade, total: Math.round(total)};
+        }
+
+        function showResults() {
+            const scores = calculateLegacy();
+            const results = document.getElementById('results');
+            results.innerHTML = `
+                <div class="text-center mb-16">
+                    <p class="text-8xl font-extrabold accent-red">${scores.grade}</p>
+                    <p class="text-4xl mt-4">Leadership Legacy Grade</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-10 text-lg">
+                    <div class="glass p-10 rounded-2xl">
+                        <h3 class="text-3xl font-bold mb-4">Leadership Integrity: ${scores.integrity}%</h3>
+                        <p>Commitment to quality and values over short-term gains – the foundation Mrs. Bector built.</p>
+                    </div>
+                    <div class="glass p-10 rounded-2xl">
+                        <h3 class="text-3xl font-bold mb-4">Governance Strength: ${scores.strength}%</h3>
+                        <p>Professionalization and independent oversight – key to Cremica's successful IPO.</p>
+                    </div>
+                    <div class="glass p-10 rounded-2xl">
+                        <h3 class="text-3xl font-bold mb-4">Growth Sustainability: ${scores.sustain}%</h3>
+                        <p>Balancing quarterly pressure with long-term brand health – ongoing challenge post-IPO.</p>
+                    </div>
+                    <div class="glass p-10 rounded-2xl">
+                        <h3 class="text-3xl font-bold mb-4">Cultural Preservation: ${scores.preserve}%</h3>
+                        <p>Retaining family values while scaling globally – Cremica's unique strength.</p>
+                    </div>
+                </div>
+                <div class="glass p-8 rounded-2xl mt-12 text-center">
+                    <p class="text-xl">Response to final challenge: <span class="font-bold">${state.challengeResponse}</span></p>
+                </div>
+            `;
+            transitionTo(document.getElementById('phase6'));
+            gsap.to('#progress > div', { width: '100%', duration: 1 });
+        }
+
+        document.getElementById('fullscreen-btn').onclick = () => document.documentElement.requestFullscreen?.();
+        document.getElementById('audio-btn').onclick = (e) => e.target.textContent = e.target.textContent === 'Audio Off' ? 'Audio On' : 'Audio Off';
+
+        initPhase1();
+        initPhase3();
+        initPhase4();
+        document.querySelector('#phase4 .next-btn').addEventListener('click', launchChallenge);
+
+        gsap.from('#game > h1', { opacity: 0, y: -50, duration: 1.5 });
+        gsap.from('#phase1', { opacity: 0, scale: 0.95, duration: 1.5, delay: 0.5 });
+    </script>
+</body>
+</html>
