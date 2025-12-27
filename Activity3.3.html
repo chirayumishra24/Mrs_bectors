@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Position the Brand: Cremica vs The Market</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/Draggable.min.js"></script>
+<style type="text/css">
+  body { font-family: 'Poppins', sans-serif; }
+  h1, h2, h3 { font-family: 'Playfair Display', serif; }
+  p { font-size: 16px; line-height: 1.7; }
+  .grain-overlay {
+    background: url('https://img.freepik.com/free-photo/white-plain-concrete-textured-background_53876-102604.jpg?semt=ais_hybrid&w=740&q=80') repeat;
+    opacity: 0.03;
+    pointer-events: none;
+  }
+  .premium-card {
+    border: 2px solid #cc0000;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  }
+  .axis-label {
+    font-weight: 600;
+    color: #1e3a8a;
+  }
+  .grid-line {
+    stroke: #e2e8f0;
+    stroke-dasharray: 4;
+  }
+  .brand-marker {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: white;
+    font-size: 1rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    cursor: move;
+  }
+  .cremica-marker {
+    background: #cc0000;
+  }
+  .competitor {
+    background: #64748b;
+  }
+  .audience-card, .tier-card {
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .audience-card.selected, .tier-card.selected {
+    border-color: #cc0000;
+    box-shadow: 0 0 25px rgba(204, 0, 0, 0.3);
+    transform: scale(1.05);
+  }
+  .tier-card.primary {
+    background: #cc0000;
+    color: white;
+  }
+  .tier-card.secondary {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+</style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 via-white to-red-50 min-h-screen py-16">
+
+<div class="fixed inset-0 grain-overlay -z-10"></div>
+
+<button class="fixed top-6 right-6 z-50 bg-gradient-to-br from-red-600 to-blue-700 hover:from-red-500 hover:to-blue-600 text-white p-4 rounded-full shadow-2xl backdrop-blur-sm transition-all duration-300 hover:scale-110 text-xl font-bold" id="fullscreenBtn">⛶</button>
+
+<div class="max-w-6xl mx-auto px-6">
+  <div class="premium-card bg-white/95 backdrop-blur-md rounded-3xl p-10 shadow-2xl">
+
+    <!-- Intro -->
+    <div id="introSection">
+      <div class="text-center mb-12">
+        <h1 class="text-4xl font-black text-blue-900 mb-6">Position the Brand: Cremica vs The Market</h1>
+        <p class="text-xl text-blue-800 mb-8">Chapter 3.3 – Brand Positioning and Target Audience</p>
+        <div class="bg-blue-50 rounded-3xl p-10">
+          <p class="text-lg leading-relaxed text-blue-900 max-w-4xl mx-auto">
+            Strong brand positioning is about perception relative to competitors.<br><br>
+            It defines where you choose to compete — and where you choose not to.<br><br>
+            Drag Cremica to where you believe it belongs on the market map, then define its target audience and product tier focus.
+          </p>
+        </div>
+      </div>
+
+      <div class="text-center mt-12">
+        <button id="startBtn" class="px-14 py-6 bg-gradient-to-r from-blue-600 to-red-600 text-white text-xl font-bold rounded-2xl shadow-2xl hover:from-blue-700 hover:to-red-700 transition-all">
+          Begin Positioning Exercise
+        </button>
+      </div>
+    </div>
+
+    <!-- Positioning Map -->
+    <div id="mapSection" class="hidden">
+      <h2 class="text-3xl font-bold text-blue-900 mb-10 text-center">Step 1: Position Cremica on the Market Map</h2>
+
+      <div class="relative bg-white rounded-3xl p-10 shadow-xl mb-12">
+        <svg viewBox="0 0 600 600" class="w-full">
+          <!-- Grid lines -->
+          <line x1="100" y1="100" x2="500" y2="100" class="grid-line"/>
+          <line x1="100" y1="300" x2="500" y2="300" class="grid-line"/>
+          <line x1="100" y1="500" x2="500" y2="500" class="grid-line"/>
+          <line x1="100" y1="100" x2="100" y2="500" class="grid-line"/>
+          <line x1="300" y1="100" x2="300" y2="500" class="grid-line"/>
+          <line x1="500" y1="100" x2="500" y2="500" class="grid-line"/>
+
+          <!-- Axis labels -->
+          <text x="300" y="80" class="axis-label text-center" text-anchor="middle">Functional ← → Indulgent / Lifestyle</text>
+          <text x="580" y="300" class="axis-label" text-anchor="end">Premium</text>
+          <text x="20" y="300" class="axis-label" text-anchor="start">Affordable</text>
+
+          <!-- Competitors (fixed) -->
+          <g transform="translate(150,450)">
+            <circle cx="0" cy="0" r="40" fill="#64748b"/>
+            <text x="0" y="5" text-anchor="middle" fill="white" font-weight="bold">Parle</text>
+          </g>
+          <g transform="translate(450,450)">
+            <circle cx="0" cy="0" r="40" fill="#64748b"/>
+            <text x="0" y="5" text-anchor="middle" fill="white" font-weight="bold">Britannia</text>
+          </g>
+          <g transform="translate(450,150)">
+            <circle cx="0" cy="0" r="40" fill="#64748b"/>
+            <text x="0" y="5" text-anchor="middle" fill="white" font-weight="bold">Heinz</text>
+          </g>
+
+          <!-- Cremica (draggable) -->
+          <g id="cremicaMarker" transform="translate(300,300)">
+            <circle cx="0" cy="0" r="40" class="cremica-marker"/>
+            <text x="0" y="5" text-anchor="middle" fill="white" font-weight="bold">Cremica</text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="text-center">
+        <button id="nextToAudienceBtn" class="px-14 py-6 bg-gradient-to-r from-blue-600 to-red-600 text-white text-xl font-bold rounded-2xl shadow-2xl hover:from-blue-700 hover:to-red-700 transition-all">
+          Next: Target Audience
+        </button>
+      </div>
+    </div>
+
+    <!-- Audience Selection -->
+    <div id="audienceSection" class="hidden">
+      <h2 class="text-3xl font-bold text-blue-900 mb-10 text-center">Step 2: Select Primary Target Audiences (Choose 2)</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+        <div class="audience-card bg-white rounded-2xl p-8 shadow-xl border-4 border-transparent text-center" data-aud="budget">
+          <h4 class="text-2xl font-bold text-blue-900 mb-4">Budget-conscious families</h4>
+          <p class="text-blue-800">Value-driven, large packs, everyday consumption</p>
+        </div>
+        <div class="audience-card bg-white rounded-2xl p-8 shadow-xl border-4 border-transparent text-center" data-aud="urban">
+          <h4 class="text-2xl font-bold text-blue-900 mb-4">Urban millennials & young couples</h4>
+          <p class="text-blue-800">Modern taste, premium feel, gifting occasions</p>
+        </div>
+        <div class="audience-card bg-white rounded-2xl p-8 shadow-xl border-4 border-transparent text-center" data-aud="health">
+          <h4 class="text-2xl font-bold text-blue-900 mb-4">Health-conscious professionals</h4>
+          <p class="text-blue-800">Low sugar, high fiber, better-for-you snacking</p>
+        </div>
+        <div class="audience-card bg-white rounded-2xl p-8 shadow-xl border-4 border-transparent text-center" data-aud="kids">
+          <h4 class="text-2xl font-bold text-blue-900 mb-4">Kids-centric households</h4>
+          <p class="text-blue-800">Fun formats, cream-filled, lunchbox appeal</p>
+        </div>
+      </div>
+
+      <div class="text-center">
+        <button id="nextToTierBtn" class="px-14 py-6 bg-gradient-to-r from-blue-600 to-red-600 text-white text-xl font-bold rounded-2xl shadow-2xl hover:from-blue-700 hover:to-red-700 transition-all">
+          Next: Product Tier Focus
+        </button>
+      </div>
+    </div>
+
+    <!-- Tier Alignment -->
+    <div id="tierSection" class="hidden">
+      <h2 class="text-3xl font-bold text-blue-900 mb-10 text-center">Step 3: Define Product Tier Focus</h2>
+      <p class="text-center text-lg text-blue-800 mb-12">Click to assign: 1 Primary tier (main focus) + 1 Secondary tier (extension)</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        <div class="tier-card bg-white rounded-2xl p-8 shadow-xl border-4 border-transparent text-center" data-tier="mass">
+          <h4 class="text-2xl font-bold text-blue-900 mb-4">Mass / Economy</h4>
+          <p class="text-blue-800">High volume, lowest price point</p>
+        </div>
+        <div class="tier-card bg-white rounded-2xl p-8 shadow-xl border-4 border-transparent text-center" data-tier="mid">
+          <h4 class="text-2xl font-bold text-blue-900 mb-4">Mid-Premium</h4>
+          <p class="text-blue-800">Better quality, moderate premium</p>
+        </div>
+        <div class="tier-card bg-white rounded-2xl p-8 shadow-xl border-4 border-transparent text-center" data-tier="premium">
+          <h4 class="text-2xl font-bold text-blue-900 mb-4">Premium / Health</h4>
+          <p class="text-blue-800">Highest quality, health-focused extensions</p>
+        </div>
+      </div>
+
+      <div class="text-center">
+        <button id="evaluateBtn" class="px-14 py-6 bg-gradient-to-r from-blue-600 to-red-600 text-white text-xl font-bold rounded-2xl shadow-2xl hover:from-blue-700 hover:to-red-700 transition-all">
+          Evaluate Positioning Strategy
+        </button>
+      </div>
+    </div>
+
+    <!-- Feedback & Reality -->
+    <div id="feedbackSection" class="hidden">
+      <h2 class="text-3xl font-bold text-blue-900 mb-10 text-center">Your Positioning Strategy Assessment</h2>
+
+      <div class="bg-white rounded-3xl p-10 shadow-xl mb-12">
+        <h3 class="text-2xl font-bold text-blue-900 mb-6">Strategic Strengths</h3>
+        <div class="space-y-4 text-lg" id="strengthsText"></div>
+      </div>
+
+      <div class="bg-white rounded-3xl p-10 shadow-xl mb-12">
+        <h3 class="text-2xl font-bold text-blue-900 mb-6">Possible Risks & Considerations</h3>
+        <div class="space-y-4 text-lg" id="risksText"></div>
+      </div>
+
+      <div class="bg-blue-50 rounded-3xl p-10 mb-12">
+        <h3 class="text-2xl font-bold text-blue-900 mb-6">Cremica’s Actual Positioning</h3>
+        <p class="text-lg leading-relaxed">
+          Cremica positions itself as <strong>“Affordable Luxury”</strong> — firmly in the <strong>Mid-Premium</strong> space with selective <strong>Premium / Health extensions</strong>.<br><br>
+          This sweet spot avoids direct price wars with mass brands (Parle, Britannia economy lines) while offering superior taste and quality perception versus pure economy players.<br><br>
+          Primary audience: Urban millennials & young couples + Budget-conscious families seeking occasional indulgence.<br><br>
+          This positioning builds loyalty through perceived value and emotional connection rather than lowest price.
+        </p>
+      </div>
+
+      <div class="bg-gradient-to-br from-blue-100 to-red-100 rounded-3xl p-10 text-center">
+        <p class="text-xl italic text-blue-900">Strong brands don’t try to be everything — they choose where to win.</p>
+      </div>
+
+      <div class="text-center mt-12">
+        <button id="restartBtn" class="px-14 py-6 bg-gray-600 text-white text-xl font-bold rounded-2xl shadow-2xl hover:bg-gray-700 transition-all">
+          Reposition Again
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  let cremicaX = 300;
+  let cremicaY = 300;
+  let selectedAudiences = [];
+  let primaryTier = '';
+  let secondaryTier = '';
+
+  document.getElementById('startBtn').addEventListener('click', () => {
+    gsap.to('#introSection', { opacity: 0, y: -50, duration: 0.8, onComplete: () => {
+      document.getElementById('introSection').classList.add('hidden');
+      document.getElementById('mapSection').classList.remove('hidden');
+      initDraggable();
+      gsap.from('#mapSection', { opacity: 0, y: 50, duration: 1 });
+    }});
+  });
+
+  function initDraggable() {
+    Draggable.create("#cremicaMarker", {
+      bounds: { minX: 100, maxX: 500, minY: 100, maxY: 500 },
+      onDragEnd: function() {
+        cremicaX = this.x + this.target.parentNode.getAttribute('transform').match(/translate\(([\d.]+)/)[1];
+        cremicaY = this.y + this.target.parentNode.getAttribute('transform').match(/translate\([\d.]+,([\d.]+)/)[1];
+      }
+    });
+  }
+
+  document.getElementById('nextToAudienceBtn').addEventListener('click', () => {
+    gsap.to('#mapSection', { opacity: 0, y: -50, duration: 0.8, onComplete: () => {
+      document.getElementById('mapSection').classList.add('hidden');
+      document.getElementById('audienceSection').classList.remove('hidden');
+      gsap.from('#audienceSection', { opacity: 0, y: 50, duration: 1 });
+    }});
+  });
+
+  document.querySelectorAll('.audience-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const aud = card.dataset.aud;
+      if (selectedAudiences.includes(aud)) {
+        selectedAudiences = selectedAudiences.filter(a => a !== aud);
+        card.classList.remove('selected');
+      } else if (selectedAudiences.length < 2) {
+        selectedAudiences.push(aud);
+        card.classList.add('selected');
+      }
+    });
+  });
+
+  document.getElementById('nextToTierBtn').addEventListener('click', () => {
+    if (selectedAudiences.length !== 2) {
+      alert('Please select exactly 2 target audiences.');
+      return;
+    }
+    gsap.to('#audienceSection', { opacity: 0, y: -50, duration: 0.8, onComplete: () => {
+      document.getElementById('audienceSection').classList.add('hidden');
+      document.getElementById('tierSection').classList.remove('hidden');
+      gsap.from('#tierSection', { opacity: 0, y: 50, duration: 1 });
+    }});
+  });
+
+  document.querySelectorAll('.tier-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const tier = card.dataset.tier;
+      if (primaryTier === tier) {
+        primaryTier = '';
+        card.classList.remove('primary');
+      } else if (secondaryTier === tier) {
+        secondaryTier = '';
+        card.classList.remove('secondary');
+      } else if (!primaryTier) {
+        primaryTier = tier;
+        card.classList.add('primary');
+      } else if (!secondaryTier) {
+        secondaryTier = tier;
+        card.classList.add('secondary');
+      }
+    });
+  });
+
+  document.getElementById('evaluateBtn').addEventListener('click', () => {
+    if (!primaryTier || !secondaryTier) {
+      alert('Please assign both a primary and secondary product tier.');
+      return;
+    }
+
+    // Simple analysis
+    let strengths = [];
+    let risks = [];
+
+    // Map position (rough quadrants)
+    const isPremium = cremicaY < 300;
+    const isIndulgent = cremicaX > 300;
+
+    if (isPremium && isIndulgent) strengths.push('Well-placed in premium-indulgent space — strong differentiation from mass competitors.');
+    if (primaryTier === 'mid' && secondaryTier === 'premium') strengths.push('Mid-premium core with health extensions — matches Cremica’s "affordable luxury" positioning.');
+
+    if (selectedAudiences.includes('urban') && selectedAudiences.includes('budget')) strengths.push('Balanced audience focus — appeals to both value-seekers and aspirational buyers.');
+
+    if (cremicaX < 200) risks.push('Too far into functional-affordable — risks commoditization and price competition.');
+    if (primaryTier === 'mass') risks.push('Mass tier focus may erode premium perception and margins.');
+
+    if (strengths.length === 0) strengths.push('Solid attempt with room to lean into mid-premium indulgence.');
+
+    document.getElementById('strengthsText').innerHTML = strengths.map(s => `<p>${s}</p>`).join('');
+    document.getElementById('risksText').innerHTML = risks.length ? risks.map(r => `<p>${r}</p>`).join('') : '<p>No major risks identified — balanced approach.</p>';
+
+    gsap.to('#tierSection', { opacity: 0, y: -50, duration: 0.8, onComplete: () => {
+      document.getElementById('tierSection').classList.add('hidden');
+      document.getElementById('feedbackSection').classList.remove('hidden');
+      gsap.from('#feedbackSection', { opacity: 0, y: 50, duration: 1 });
+    }});
+  });
+
+  document.getElementById('restartBtn').addEventListener('click', () => location.reload());
+
+  document.getElementById('fullscreenBtn').addEventListener('click', () => {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+    else document.exitFullscreen();
+  });
+</script>
+</body>
+</html>
