@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Cremica Packaging Crisis Room – Decision Mapping Experience</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<style type="text/css">
+  body { font-family: 'Poppins', sans-serif; }
+  h1, h2, h3, h4 { font-family: 'Playfair Display', serif; }
+  p { font-size: 15px !important; line-height: 1.6; }
+  .text-lg { font-size: 15px !important; }
+  .text-xl { font-size: 16px !important; }
+  .text-2xl { font-size: 18px !important; }
+  .text-3xl { font-size: 20px !important; }
+  .text-4xl { font-size: 22px !important; }
+  .text-5xl { font-size: 26px !important; }
+  .grain-overlay {
+    background: url('https://img.freepik.com/free-photo/white-plain-concrete-textured-background_53876-102604.jpg?semt=ais_hybrid&w=740&q=80') repeat;
+    opacity: 0.03;
+    pointer-events: none;
+  }
+  .premium-card {
+    border: 2px solid #cc0000;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15), 0 0 25px rgba(255, 215, 0, 0.3);
+    transition: all 0.4s ease;
+  }
+  .decision-btn {
+    cursor: pointer;
+    transition: all 0.4s ease;
+  }
+  .decision-btn.selected {
+    background: #cc0000;
+    color: white;
+    box-shadow: 0 0 30px rgba(204, 0, 0, 0.5);
+    transform: scale(1.05);
+  }
+  .meter {
+    height: 18px;
+    background: #e0e0e0;
+    border-radius: 9px;
+    overflow: hidden;
+  }
+  .meter-fill {
+    height: 100%;
+    transition: width 1.5s ease;
+  }
+  .low { background: #4ade80; }
+  .medium { background: #fbbf24; }
+  .high { background: #ef4444; }
+</style>
+</head>
+<body class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white min-h-screen py-12">
+
+<div class="fixed inset-0 grain-overlay -z-10 opacity-20"></div>
+
+<button class="fixed top-6 right-6 z-50 bg-gradient-to-br from-red-600 to-red-800 hover:from-red-500 hover:to-red-700 text-white p-4 rounded-full shadow-2xl backdrop-blur-sm transition-all duration-300 hover:scale-110 text-xl font-bold" id="fullscreenBtn">⛶</button>
+
+<div class="max-w-6xl mx-auto px-6">
+  <div class="premium-card bg-gray-800/95 backdrop-blur-md rounded-3xl p-10 shadow-2xl border-red-900/50">
+
+    <!-- Crisis Room Intro -->
+    <div id="introSection">
+      <div class="text-center mb-12">
+        <h1 class="text-4xl font-black text-red-500 mb-4">Cremica Packaging Crisis Room</h1>
+        <p class="text-xl text-gray-300 mb-6">Decision Mapping Experience</p>
+        <p class="text-gray-400 max-w-4xl mx-auto mb-10">Chapter 2.4: Packaging and Labeling Compliance</p>
+        <div class="bg-red-900/30 rounded-3xl p-8 border border-red-700">
+          <h2 class="text-2xl font-bold mb-4">You are part of Cremica’s Senior Management Crisis Response Team</h2>
+          <p class="leading-relaxed">A serious packaging/labeling non-compliance has been detected. The issue is now public and escalating.</p>
+          <p class="leading-relaxed mt-3">Your decisions in the next critical hours will determine legal exposure, financial impact, brand trust, and business continuity.</p>
+          <p class="font-semibold text-red-400 mt-4">There are no perfect choices — only trade-offs.</p>
+        </div>
+      </div>
+
+      <div class="text-center">
+        <button id="startCrisisBtn" class="px-14 py-6 bg-gradient-to-r from-red-700 to-red-900 text-white text-2xl font-bold rounded-2xl shadow-2xl hover:from-red-600 hover:to-red-800 transition-all duration-300 hover:scale-105">
+          Enter Crisis Room – Begin Scenario
+        </button>
+      </div>
+    </div>
+
+    <!-- Crisis Scenario -->
+    <div id="crisisSection" class="hidden">
+      <div class="mb-10">
+        <h2 class="text-3xl font-black text-red-500 mb-6 text-center" id="crisisTitle">Crisis Trigger</h2>
+        <div class="bg-red-900/40 rounded-3xl p-8 border-2 border-red-700">
+          <p class="leading-relaxed" id="crisisDescription"></p>
+          <p class="text-red-300 mt-4 font-semibold">The issue is now public. FSSAI has been notified. Media inquiries are incoming.</p>
+        </div>
+      </div>
+
+      <!-- Decision Stages -->
+      <div id="decisionStages" class="space-y-12"></div>
+
+      <!-- Risk Meters -->
+      <div class="bg-gray-900 rounded-3xl p-8 mt-12">
+        <h3 class="text-xl font-bold mb-6 text-center">Current Risk Exposure</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="text-center">
+            <p class="font-semibold mb-3">Legal Risk</p>
+            <div class="meter"><div class="meter-fill low w-1/3" id="legalMeter"></div></div>
+            <p class="mt-2" id="legalText">Low</p>
+          </div>
+          <div class="text-center">
+            <p class="font-semibold mb-3">Financial Impact</p>
+            <div class="meter"><div class="meter-fill low w-1/3" id="financialMeter"></div></div>
+            <p class="mt-2" id="financialText">₹0–5 lakh</p>
+          </div>
+          <div class="text-center">
+            <p class="font-semibold mb-3">Brand Trust Impact</p>
+            <div class="meter"><div class="meter-fill low w-1/3" id="brandMeter"></div></div>
+            <p class="mt-2" id="brandText">Minimal</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center mt-12">
+        <button id="revealOutcomeBtn" class="hidden px-14 py-6 bg-gradient-to-r from-red-700 to-red-900 text-white text-2xl font-bold rounded-2xl shadow-2xl hover:from-red-600 hover:to-red-800 transition-all">
+          Reveal Final Outcome
+        </button>
+      </div>
+    </div>
+
+    <!-- Outcome & Reflection -->
+    <div id="outcomeSection" class="hidden">
+      <h2 class="text-4xl font-black text-red-500 mb-10 text-center">Crisis Outcome</h2>
+
+      <div class="bg-gray-900 rounded-3xl p-10 mb-10">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+          <div class="bg-red-900/50 rounded-2xl p-6 text-center border border-red-700">
+            <p class="font-bold mb-3">Crisis Handling Score</p>
+            <p class="text-4xl font-black" id="finalScore"></p>
+          </div>
+          <div class="bg-amber-900/50 rounded-2xl p-6 text-center border border-amber-700">
+            <p class="font-bold mb-3">Total Estimated Cost</p>
+            <p class="text-3xl font-black" id="totalCost"></p>
+          </div>
+          <div class="bg-gray-800 rounded-2xl p-6 text-center border border-gray-600">
+            <p class="font-bold mb-3">Brand Recovery Timeline</p>
+            <p class="text-2xl font-black" id="recoveryTime"></p>
+          </div>
+        </div>
+
+        <div class="bg-red-900/30 rounded-3xl p-8 mb-10 border border-red-700">
+          <h3 class="text-xl font-bold mb-4">Risk Exposure Summary</h3>
+          <div class="space-y-4" id="summaryText"></div>
+        </div>
+
+        <div class="bg-amber-900/30 rounded-3xl p-8 mb-10 border border-amber-700">
+          <h3 class="text-xl font-bold mb-4">Key Compliance Takeaway</h3>
+          <p class="italic" id="takeawayText"></p>
+        </div>
+
+        <div class="bg-gray-800 rounded-3xl p-8 text-center">
+          <p class="text-xl italic text-gray-300">In FMCG, packaging mistakes are not errors — they are risks.</p>
+        </div>
+
+        <div class="text-center mt-10">
+          <button id="newCrisisBtn" class="px-14 py-6 bg-gradient-to-r from-gray-700 to-gray-900 text-white text-xl font-bold rounded-2xl shadow-2xl hover:from-gray-600 hover:to-gray-800 transition-all">
+            Handle New Crisis Scenario
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const scenarios = [
+    {
+      title: "Missing Allergen Declaration",
+      description: "A consumer with severe wheat allergy suffered a reaction after consuming Cremica Chocolate Cream Biscuits. Investigation revealed the label does not declare 'Contains Wheat Gluten' in bold as required. Social media backlash is growing rapidly.",
+      regulation: "FSSAI Food Safety and Standards (Labelling and Display) Regulations, 2020 – Allergen declaration mandatory in bold."
+    },
+    {
+      title: "Misleading Health Claim",
+      description: "Cremica Tomato Ketchup labels carry the claim “100% Natural – No Artificial Preservatives”. FSSAI inspection found Class II preservatives present. Multiple consumer complaints and viral posts accusing false advertising.",
+      regulation: "FSSAI Food Safety and Standards (Advertising and Claims) Regulations, 2018 – Claims must be truthful and scientifically substantiated."
+    },
+    {
+      title: "Incorrect FSSAI License Format",
+      description: "Export consignment of English Oven burger buns rejected at Middle East port. The FSSAI license number on label is in old format (missing 14-digit code and logo). Importer threatening contract termination.",
+      regulation: "FSSAI mandatory labeling requirements – Current 14-digit license number with logo required on all packs."
+    },
+    {
+      title: "Missing Storage Instruction",
+      description: "High moisture led to mold growth in several packs of Cremica Marie biscuits in semi-urban retail. Consumers posting images online. No storage instruction (“Store in cool & dry place”) present on pack.",
+      regulation: "FSSAI Labelling Regulations – Storage conditions must be declared to maintain product safety."
+    }
+  ];
+
+  let currentScenario = null;
+  let decisions = {};
+  let impacts = { legal: 20, financial: 0, brand: 10 };
+
+  const decisionStages = [
+    {
+      question: "Immediate Response (within 24 hours)",
+      options: [
+        { text: "Issue voluntary recall of affected batches", impact: { legal: -15, financial: 50, brand: -10 } },
+        { text: "Wait for official FSSAI notice before acting", impact: { legal: 30, financial: -20, brand: 25 } },
+        { text: "Quietly withdraw stock from trade without public statement", impact: { legal: 20, financial: -10, brand: 30 } },
+        { text: "Publicly apologize and commit to immediate correction", impact: { legal: -10, financial: 10, brand: -20 } }
+      ]
+    },
+    {
+      question: "Regulatory Handling",
+      options: [
+        { text: "Proactively report to FSSAI with corrective plan", impact: { legal: -20, financial: 5, brand: -5 } },
+        { text: "Engage legal team to challenge any notice", impact: { legal: 25, financial: 20, brand: 10 } },
+        { text: "Cooperate fully but minimize disclosure", impact: { legal: 10, financial: 0, brand: 15 } },
+        { text: "Submit root cause analysis and preventive measures", impact: { legal: -25, financial: 10, brand: -10 } }
+      ]
+    },
+    {
+      question: "Brand Communication",
+      options: [
+        { text: "Full transparency – press release admitting error", impact: { legal: -5, financial: 15, brand: -25 } },
+        { text: "Limited statement emphasizing isolated incident", impact: { legal: 10, financial: -5, brand: 10 } },
+        { text: "No public comment – let it fade", impact: { legal: 20, financial: -15, brand: 35 } },
+        { text: "Social media engagement acknowledging concern", impact: { legal: 0, financial: 5, brand: -15 } }
+      ]
+    },
+    {
+      question: "Supply Chain Correction",
+      options: [
+        { text: "Halt production until new artwork approved", impact: { legal: -15, financial: 30, brand: -5 } },
+        { text: "Sticker correction on existing stock", impact: { legal: 15, financial: -20, brand: 10 } },
+        { text: "Third-party audit of all labels", impact: { legal: -20, financial: 25, brand: -10 } },
+        { text: "Implement digital artwork approval system", impact: { legal: -10, financial: 20, brand: 0 } }
+      ]
+    }
+  ];
+
+  // Start crisis
+  document.getElementById('startCrisisBtn').addEventListener('click', () => {
+    currentScenario = scenarios[Math.floor(Math.random() * scenarios.length)];
+    document.getElementById('crisisTitle').textContent = currentScenario.title;
+    document.getElementById('crisisDescription').innerHTML = `<p>${currentScenario.description}</p><p class="mt-4 text-amber-300 font-semibold">Relevant Regulation: ${currentScenario.regulation}</p>`;
+
+    gsap.to('#introSection', { opacity: 0, y: -50, duration: 0.8, onComplete: () => {
+      document.getElementById('introSection').classList.add('hidden');
+      document.getElementById('crisisSection').classList.remove('hidden');
+      loadDecisionStages();
+      gsap.from('#crisisSection', { opacity: 0, y: 50, duration: 1 });
+    }});
+  });
+
+  function loadDecisionStages() {
+    const container = document.getElementById('decisionStages');
+    container.innerHTML = '';
+
+    decisionStages.forEach((stage, index) => {
+      const div = document.createElement('div');
+      div.className = 'bg-gray-800 rounded-3xl p-8 shadow-2xl border border-gray-700';
+      div.innerHTML = `
+        <h3 class="text-xl font-bold mb-6">${stage.question}</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5" data-stage="${index}"></div>
+      `;
+      const optionsDiv = div.querySelector(`[data-stage="${index}"]`);
+      stage.options.forEach(opt => {
+        const btn = document.createElement('div');
+        btn.className = 'decision-btn bg-gray-700 rounded-2xl p-6 hover:bg-gray-600 shadow-lg text-center';
+        btn.textContent = opt.text;
+        btn.addEventListener('click', () => {
+          optionsDiv.querySelectorAll('.decision-btn').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          decisions[index] = opt.impact;
+
+          Object.keys(opt.impact).forEach(key => {
+            impacts[key] += opt.impact[key];
+          });
+          updateMeters();
+
+          if (Object.keys(decisions).length === decisionStages.length) {
+            document.getElementById('revealOutcomeBtn').classList.remove('hidden');
+            gsap.from('#revealOutcomeBtn', { opacity: 0, y: 50, duration: 1 });
+          }
+        });
+        optionsDiv.appendChild(btn);
+      });
+      container.appendChild(div);
+    });
+  }
+
+  function updateMeters() {
+    const legal = Math.max(0, Math.min(100, impacts.legal));
+    const financial = Math.max(0, impacts.financial);
+    const brand = Math.max(0, Math.min(100, impacts.brand));
+
+    document.getElementById('legalMeter').style.width = legal + '%';
+    document.getElementById('legalMeter').className = `meter-fill ${legal < 40 ? 'low' : legal < 70 ? 'medium' : 'high'}`;
+    document.getElementById('legalText').textContent = legal < 40 ? 'Low' : legal < 70 ? 'Medium' : 'High';
+
+    document.getElementById('financialMeter').style.width = Math.min(100, financial / 2) + '%';
+    document.getElementById('financialMeter').className = `meter-fill ${financial < 30 ? 'low' : financial < 70 ? 'medium' : 'high'}`;
+    document.getElementById('financialText').textContent = financial < 30 ? '₹0–30 lakh' : financial < 70 ? '₹30–70 lakh' : '₹70+ lakh';
+
+    document.getElementById('brandMeter').style.width = brand + '%';
+    document.getElementById('brandMeter').className = `meter-fill ${brand < 40 ? 'low' : brand < 70 ? 'medium' : 'high'}`;
+    document.getElementById('brandText').textContent = brand < 40 ? 'Minimal' : brand < 70 ? 'Moderate' : 'Severe';
+  }
+
+  document.getElementById('revealOutcomeBtn').addEventListener('click', () => {
+    const score = Math.round(100 - (impacts.legal * 0.5 + impacts.financial * 0.3 + impacts.brand * 0.2));
+
+    document.getElementById('finalScore').textContent = score + '/100';
+    document.getElementById('totalCost').textContent = impacts.financial < 30 ? '₹10–30 lakh' : impacts.financial < 70 ? '₹30–70 lakh' : '₹70+ lakh';
+    document.getElementById('recoveryTime').textContent = impacts.brand < 40 ? '3–6 months' : impacts.brand < 70 ? '6–12 months' : '12+ months';
+
+    let summary = `
+      <p><strong>Legal Outcome:</strong> ${impacts.legal < 40 ? 'Minor warning likely' : impacts.legal < 70 ? 'Significant fine probable' : 'License suspension risk'}</p>
+      <p><strong>Financial Impact:</strong> Estimated cost ₹${impacts.financial < 30 ? '10–30' : impacts.financial < 70 ? '30–70' : '70+'} lakh (recall, legal, lost sales)</p>
+      <p><strong>Brand Trust:</strong> ${impacts.brand < 40 ? 'Short-term dip recoverable' : impacts.brand < 70 ? 'Moderate long-term erosion' : 'Severe reputational damage'}</p>
+      <p><strong>Business Impact:</strong> ${impacts.legal > 60 ? 'Export markets at risk' : 'Domestic supply chain disruption'}</p>
+    `;
+    document.getElementById('summaryText').innerHTML = summary;
+
+    const takeaways = [
+      "Proactive transparency with regulators reduces legal escalation.",
+      "Delayed response amplifies social media backlash and brand damage.",
+      "Preventive digital artwork governance is far cheaper than crisis management.",
+      "Clear accountability in labeling approval prevents recurrence."
+    ];
+    document.getElementById('takeawayText').textContent = takeaways[Math.floor(Math.random() * takeaways.length)];
+
+    gsap.to('#crisisSection', { opacity: 0, y: -50, duration: 0.8, onComplete: () => {
+      document.getElementById('crisisSection').classList.add('hidden');
+      document.getElementById('outcomeSection').classList.remove('hidden');
+      gsap.from('#outcomeSection', { opacity: 0, y: 50, duration: 1 });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }});
+  });
+
+  document.getElementById('newCrisisBtn').addEventListener('click', () => location.reload());
+
+  document.getElementById('fullscreenBtn').addEventListener('click', () => {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+    else document.exitFullscreen();
+  });
+</script>
+</body>
+</html>
