@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Cremica Innovation Lab: From Insight to Shelf</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<style type="text/css">
+  body { font-family: 'Poppins', sans-serif; }
+  h1, h2, h3, h4 { font-family: 'Playfair Display', serif; }
+  p, li, span { font-size: 16px !important; line-height: 1.7; }
+  h1 { font-size: 2.5rem !important; }
+  h2 { font-size: 2rem !important; }
+  h3 { font-size: 1.75rem !important; }
+  h4 { font-size: 1.5rem !important; }
+  .text-xl { font-size: 1.125rem !important; }
+  .text-2xl { font-size: 1.25rem !important; }
+  .text-3xl { font-size: 1.5rem !important; }
+  .text-4xl { font-size: 1.75rem !important; }
+  .text-5xl { font-size: 2rem !important; }
+  .text-6xl { font-size: 2.25rem !important; }
+  .grain-overlay {
+    background: url('https://img.freepik.com/free-photo/white-plain-concrete-textured-background_53876-102604.jpg?semt=ais_hybrid&w=740&q=80') repeat;
+    opacity: 0.03;
+    pointer-events: none;
+  }
+  .premium-card {
+    border: 2px solid #cc0000;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15), 0 0 25px rgba(255, 215, 0, 0.3);
+    transition: all 0.4s ease;
+  }
+  .choice-btn {
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .choice-btn.selected {
+    background: #cc0000;
+    color: white;
+    box-shadow: 0 0 20px rgba(204, 0, 0, 0.4);
+    transform: scale(1.03);
+  }
+</style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 via-white to-red-50 min-h-screen py-16">
+
+<div class="fixed inset-0 grain-overlay -z-10"></div>
+
+<button class="fixed top-6 right-6 z-50 bg-gradient-to-br from-red-600 to-blue-700 hover:from-red-500 hover:to-blue-600 text-white p-4 rounded-full shadow-2xl backdrop-blur-sm transition-all duration-300 hover:scale-110 text-2xl font-bold" id="fullscreenBtn">⛶</button>
+
+<div class="max-w-6xl mx-auto px-6">
+  <div class="premium-card bg-white/95 backdrop-blur-md rounded-3xl p-10 shadow-2xl">
+
+    <!-- Intro Screen -->
+    <div id="introScreen">
+      <div class="text-center mb-12">
+        <h1 class="font-black text-blue-900 mb-4">Cremica Innovation Lab: From Insight to Shelf</h1>
+        <p class="text-lg text-blue-800 mb-8">You are Head – Product Development & Innovation at Mrs. Bector’s Food Specialties Ltd. (Cremica)</p>
+        <div class="max-w-4xl mx-auto bg-blue-50 rounded-2xl p-8 mb-10">
+          <h2 class="text-2xl font-bold text-blue-900 mb-4">Your Mandate</h2>
+          <p class="text-blue-800 mb-3">Reporting to the CEO, COO, and QSR Strategy Head, you lead the end-to-end innovation pipeline across biscuits, bakery, sauces, and condiments.</p>
+          <p class="text-blue-800 mb-3">Your challenge: Convert consumer insights and QSR requirements into profitable, scalable new products while balancing health, taste, shelf-life, cost, and regulatory compliance.</p>
+          <p class="text-blue-800">Over four innovation cycles, guide a major new product from ideation to launch.</p>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-6 max-w-5xl mx-auto mb-10">
+          <div class="bg-white rounded-2xl p-6 shadow-lg text-center">
+            <p class="font-semibold">FY24 Revenue</p>
+            <p class="text-2xl font-bold text-blue-900">₹1,623 Cr</p>
+          </div>
+          <div class="bg-white rounded-2xl p-6 shadow-lg text-center">
+            <p class="font-semibold">R&D Spend</p>
+            <p class="text-xl font-bold">2–3% of revenue</p>
+          </div>
+          <div class="bg-white rounded-2xl p-6 shadow-lg text-center">
+            <p class="font-semibold">R&D Locations</p>
+            <p class="text-xl font-bold">Ludhiana & Greater Noida</p>
+          </div>
+          <div class="bg-white rounded-2xl p-6 shadow-lg text-center">
+            <p class="font-semibold">Success Rate</p>
+            <p class="text-2xl font-bold text-green-700">~70%</p>
+          </div>
+          <div class="bg-white rounded-2xl p-6 shadow-lg text-center">
+            <p class="font-semibold">Development Cycle</p>
+            <p class="text-xl font-bold">12–18 months</p>
+          </div>
+          <div class="bg-white rounded-2xl p-6 shadow-lg text-center">
+            <p class="font-semibold">Export Presence</p>
+            <p class="text-2xl font-bold">69 countries</p>
+          </div>
+        </div>
+
+        <button id="startGameBtn" class="px-12 py-5 bg-gradient-to-r from-blue-600 to-red-600 text-white text-xl font-bold rounded-2xl shadow-2xl hover:from-blue-700 hover:to-red-700 transition-all duration-300 hover:scale-105">
+          Begin Innovation Journey
+        </button>
+      </div>
+    </div>
+
+    <!-- Game Area -->
+    <div id="gameArea" class="hidden">
+      <div class="text-center mb-10">
+        <h2 class="text-3xl font-black text-blue-900 mb-4" id="roundTitle">Innovation Cycle 1</h2>
+        <p class="text-lg text-blue-800 max-w-4xl mx-auto" id="scenarioText"></p>
+      </div>
+
+      <!-- Decisions -->
+      <div id="decisionsContainer" class="space-y-12 mb-12"></div>
+
+      <!-- Submit Round -->
+      <div class="text-center mb-12">
+        <button id="submitRoundBtn" class="hidden px-12 py-5 bg-gradient-to-r from-green-600 to-green-700 text-white text-xl font-bold rounded-2xl shadow-2xl hover:from-green-700 hover:to-green-800 transition-all">
+          Submit Decisions & Advance
+        </button>
+      </div>
+
+      <!-- KPI Dashboard -->
+      <div class="bg-gradient-to-r from-blue-100 to-red-100 rounded-3xl p-8 mb-12">
+        <h3 class="text-2xl font-bold text-blue-900 text-center mb-6">Innovation Pipeline Dashboard</h3>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div class="bg-white rounded-2xl p-5 shadow-lg text-center">
+            <p class="font-semibold">Success Probability</p>
+            <p class="text-2xl font-bold text-blue-900" id="kpiSuccess">70</p><span>%</span>
+          </div>
+          <div class="bg-white rounded-2xl p-5 shadow-lg text-center">
+            <p class="font-semibold">R&D Cost Utilization</p>
+            <p class="text-2xl font-bold text-blue-900" id="kpiCost">0</p><span>%</span>
+          </div>
+          <div class="bg-white rounded-2xl p-5 shadow-lg text-center">
+            <p class="font-semibold">Shelf-Life Score</p>
+            <p class="text-2xl font-bold text-blue-900" id="kpiShelf">70</p>
+          </div>
+          <div class="bg-white rounded-2xl p-5 shadow-lg text-center">
+            <p class="font-semibold">Taste Acceptance</p>
+            <p class="text-2xl font-bold text-blue-900" id="kpiTaste">75</p>
+          </div>
+          <div class="bg-white rounded-2xl p-5 shadow-lg text-center">
+            <p class="font-semibold">Time-to-Market</p>
+            <p class="text-2xl font-bold text-blue-900" id="kpiTime">15</p><span> months</span>
+          </div>
+          <div class="bg-white rounded-2xl p-5 shadow-lg text-center">
+            <p class="font-semibold">Portfolio Health</p>
+            <p class="text-2xl font-bold text-blue-900" id="kpiPortfolio">80</p>
+          </div>
+          <div class="bg-white rounded-2xl p-5 shadow-lg text-center">
+            <p class="font-semibold">Export Readiness</p>
+            <p class="text-2xl font-bold text-blue-900" id="kpiExport">60</p>
+          </div>
+          <div class="bg-white rounded-2xl p-5 shadow-lg text-center">
+            <p class="font-semibold">Brand Premium</p>
+            <p class="text-2xl font-bold text-blue-900" id="kpiBrand">75</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Round Feedback -->
+      <div id="roundFeedback" class="hidden max-w-5xl mx-auto bg-gradient-to-br from-blue-100 to-red-100 rounded-3xl p-10 shadow-2xl mb-16">
+        <h3 class="text-3xl font-bold text-blue-900 mb-8 text-center">Cycle Outcome & Insights</h3>
+        <div id="feedbackText" class="text-lg leading-relaxed space-y-6 bg-white/90 rounded-3xl p-8 shadow-inner"></div>
+        <div class="text-center mt-10">
+          <button id="nextRoundBtn" class="px-14 py-6 bg-green-600 text-white text-xl font-bold rounded-2xl shadow-2xl hover:bg-green-700 transition-all">
+            Advance to Next Cycle
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Final Results Screen -->
+    <div id="finalScreen" class="hidden">
+      <div class="text-center py-20">
+        <h2 class="text-4xl font-black text-blue-900 mb-12">Innovation Journey Complete</h2>
+        <div class="max-w-5xl mx-auto bg-gradient-to-br from-yellow-100 to-red-100 rounded-3xl p-16 shadow-2xl">
+          <h3 class="text-3xl font-bold text-blue-900 mb-10" id="personaTitle">Your Innovation Persona</h3>
+          <p class="text-2xl text-blue-800 mb-12" id="finalScoreText">Innovation ROI Score: Calculating...</p>
+
+          <div class="bg-white/95 rounded-3xl p-12 shadow-2xl">
+            <h4 class="text-2xl font-bold text-blue-900 mb-8 text-center">Final Evaluation</h4>
+            <div class="text-left space-y-8 text-lg leading-relaxed text-blue-900" id="finalReflection">
+              <!-- Filled by JS -->
+            </div>
+          </div>
+
+          <div class="mt-16 text-center">
+            <p class="text-2xl italic text-blue-900">Thank you for leading Cremica's innovation pipeline.</p>
+            <p class="text-lg mt-4 text-blue-700">Refresh the page to start a new journey.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Game State
+  let round = 1;
+  let kpis = {
+    success: 70,
+    cost: 0,
+    shelf: 70,
+    taste: 75,
+    time: 15,
+    portfolio: 80,
+    export: 60,
+    brand: 75
+  };
+
+  let decisionsMade = {};
+  let chosenOptions = [];
+
+  const rounds = [
+    {
+      title: "Cycle 1: Ideation & Trend Selection",
+      scenario: "Multiple consumer and QSR trends emerge: rising demand for low-sugar and diabetic-friendly options, vegan spreads, global flavor fusion, and QSR requests for customized sauces and biscuit formats.",
+      decisions: [
+        {
+          category: "Strategic Priority",
+          question: "Primary innovation focus for the pipeline?",
+          options: [
+            { text: "Prioritize QSR-led customization (B2B stability)", effects: { success: +10, time: -2, export: +10, brand: +5 } },
+            { text: "Focus on health-led retail SKUs (low-sugar, high-fiber)", effects: { success: +5, shelf: +10, taste: -5, brand: +15 } },
+            { text: "Invest in premium global fusion flavors", effects: { taste: +15, export: +20, cost: +15, success: -5 } },
+            { text: "Conservative approach – incremental improvements only", effects: { cost: -20, time: -3, success: +15, brand: -10 } }
+          ]
+        },
+        {
+          category: "Trend Selection",
+          question: "Secondary trend to pursue?",
+          options: [
+            { text: "Vegan and eggless spreads innovation", effects: { success: +8, brand: +10, shelf: +5 } },
+            { text: "Indian-traditional flavor revival", effects: { taste: +10, portfolio: +10, export: -5 } },
+            { text: "Zero trans-fat premium bakery extensions", effects: { shelf: +15, cost: +10, brand: +8 } }
+          ]
+        }
+      ],
+      generalFeedback: "Effective ideation balances QSR requirements with emerging retail health trends. Cremica’s strength lies in translating global insights into affordable, scalable Indian products."
+    },
+    {
+      title: "Cycle 2: Prototyping & Flavor Engineering",
+      scenario: "Lab trials commence at Ludhiana R&D center. Early prototypes show promise but require decisions on flavor masking, ingredient quality, and technology investment.",
+      decisions: [
+        {
+          category: "Flavor Approach",
+          question: "Primary flavor development strategy?",
+          options: [
+            { text: "Health-masked with stevia and low-GI sweeteners", effects: { taste: -10, success: +10, shelf: +8, brand: +12 } },
+            { text: "Bold global fusion (e.g., international spice blends)", effects: { taste: +15, export: +15, cost: +12, success: -8 } },
+            { text: "Traditional Indian palate optimization", effects: { taste: +12, portfolio: +15, time: -2 } }
+          ]
+        },
+        {
+          category: "Technology Investment",
+          question: "R&D collaboration and tooling?",
+          options: [
+            { text: "Partner with IIT for advanced flavor profiling", effects: { success: +15, cost: +20, time: +2, taste: +10 } },
+            { text: "Invest in in-house GC-MS and sensory lab upgrade", effects: { taste: +12, shelf: +10, cost: +15 } },
+            { text: "Faster internal trials with existing setup", effects: { time: -3, cost: -15, success: -10 } }
+          ]
+        }
+      ],
+      generalFeedback: "Flavor science is critical in FMCG innovation. Cremica invests selectively in sensory and analytical capabilities to ensure taste leadership without excessive cost escalation."
+    },
+    {
+      title: "Cycle 3: Shelf-Life, Compliance & Scaling",
+      scenario: "Prototype performs well in sensory tests but faces oxidation risks and shelf-life challenges, especially for export and QSR supply chains requiring 6–9 months stability.",
+      decisions: [
+        {
+          category: "Preservation Technology",
+          question: "Shelf-life enhancement approach?",
+          options: [
+            { text: "Invest in MAP and nitrogen flushing", effects: { shelf: +20, cost: +15, export: +15 } },
+            { text: "Apply hurdle technology (multiple barriers)", effects: { shelf: +18, success: +10, cost: +10 } },
+            { text: "Accept shorter shelf-life for perceived freshness", effects: { shelf: -15, brand: +10, cost: -10, portfolio: -8 } },
+            { text: "Reformulate with natural antioxidants", effects: { shelf: +12, taste: -5, cost: +8, brand: +8 } }
+          ]
+        },
+        {
+          category: "Compliance & Scaling",
+          question: "Regulatory and production readiness?",
+          options: [
+            { text: "Accelerate FSSAI and HACCP certification", effects: { time: +2, success: +12, export: +10 } },
+            { text: "Pilot production at Greater Noida facility", effects: { time: -2, cost: +10, portfolio: +10 } },
+            { text: "Delay scaling until perfect stability achieved", effects: { time: +4, success: +8, cost: -15 } }
+          ]
+        }
+      ],
+      generalFeedback: "Shelf-life and compliance are non-negotiable in scaled FMCG. Cremica achieves low wastage (2%) through rigorous preservation science and process control."
+    },
+    {
+      title: "Cycle 4: Launch, Iteration & Portfolio Impact",
+      scenario: "Product is production-ready. Launch strategy and post-launch iteration will determine commercial success and portfolio renewal impact.",
+      decisions: [
+        {
+          category: "Launch Strategy",
+          question: "Primary go-to-market approach?",
+          options: [
+            { text: "QSR pilot with key accounts (McDonald’s/KFC)", effects: { success: +20, time: -3, export: +10, brand: +8 } },
+            { text: "Soft launch via e-commerce and modern trade", effects: { portfolio: +15, brand: +15, cost: +10 } },
+            { text: "National retail rollout with marketing push", effects: { success: +15, portfolio: +20, cost: +20 } },
+            { text: "Export-first strategy targeting 69 countries", effects: { export: +30, success: +10, brand: +12, time: +2 } }
+          ]
+        },
+        {
+          category: "Post-Launch Action",
+          question: "Response to initial market feedback?",
+          options: [
+            { text: "Rapid reformulation based on consumer reviews", effects: { taste: +10, success: +12, time: +3 } },
+            { text: "Increase marketing and trade spend", effects: { brand: +20, portfolio: +15, cost: +15 } },
+            { text: "Extend line with variants", effects: { portfolio: +20, success: +8, export: +10 } },
+            { text: "Kill underperforming elements early", effects: { cost: -20, portfolio: +10, success: +5 } }
+          ]
+        }
+      ],
+      generalFeedback: "Successful launches require disciplined iteration. Cremica maintains high success rates (~70%) through data-driven decisions and balanced risk management."
+    }
+  ];
+
+  // Elements
+  const introScreen = document.getElementById('introScreen');
+  const gameArea = document.getElementById('gameArea');
+  const finalScreen = document.getElementById('finalScreen');
+  const startGameBtn = document.getElementById('startGameBtn');
+  const roundTitle = document.getElementById('roundTitle');
+  const scenarioText = document.getElementById('scenarioText');
+  const decisionsContainer = document.getElementById('decisionsContainer');
+  const submitRoundBtn = document.getElementById('submitRoundBtn');
+  const roundFeedback = document.getElementById('roundFeedback');
+  const feedbackText = document.getElementById('feedbackText');
+  const nextRoundBtn = document.getElementById('nextRoundBtn');
+  const personaTitle = document.getElementById('personaTitle');
+  const finalScoreText = document.getElementById('finalScoreText');
+  const finalReflection = document.getElementById('finalReflection');
+
+  function updateKPIs() {
+    document.getElementById('kpiSuccess').textContent = kpis.success.toFixed(0);
+    document.getElementById('kpiCost').textContent = kpis.cost.toFixed(0);
+    document.getElementById('kpiShelf').textContent = kpis.shelf.toFixed(0);
+    document.getElementById('kpiTaste').textContent = kpis.taste.toFixed(0);
+    document.getElementById('kpiTime').textContent = kpis.time.toFixed(0);
+    document.getElementById('kpiPortfolio').textContent = kpis.portfolio.toFixed(0);
+    document.getElementById('kpiExport').textContent = kpis.export.toFixed(0);
+    document.getElementById('kpiBrand').textContent = kpis.brand.toFixed(0);
+  }
+
+  function loadRound() {
+    const r = rounds[round - 1];
+    roundTitle.textContent = r.title;
+    scenarioText.textContent = r.scenario;
+
+    decisionsContainer.innerHTML = '';
+    decisionsMade = {};
+    chosenOptions = [];
+
+    r.decisions.forEach((dec, idx) => {
+      const div = document.createElement('div');
+      div.className = 'bg-white rounded-2xl p-8 shadow-2xl';
+      div.innerHTML = `
+        <h4 class="text-xl font-bold text-blue-900 mb-4">${dec.category}</h4>
+        <p class="text-blue-800 mb-8">${dec.question}</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6" data-decision="${idx}"></div>
+      `;
+      const optionsDiv = div.querySelector(`[data-decision="${idx}"]`);
+      dec.options.forEach((opt) => {
+        const btn = document.createElement('div');
+        btn.className = 'choice-btn bg-gray-100 rounded-xl p-6 text-base font-medium hover:bg-gray-200 text-center shadow-md';
+        btn.textContent = opt.text;
+        btn.addEventListener('click', () => {
+          optionsDiv.querySelectorAll('.choice-btn').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          decisionsMade[idx] = opt.effects;
+          chosenOptions[idx] = {category: dec.category, choice: opt.text};
+          checkAllDecisions();
+        });
+        optionsDiv.appendChild(btn);
+      });
+      decisionsContainer.appendChild(div);
+    });
+
+    roundFeedback.classList.add('hidden');
+    submitRoundBtn.classList.add('hidden');
+    updateKPIs();
+  }
+
+  function checkAllDecisions() {
+    const required = rounds[round - 1].decisions.length;
+    if (Object.keys(decisionsMade).length === required) {
+      submitRoundBtn.classList.remove('hidden');
+      gsap.from(submitRoundBtn, { opacity: 0, y: 50, duration: 1 });
+    }
+  }
+
+  submitRoundBtn.addEventListener('click', () => {
+    Object.values(decisionsMade).forEach(eff => {
+      Object.keys(eff).forEach(k => kpis[k] += eff[k]);
+    });
+
+    kpis.success = Math.max(30, Math.min(100, kpis.success));
+    kpis.cost = Math.max(0, Math.min(100, kpis.cost));
+    kpis.shelf = Math.max(40, Math.min(100, kpis.shelf));
+    kpis.taste = Math.max(50, Math.min(100, kpis.taste));
+    kpis.time = Math.max(10, Math.min(24, kpis.time));
+    kpis.portfolio = Math.max(50, Math.min(100, kpis.portfolio));
+    kpis.export = Math.max(20, Math.min(100, kpis.export));
+    kpis.brand = Math.max(50, Math.min(100, kpis.brand));
+
+    updateKPIs();
+
+    let personal = "<strong>Your Decisions This Cycle:</strong><ul class='list-disc pl-6 space-y-3 mt-4'>";
+    chosenOptions.forEach(opt => {
+      personal += `<li><strong>${opt.category}:</strong> "${opt.choice}"</li>`;
+    });
+    personal += "</ul>";
+
+    let insight = "<p class='mt-8 italic text-blue-900 border-t pt-6'>${rounds[round - 1].generalFeedback}</p>";
+
+    feedbackText.innerHTML = personal + insight;
+
+    roundFeedback.classList.remove('hidden');
+    submitRoundBtn.classList.add('hidden');
+    gsap.from(roundFeedback, { opacity: 0, y: 100, duration: 1.5 });
+    roundFeedback.scrollIntoView({ behavior: 'smooth' });
+
+    nextRoundBtn.textContent = (round === 4) ? "View Final Evaluation" : "Advance to Next Cycle";
+  });
+
+  nextRoundBtn.addEventListener('click', () => {
+    if (round === 4) {
+      showFinalEvaluation();
+    } else {
+      round++;
+      loadRound();
+    }
+  });
+
+  function showFinalEvaluation() {
+    gameArea.classList.add('hidden');
+    roundFeedback.classList.add('hidden');
+    finalScreen.classList.remove('hidden');
+
+    // Fixed ROI calculation - now properly capped at 100
+    let roiScore = Math.round(
+      kpis.success * 0.3 +
+      (100 - kpis.time / 24 * 100) * 0.15 +  // lower time = higher score
+      kpis.taste * 0.15 +
+      kpis.shelf * 0.1 +
+      kpis.portfolio * 0.1 +
+      kpis.export * 0.1 +
+      kpis.brand * 0.1
+    );
+    roiScore = Math.min(100, Math.max(0, roiScore));  // Ensure 0-100 range
+
+    let persona = "";
+    if (kpis.success >= 85 && kpis.time >= 18) persona = "R&D Perfectionist";
+    else if (kpis.time <= 12 && kpis.success >= 75) persona = "Speed-to-Market Innovator";
+    else if (kpis.brand >= 85 && kpis.shelf >= 80) persona = "Health-first Visionary";
+    else if (kpis.export >= 80 && kpis.success >= 80) persona = "QSR-Centric Operator";
+    else persona = "Balanced Portfolio Builder";
+
+    personaTitle.textContent = persona;
+    finalScoreText.textContent = `Innovation ROI Score: ${roiScore}/100`;
+
+    let reflection = `
+      <p><strong>Innovation ROI:</strong> ${roiScore >= 80 ? "Strong projected returns with high success likelihood" : roiScore >= 60 ? "Moderate returns with balanced risk" : "Higher risk profile requiring refinement"}.</p>
+      <p><strong>Portfolio impact:</strong> Portfolio health at ${kpis.portfolio} reflects ${kpis.portfolio >= 85 ? "excellent renewal potential" : "moderate contribution to freshness"}.</p>
+      <p><strong>Scalability:</strong> Shelf-life (${kpis.shelf}) and time-to-market (${kpis.time} months) indicate ${kpis.shelf >= 85 && kpis.time <= 15 ? "strong production readiness" : "acceptable trade-offs"}.</p>
+      <p><strong>Brand & market fit:</strong> Taste (${kpis.taste}) and brand perception (${kpis.brand}) support ${kpis.brand >= 80 ? "premium positioning" : "mainstream appeal"}.</p>
+      <p class='mt-8 italic border-t pt-6'><strong>Cremica Reality:</strong> Innovation at Cremica is driven by deep consumer understanding, rigorous R&D, and disciplined execution — delivering “affordable luxury” across biscuits, sauces, and bakery while sustaining leadership in both B2B and B2C channels.</p>
+    `;
+
+    finalReflection.innerHTML = reflection;
+
+    gsap.from(finalScreen.querySelector('.bg-gradient-to-br'), { opacity: 0, scale: 0.9, duration: 1.5, ease: "power3.out" });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  startGameBtn.addEventListener('click', () => {
+    gsap.to(introScreen, { opacity: 0, y: -100, duration: 1, onComplete: () => {
+      introScreen.classList.add('hidden');
+      gameArea.classList.remove('hidden');
+      loadRound();
+      gsap.from(gameArea, { opacity: 0, y: 100, duration: 1.2 });
+    }});
+  });
+
+  document.getElementById('fullscreenBtn').addEventListener('click', () => {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+    else document.exitFullscreen();
+  });
+</script>
+</body>
+</html>
