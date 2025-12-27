@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Cremica Product Strategist: Sauces, Scale & Strategy</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<style type="text/css">
+  body { font-family: 'Poppins', sans-serif; }
+  h1, h2, h3, h4 { font-family: 'Playfair Display', serif; }
+  p { font-size: 18px !important; line-height: 1.8; }
+  .grain-overlay {
+    background: url('https://img.freepik.com/free-photo/white-plain-concrete-textured-background_53876-102604.jpg?semt=ais_hybrid&w=740&q=80') repeat;
+    opacity: 0.03;
+    pointer-events: none;
+  }
+  .premium-card {
+    border: 2px solid #cc0000;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15), 0 0 25px rgba(255, 215, 0, 0.3);
+    transition: all 0.4s ease;
+  }
+  .choice-btn {
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .choice-btn.selected {
+    background: #cc0000;
+    color: white;
+    box-shadow: 0 0 20px rgba(204, 0, 0, 0.4);
+    transform: scale(1.03);
+  }
+</style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 via-white to-red-50 min-h-screen py-20">
+
+<div class="fixed inset-0 grain-overlay -z-10"></div>
+
+<button class="fixed top-6 right-6 z-50 bg-gradient-to-br from-red-600 to-blue-700 hover:from-red-500 hover:to-blue-600 text-white p-4 rounded-full shadow-2xl backdrop-blur-sm transition-all duration-300 hover:scale-110 text-3xl font-bold" id="fullscreenBtn">⛶</button>
+
+<div class="max-w-6xl mx-auto px-6">
+  <div class="premium-card bg-white/95 backdrop-blur-md rounded-3xl p-12 shadow-2xl">
+
+    <!-- Intro Screen -->
+    <div id="introScreen">
+      <div class="text-center mb-16">
+        <h1 class="text-5xl font-black text-blue-900 mb-6">Cremica Product Strategist: Sauces, Scale & Strategy</h1>
+        <p class="text-2xl text-blue-800 mb-10">You are the Product Strategist at Cremica Food Industries Ltd. (CFIL)</p>
+        <div class="max-w-4xl mx-auto bg-blue-50 rounded-2xl p-10 mb-12">
+          <h2 class="text-3xl font-bold text-blue-900 mb-6">Your Role & Challenge</h2>
+          <p class="text-lg text-blue-800 mb-4">Reporting to the CEO and QSR Key Accounts Head, you are responsible for balancing B2B dominance (McDonald’s, KFC, Burger King, Subway, Domino’s) with accelerating B2C retail growth.</p>
+          <p class="text-lg text-blue-800 mb-4">Raw material costs (tomato, edible oil) are rising 10–15%. You must protect margins while investing in innovation, localization, and sustainability.</p>
+          <p class="text-lg text-blue-800">Over four quarters, make critical decisions to drive profitable scale.</p>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-8 max-w-5xl mx-auto mb-12">
+          <div class="bg-white rounded-2xl p-8 shadow-lg text-center">
+            <p class="text-lg font-semibold">B2B/QSR Revenue</p>
+            <p class="text-4xl font-bold text-blue-900">~70%</p>
+          </div>
+          <div class="bg-white rounded-2xl p-8 shadow-lg text-center">
+            <p class="text-lg font-semibold">Retail Revenue</p>
+            <p class="text-4xl font-bold text-red-700">~30%</p>
+          </div>
+          <div class="bg-white rounded-2xl p-8 shadow-lg text-center">
+            <p class="text-lg font-semibold">Facility Utilization</p>
+            <p class="text-4xl font-bold text-green-700">~80%</p>
+          </div>
+          <div class="bg-white rounded-2xl p-8 shadow-lg text-center">
+            <p class="text-lg font-semibold">B2B Margin</p>
+            <p class="text-3xl font-bold">15–20%</p>
+          </div>
+          <div class="bg-white rounded-2xl p-8 shadow-lg text-center">
+            <p class="text-lg font-semibold">Retail Margin</p>
+            <p class="text-3xl font-bold">12–15%</p>
+          </div>
+          <div class="bg-white rounded-2xl p-8 shadow-lg text-center">
+            <p class="text-lg font-semibold">Daily Capacity</p>
+            <p class="text-3xl font-bold">4M+ sachets</p>
+          </div>
+        </div>
+
+        <button id="startGameBtn" class="px-16 py-8 bg-gradient-to-r from-blue-600 to-red-600 text-white text-3xl font-bold rounded-2xl shadow-2xl hover:from-blue-700 hover:to-red-700 transition-all duration-300 hover:scale-105">
+          Begin Simulation
+        </button>
+      </div>
+    </div>
+
+    <!-- Game Area (Rounds) -->
+    <div id="gameArea" class="hidden">
+      <div class="text-center mb-12">
+        <h2 class="text-4xl font-black text-blue-900 mb-4" id="roundTitle">Quarter 1</h2>
+        <p class="text-xl text-blue-800 max-w-4xl mx-auto" id="scenarioText"></p>
+      </div>
+
+      <!-- Decisions -->
+      <div id="decisionsContainer" class="space-y-16 mb-16"></div>
+
+      <!-- Submit Round -->
+      <div class="text-center mb-16">
+        <button id="submitRoundBtn" class="hidden px-14 py-7 bg-gradient-to-r from-green-600 to-green-700 text-white text-2xl font-bold rounded-2xl shadow-2xl hover:from-green-700 hover:to-green-800 transition-all">
+          Submit Decisions & Proceed
+        </button>
+      </div>
+
+      <!-- KPI Dashboard -->
+      <div class="bg-gradient-to-r from-blue-100 to-red-100 rounded-3xl p-10 mb-16">
+        <h3 class="text-3xl font-bold text-blue-900 text-center mb-8">Performance Dashboard</h3>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+          <div class="bg-white rounded-2xl p-6 shadow-lg text-center">
+            <p class="text-lg font-semibold">Revenue (₹ Cr)</p>
+            <p class="text-3xl font-bold text-blue-900" id="kpiRevenue">150</p>
+          </div>
+          <div class="bg-white rounded-2xl p-6 shadow-lg text-center">
+            <p class="text-lg font-semibold">EBITDA Margin (%)</p>
+            <p class="text-3xl font-bold text-blue-900" id="kpiMargin">16.5</p>
+          </div>
+          <div class="bg-white rounded-2xl p-6 shadow-lg text-center">
+            <p class="text-lg font-semibold">Capacity Utilization (%)</p>
+            <p class="text-3xl font-bold text-blue-900" id="kpiUtil">80</p>
+          </div>
+          <div class="bg-white rounded-2xl p-6 shadow-lg text-center">
+            <p class="text-lg font-semibold">QSR Retention Score</p>
+            <p class="text-3xl font-bold text-blue-900" id="kpiQSR">85</p>
+          </div>
+          <div class="bg-white rounded-2xl p-6 shadow-lg text-center">
+            <p class="text-lg font-semibold">Retail Brand Equity</p>
+            <p class="text-3xl font-bold text-blue-900" id="kpiRetail">60</p>
+          </div>
+          <div class="bg-white rounded-2xl p-6 shadow-lg text-center">
+            <p class="text-lg font-semibold">Export Readiness</p>
+            <p class="text-3xl font-bold text-blue-900" id="kpiExport">40</p>
+          </div>
+          <div class="bg-white rounded-2xl p-6 shadow-lg text-center">
+            <p class="text-lg font-semibold">Risk Index</p>
+            <p class="text-3xl font-bold text-blue-900" id="kpiRisk">30</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Round Feedback -->
+      <div id="roundFeedback" class="hidden max-w-5xl mx-auto bg-gradient-to-br from-blue-100 to-red-100 rounded-3xl p-12 shadow-2xl mb-20">
+        <h3 class="text-4xl font-bold text-blue-900 mb-10 text-center">Round Outcome & Learning Insights</h3>
+        <div id="feedbackText" class="text-xl leading-relaxed space-y-8 bg-white/90 rounded-3xl p-10 shadow-inner"></div>
+        <div class="text-center mt-12">
+          <button id="nextRoundBtn" class="px-16 py-8 bg-green-600 text-white text-3xl font-bold rounded-2xl shadow-2xl hover:bg-green-700 transition-all">
+            Continue to Next Quarter
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Final Results Screen - Completely Separate -->
+    <div id="finalScreen" class="hidden">
+      <div class="text-center py-24">
+        <h2 class="text-6xl font-black text-blue-900 mb-16">Simulation Complete</h2>
+        <div class="max-w-5xl mx-auto bg-gradient-to-br from-yellow-100 to-red-100 rounded-3xl p-20 shadow-2xl">
+          <h3 class="text-5xl font-bold text-blue-900 mb-12" id="archetypeTitle">Your Strategic Archetype</h3>
+          <p class="text-4xl text-blue-800 mb-16" id="finalScoreText">Final Performance Score: Calculating...</p>
+
+          <div class="bg-white/95 rounded-3xl p-16 shadow-2xl">
+            <h4 class="text-4xl font-bold text-blue-900 mb-12 text-center">Strategic Reflection</h4>
+            <div class="text-left space-y-10 text-2xl leading-relaxed text-blue-900" id="finalFeedback">
+              <!-- Filled by JavaScript -->
+            </div>
+          </div>
+
+          <div class="mt-20 text-center">
+            <p class="text-3xl italic text-blue-900">Thank you for playing the Cremica Product Strategist Simulation.</p>
+            <p class="text-xl mt-6 text-blue-700">Refresh the page to play again.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Game State
+  let round = 1;
+  let kpis = {
+    revenue: 150,
+    margin: 16.5,
+    util: 80,
+    qsr: 85,
+    retail: 60,
+    export: 40,
+    risk: 30
+  };
+
+  let decisionsMade = {};
+  let chosenOptions = [];
+
+  const rounds = [
+    {
+      title: "Q1: Rising Input Costs",
+      scenario: "Tomato and edible oil prices have increased 12% due to supply disruptions. QSR clients expect stable pricing, while retail competitors are raising prices.",
+      decisions: [
+        {
+          category: "Cost Management",
+          question: "How do you respond to raw material inflation?",
+          options: [
+            { text: "Absorb costs to protect QSR relationships", effects: { margin: -2, qsr: +5, risk: +10 } },
+            { text: "Pass 8% price increase to retail only", effects: { margin: +1, retail: -5, revenue: +5 } },
+            { text: "Renegotiate QSR contracts for partial pass-through", effects: { margin: +0.5, qsr: -5, risk: -5 } },
+            { text: "Accelerate backward integration planning", effects: { margin: -1, risk: -15, export: +5 } }
+          ]
+        },
+        {
+          category: "Channel Allocation",
+          question: "Production allocation priority for next quarter?",
+          options: [
+            { text: "Increase QSR sachet volume (volume stability)", effects: { util: +8, revenue: +8, qsr: +8, retail: -8 } },
+            { text: "Boost retail bottles/pouches (brand growth)", effects: { util: +5, revenue: +10, retail: +12, margin: -1 } },
+            { text: "Balanced split with new export trials", effects: { export: +15, revenue: +5, risk: +10 } }
+          ]
+        },
+        {
+          category: "Product Strategy",
+          question: "Innovation focus for the quarter?",
+          options: [
+            { text: "Launch low-sugar ketchup variant for QSRs", effects: { qsr: +12, margin: -1.5, retail: +5 } },
+            { text: "Expand Vegenaise flavors for retail", effects: { retail: +15, revenue: +8, margin: -1 } },
+            { text: "Develop Indian chutneys for localization", effects: { qsr: +10, export: +10, margin: -2 } },
+            { text: "Delay new launches to protect margins", effects: { margin: +2, retail: -10, export: -10 } }
+          ]
+        }
+      ],
+      generalFeedback: "Rising costs force trade-offs. Cremica historically absorbs short-term shocks to retain QSR trust while selectively passing costs in retail where brand equity allows."
+    },
+    {
+      title: "Q2: QSR Customization Demand",
+      scenario: "McDonald’s and Burger King request sugar-reduced and trans-fat-free formulations. Meeting specs requires reformulation investment.",
+      decisions: [
+        {
+          category: "Innovation",
+          question: "Response to QSR health reformulation demand?",
+          options: [
+            { text: "Invest in healthier oils & sugar reduction", effects: { qsr: +15, margin: -2, retail: +8 } },
+            { text: "Offer premium pricing for customized specs", effects: { margin: +2, qsr: -8, revenue: +5 } },
+            { text: "Partial compliance with existing range", effects: { qsr: -10, risk: +15 } },
+            { text: "Propose phased rollout over two years", effects: { margin: +1, qsr: +5, risk: -5 } }
+          ]
+        },
+        {
+          category: "Sustainability",
+          question: "Packaging initiative?",
+          options: [
+            { text: "Pilot recyclable pouches for retail", effects: { retail: +15, margin: -1.5, export: +10 } },
+            { text: "Maintain current packaging to preserve margins", effects: { margin: +1.5, retail: -8 } },
+            { text: "Eco-friendly sachets for QSR trials", effects: { qsr: +10, margin: -2, export: +8 } }
+          ]
+        },
+        {
+          category: "Capacity",
+          question: "Utilization strategy?",
+          options: [
+            { text: "Run at 90%+ for volume efficiency", effects: { util: +12, revenue: +12, risk: +15 } },
+            { text: "Keep buffer for new SKUs", effects: { util: -8, export: +15, retail: +10 } }
+          ]
+        }
+      ],
+      generalFeedback: "QSR customization strengthens long-term contracts but pressures short-term margins. Cremica invests selectively in health and sustainability to differentiate."
+    },
+    {
+      title: "Q3: Retail & Export Opportunity",
+      scenario: "Cloud kitchens surge demands more retail-style packs. Middle East export inquiry arrives for private-label mayo and ketchup.",
+      decisions: [
+        {
+          category: "Export Strategy",
+          question: "Approach to Middle East export opportunity?",
+          options: [
+            { text: "Pursue aggressively with dedicated line", effects: { export: +30, revenue: +15, util: +10, margin: -2 } },
+            { text: "Test with small batches", effects: { export: +15, revenue: +5, risk: -10 } },
+            { text: "Decline to focus on domestic stability", effects: { qsr: +8, margin: +1 } }
+          ]
+        },
+        {
+          category: "Retail Push",
+          question: "Cloud kitchen demand response?",
+          options: [
+            { text: "Launch dedicated cloud kitchen range", effects: { retail: +20, revenue: +18, margin: -1.5 } },
+            { text: "Supply existing retail packs", effects: { revenue: +10, retail: +10 } },
+            { text: "Prioritize QSR commitments", effects: { qsr: +10, retail: -12 } }
+          ]
+        },
+        {
+          category: "Competitor Threat",
+          question: "New low-cost mayo competitor enters retail",
+          options: [
+            { text: "Match pricing selectively", effects: { margin: -3, retail: +8, revenue: +5 } },
+            { text: "Differentiate on quality & Cremica brand", effects: { retail: +12, margin: +1 } },
+            { text: "Increase trade promotions", effects: { revenue: +10, margin: -2 } }
+          ]
+        }
+      ],
+      generalFeedback: "Export and cloud kitchens represent high-growth channels, but require capacity reallocation and margin investment."
+    },
+    {
+      title: "Q4: Scale & Sustainability",
+      scenario: "Competitor launches aggressive retail campaign. Government announces sustainability incentives. Final quarter to cement strategy.",
+      decisions: [
+        {
+          category: "Final Allocation",
+          question: "Long-term channel priority?",
+          options: [
+            { text: "Lock in QSR volume leadership", effects: { qsr: +20, revenue: +15, margin: +1, retail: -15 } },
+            { text: "Accelerate retail brand building", effects: { retail: +25, revenue: +20, margin: -2 } },
+            { text: "Balanced portfolio with export growth", effects: { export: +20, retail: +15, qsr: +10, revenue: +18 } }
+          ]
+        },
+        {
+          category: "Sustainability Investment",
+          question: "Sustainability commitment?",
+          options: [
+            { text: "Full transition to recyclable packaging", effects: { retail: +20, export: +25, margin: -3 } },
+            { text: "Gradual adoption over 3 years", effects: { margin: +1, retail: +10 } },
+            { text: "Minimal changes", effects: { margin: +3, risk: +20 } }
+          ]
+        },
+        {
+          category: "Innovation Pipeline",
+          question: "Final innovation push?",
+          options: [
+            { text: "Premium health-focused retail range", effects: { retail: +20, margin: +1, export: +15 } },
+            { text: "Cost-optimized QSR formulations", effects: { qsr: +15, margin: +3 } },
+            { text: "Indian fusion sauces for all channels", effects: { revenue: +15, retail: +15, qsr: +10 } }
+          ]
+        }
+      ],
+      generalFeedback: "Sustainable scale requires balancing QSR reliability with retail and export ambition. Cremica’s real strength lies in operational excellence and trusted partnerships."
+    }
+  ];
+
+  // Elements
+  const introScreen = document.getElementById('introScreen');
+  const gameArea = document.getElementById('gameArea');
+  const finalScreen = document.getElementById('finalScreen');
+  const startGameBtn = document.getElementById('startGameBtn');
+  const roundTitle = document.getElementById('roundTitle');
+  const scenarioText = document.getElementById('scenarioText');
+  const decisionsContainer = document.getElementById('decisionsContainer');
+  const submitRoundBtn = document.getElementById('submitRoundBtn');
+  const roundFeedback = document.getElementById('roundFeedback');
+  const feedbackText = document.getElementById('feedbackText');
+  const nextRoundBtn = document.getElementById('nextRoundBtn');
+  const archetypeTitle = document.getElementById('archetypeTitle');
+  const finalScoreText = document.getElementById('finalScoreText');
+  const finalFeedback = document.getElementById('finalFeedback');
+
+  function updateKPIs() {
+    document.getElementById('kpiRevenue').textContent = kpis.revenue.toFixed(0);
+    document.getElementById('kpiMargin').textContent = kpis.margin.toFixed(1);
+    document.getElementById('kpiUtil').textContent = kpis.util.toFixed(0);
+    document.getElementById('kpiQSR').textContent = kpis.qsr.toFixed(0);
+    document.getElementById('kpiRetail').textContent = kpis.retail.toFixed(0);
+    document.getElementById('kpiExport').textContent = kpis.export.toFixed(0);
+    document.getElementById('kpiRisk').textContent = kpis.risk.toFixed(0);
+  }
+
+  function loadRound() {
+    const r = rounds[round - 1];
+    roundTitle.textContent = r.title;
+    scenarioText.textContent = r.scenario;
+
+    decisionsContainer.innerHTML = '';
+    decisionsMade = {};
+    chosenOptions = [];
+
+    r.decisions.forEach((dec, idx) => {
+      const div = document.createElement('div');
+      div.className = 'bg-white rounded-2xl p-10 shadow-2xl';
+      div.innerHTML = `
+        <h4 class="text-3xl font-bold text-blue-900 mb-6">${dec.category} Decision</h4>
+        <p class="text-xl text-blue-800 mb-10">${dec.question}</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8" data-decision="${idx}"></div>
+      `;
+      const optionsDiv = div.querySelector(`[data-decision="${idx}"]`);
+      dec.options.forEach((opt) => {
+        const btn = document.createElement('div');
+        btn.className = 'choice-btn bg-gray-100 rounded-2xl p-8 text-xl font-medium hover:bg-gray-200 text-center shadow-md';
+        btn.textContent = opt.text;
+        btn.addEventListener('click', () => {
+          optionsDiv.querySelectorAll('.choice-btn').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          decisionsMade[idx] = opt.effects;
+          chosenOptions[idx] = {category: dec.category, question: dec.question, choice: opt.text};
+          checkAllDecisions();
+        });
+        optionsDiv.appendChild(btn);
+      });
+      decisionsContainer.appendChild(div);
+    });
+
+    roundFeedback.classList.add('hidden');
+    submitRoundBtn.classList.add('hidden');
+    updateKPIs();
+  }
+
+  function checkAllDecisions() {
+    const required = rounds[round - 1].decisions.length;
+    if (Object.keys(decisionsMade).length === required) {
+      submitRoundBtn.classList.remove('hidden');
+      gsap.from(submitRoundBtn, { opacity: 0, y: 50, duration: 1 });
+    }
+  }
+
+  submitRoundBtn.addEventListener('click', () => {
+    Object.values(decisionsMade).forEach(eff => {
+      Object.keys(eff).forEach(k => kpis[k] += eff[k]);
+    });
+
+    kpis.margin = Math.max(8, Math.min(22, kpis.margin));
+    kpis.util = Math.max(60, Math.min(100, kpis.util));
+    kpis.qsr = Math.max(50, Math.min(100, kpis.qsr));
+    kpis.retail = Math.max(30, Math.min(100, kpis.retail));
+    kpis.export = Math.max(0, Math.min(100, kpis.export));
+    kpis.risk = Math.max(0, Math.min(80, kpis.risk));
+
+    updateKPIs();
+
+    let personal = "<strong class='text-2xl'>Your Decisions This Quarter:</strong><ul class='list-disc pl-10 space-y-5 mt-6 text-xl'>";
+    chosenOptions.forEach(opt => {
+      personal += `<li><strong>${opt.category}:</strong> "${opt.choice}"</li>`;
+    });
+    personal += "</ul>";
+
+    let improvement = "<strong class='text-2xl block mt-10'>Areas for Improvement:</strong><ul class='list-disc pl-10 space-y-5 mt-6 text-xl'>";
+    if (kpis.margin < 14) improvement += "<li>Margins under pressure — consider cost pass-through or delaying non-critical innovations.</li>";
+    if (kpis.qsr < 80) improvement += "<li>QSR retention declined — prioritize client relationships.</li>";
+    if (kpis.retail < 70) improvement += "<li>Retail equity lagged — invest more in retail channels.</li>";
+    if (kpis.risk > 50) improvement += "<li>High risk — focus on stability measures.</li>";
+    if (kpis.util < 75) improvement += "<li>Low utilization — prioritize volume channels.</li>";
+    if (improvement.match(/<li>/g)?.length === 0) improvement += "<li>Excellent balance across all metrics — well done!</li>";
+    improvement += "</ul>";
+
+    feedbackText.innerHTML = `${personal}${improvement}<p class='mt-12 italic text-2xl text-blue-900 border-t pt-8'>${rounds[round - 1].generalFeedback}</p>`;
+
+    roundFeedback.classList.remove('hidden');
+    submitRoundBtn.classList.add('hidden');
+    gsap.from(roundFeedback, { opacity: 0, y: 100, duration: 1.5 });
+    roundFeedback.scrollIntoView({ behavior: 'smooth' });
+
+    nextRoundBtn.textContent = (round === 4) ? "View Final Results" : "Continue to Next Quarter";
+  });
+
+  nextRoundBtn.addEventListener('click', () => {
+    if (round === 4) {
+      showFinalResults();
+    } else {
+      round++;
+      loadRound();
+    }
+  });
+
+  function showFinalResults() {
+    gameArea.classList.add('hidden');
+    roundFeedback.classList.add('hidden');
+
+    finalScreen.classList.remove('hidden');
+
+    const score = Math.round((kpis.revenue / 150 * 30) + (kpis.margin * 3) + (kpis.qsr * 0.4) + (kpis.retail * 0.5) + (kpis.export * 0.3) - (kpis.risk * 0.5));
+
+    let archetype = "";
+    if (kpis.qsr >= 90 && kpis.retail <= 70) archetype = "QSR Reliability Champion";
+    else if (kpis.retail >= 85 && kpis.qsr >= 75) archetype = "Retail Brand Builder";
+    else if (kpis.qsr >= 80 && kpis.retail >= 75 && kpis.export >= 60) archetype = "Balanced Growth Strategist";
+    else archetype = "High-Risk Innovator";
+
+    archetypeTitle.textContent = archetype;
+    finalScoreText.textContent = `Final Performance Score: ${score}/100`;
+
+    let reflection = `
+      <p><strong>What you did well:</strong> ${kpis.qsr >= 80 ? "Maintained strong QSR partnerships" : kpis.retail >= 80 ? "Built powerful retail brand equity" : "Explored innovative growth paths"}.</p>
+      <p><strong>Trade-offs accepted:</strong> ${kpis.margin <= 14 ? "Prioritized growth over short-term margins" : kpis.retail <= 60 ? "Protected QSR stability at the cost of retail growth" : "Achieved strong balance across objectives"}.</p>
+      <p><strong>Operational efficiency:</strong> Ended with ${kpis.util}% capacity utilization — ${kpis.util >= 90 ? "maximum scale achieved" : "room preserved for flexibility"}.</p>
+      <p><strong>Risk profile:</strong> Final risk index ${kpis.risk} — ${kpis.risk <= 30 ? "excellent control" : "accepted higher volatility for growth"}.</p>
+      <p class='mt-12 italic text-2xl border-t pt-8'><strong>Real-world Cremica Insight:</strong> Sustainable leadership comes from protecting core QSR volume while methodically building retail presence and export capability — the exact journey Cremica has successfully navigated since 1996.</p>
+    `;
+
+    finalFeedback.innerHTML = reflection;
+
+    gsap.from(finalScreen.querySelector('.bg-gradient-to-br'), { opacity: 0, scale: 0.9, duration: 1.5, ease: "power3.out" });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  startGameBtn.addEventListener('click', () => {
+    gsap.to(introScreen, { opacity: 0, y: -100, duration: 1, onComplete: () => {
+      introScreen.classList.add('hidden');
+      gameArea.classList.remove('hidden');
+      loadRound();
+      gsap.from(gameArea, { opacity: 0, y: 100, duration: 1.2 });
+    }});
+  });
+
+  document.getElementById('fullscreenBtn').addEventListener('click', () => {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+    else document.exitFullscreen();
+  });
+</script>
+</body>
+</html>
