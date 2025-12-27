@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>E-Waste Management - Reuse Lab</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<style type="text/css">
+  html,body{
+    margin:0;padding:0;min-height:100vh;
+    color:#1e293b;font-family:'Segoe UI', system-ui, sans-serif;
+    overflow-x:hidden;line-height:1.8;font-size:16px;
+    background:#0f172a;
+  }
+ 
+  .neon-title{
+    font-size:clamp(2.5rem,5vw,3.5rem);font-weight:900;
+    background:linear-gradient(90deg,#2563eb,#3b82f6,#60a5fa,#2563eb);background-size:300%;
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+    animation:glow 8s ease-in-out infinite;text-shadow:0 0 30px rgba(37,99,235,0.4);
+  }
+  @keyframes glow{0%,100%{background-position:0%}50%{background-position:300%}}
+ 
+  .content-card{
+    position:relative;background:white;border:4px solid #2563eb;border-radius:2rem;
+    padding:3rem;margin:40px auto;transition:all .4s;
+    box-shadow:0 15px 50px rgba(37,99,235,0.15);max-width:7xl;
+  }
+  .content-card:hover{
+    transform:translateY(-12px);box-shadow:0 30px 80px rgba(37,99,235,0.25);
+  }
+ 
+  .subtitle{
+    font-size:clamp(1.5rem,4vw,2.5rem);font-weight:bold;color:#60a5fa;
+    text-shadow:0 0 20px rgba(96,165,250,0.4);margin-top:1.5rem;
+  }
+ 
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+  }
+  .bounce-recycle {
+    animation: bounce 2s infinite ease-in-out;
+    width:80px;filter:drop-shadow(0 0 20px #2563eb);
+  }
+ 
+  .draggable-item{
+    padding:1.5rem;background:#f0f9ff;border:3px dashed #3b82f6;
+    border-radius:1.5rem;cursor:grab;text-align:center;transition:all .3s;
+    user-select:none;box-shadow:0 8px 20px rgba(0,0,0,0.08);display:flex;flex-direction:column;align-items:center;
+  }
+  .draggable-item img{
+    width:120px;height:120px;object-fit:contain;margin-bottom:0.8rem;
+  }
+  .draggable-item .label{
+    font-weight:bold;font-size:1.1rem;
+  }
+  .draggable-item:hover{transform:translateY(-8px);box-shadow:0 15px 30px rgba(59,130,246,0.2);}
+  .draggable-item:active{cursor:grabbing;}
+ 
+  .drop-zone{
+    min-height:140px;background:#f8fbff;border:4px dashed #94a3b8;
+    border-radius:2rem;padding:1.5rem;text-align:center;font-weight:bold;
+    transition:all .4s;box-shadow:0 10px 30px rgba(0,0,0,0.08);
+  }
+  .drop-zone.over{
+    border-color:#2563eb;background:#e0f2fe;box-shadow:0 0 40px rgba(37,99,235,0.5);
+  }
+  .drop-zone .feedback{
+    margin-top:1rem;font-size:1.2rem;
+  }
+ 
+  .activity-btn{
+    padding:1rem 2.5rem;font-size:1.5rem;border-radius:2rem;
+    transition:all 0.3s;box-shadow:0 10px 30px rgba(0,0,0,0.15);
+    font-weight:bold;
+  }
+  .activity-btn:hover{transform:scale(1.1);}
+  .activity-btn-primary{background:#2563eb;color:white;}
+  .activity-btn-secondary{background:#e2e8f0;color:#1e293b;}
+</style>
+</head>
+<body class="bg-slate-900">
+
+<!-- Background GIF -->
+<div class="fixed inset-0 -z-20 pointer-events-none opacity-30">
+  <img alt="background" class="w-full h-full object-cover" src="/s/articles/6927da4e2869b1081116dd9e/images/1two.gif" />
+</div>
+
+<!-- Reuse Lab Activity -->
+<section class="py-16 px-6 max-w-7xl mx-auto">
+  <div class="content-card text-center relative overflow-hidden">
+    <img class="bounce-recycle absolute top-8 right-12" src="/s/articles/69465c2cb3f1c461218d120a/images/recycle-symbol.png" alt="recycle">
+    
+    <h1 class="neon-title">Reuse Lab: From Waste to Worth</h1>
+    <p class="subtitle">Design smart second lives for old electronics.</p>
+    
+    <p class="mt-12 text-xl text-[#64748b] max-w-4xl mx-auto">
+      Drag each discarded device to the most impactful and creative reuse opportunity.
+    </p>
+    
+    <!-- Matching Area -->
+    <div class="mt-20 grid lg:grid-cols-2 gap-16 max-w-6xl mx-auto">
+      <!-- Left: Discarded Devices -->
+      <div>
+        <h3 class="text-3xl font-bold text-[#1e40af] mb-8">Discarded Devices</h3>
+        <div class="space-y-6">
+          <div class="draggable-item" data-device="smartphone" draggable="true">
+            <img src="https://png.pngtree.com/png-clipart/20231026/original/pngtree-old-broken-mobile-phone-isolated-white-background-cell-photo-png-image_13434689.png" alt="Old Smartphone">
+            <div class="label">Old Smartphone</div>
+          </div>
+          <div class="draggable-item" data-device="laptop" draggable="true">
+            <img src="./images/—Pngtree—broken laptop screen advertising_2416673.png" alt="Broken Laptop">
+            <div class="label">Broken Laptop</div>
+          </div>
+          <div class="draggable-item" data-device="tablet" draggable="true">
+            <img src="./images/—Pngtree—silver tablet with black screen_23553837.png" alt="Outdated Tablet">
+            <div class="label">Outdated Tablet</div>
+          </div>
+          <div class="draggable-item" data-device="crt" draggable="true">
+            <img src="./images/—Pngtree—crt computer_16409634.png" alt="CRT Monitor">
+            <div class="label">CRT Monitor</div>
+          </div>
+          <div class="draggable-item" data-device="speakers" draggable="true">
+            <img src="https://png.pngtree.com/png-vector/20231229/ourmid/pngtree-disassembled-electronic-speaker-dirty-png-image_11065770.png" alt="Dead Speakers">
+            <div class="label">Dead Speakers</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Right: Reuse Opportunities -->
+      <div>
+        <h3 class="text-3xl font-bold text-[#1e40af] mb-8">Reuse Opportunities</h3>
+        <div class="space-y-6">
+          <div class="drop-zone" data-target="security">
+            Community Security Camera
+            <div class="feedback hidden"></div>
+          </div>
+          <div class="drop-zone" data-target="learning">
+            Digital Learning Tool
+            <div class="feedback hidden"></div>
+          </div>
+          <div class="drop-zone" data-target="gaming">
+            Media / Retro Gaming Center
+            <div class="feedback hidden"></div>
+          </div>
+          <div class="drop-zone" data-target="art">
+            Art Installation / Aquarium
+            <div class="feedback hidden"></div>
+          </div>
+          <div class="drop-zone" data-target="planter">
+            Smart Planter / Home Décor
+            <div class="feedback hidden"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Impact Counters -->
+    <div class="mt-20 grid md:grid-cols-3 gap-10 max-w-5xl mx-auto">
+      <div class="p-8 rounded-3xl bg-gradient-to-br from-[#2563eb]/10 to-[#60a5fa]/10 border-4 border-[#2563eb] shadow-2xl">
+        <p class="text-2xl font-bold text-[#2563eb]">E-Waste Prevented</p>
+        <p id="wasteCount" class="text-5xl font-bold text-[#2563eb] mt-4">0 kg</p>
+      </div>
+      <div class="p-8 rounded-3xl bg-gradient-to-br from-[#3b82f6]/10 to-[#60a5fa]/10 border-4 border-[#3b82f6] shadow-2xl">
+        <p class="text-2xl font-bold text-[#3b82f6]">Social / Educational Value</p>
+        <p id="socialCount" class="text-5xl font-bold text-[#3b82f6] mt-4">0</p>
+      </div>
+      <div class="p-8 rounded-3xl bg-gradient-to-br from-[#60a5fa]/10 to-white border-4 border-[#60a5fa] shadow-2xl">
+        <p class="text-2xl font-bold text-[#60a5fa]">Environmental Benefit</p>
+        <p id="envCount" class="text-5xl font-bold text-[#60a5fa] mt-4">0</p>
+      </div>
+    </div>
+    
+    <!-- Success Message -->
+    <div id="successMessage" class="hidden mt-20">
+      <h2 class="text-6xl font-bold text-[#22c55e] mb-8 animate-pulse drop-shadow-2xl">REUSE MASTER ACHIEVED</h2>
+      <p class="text-3xl text-white max-w-5xl mx-auto leading-relaxed">
+        You transformed waste into value,<br>
+        extended product lifecycles,<br>
+        and multiplied social impact.
+      </p>
+    </div>
+    
+    <!-- Reset Button -->
+    <div class="mt-16">
+      <button id="resetBtn" class="activity-btn activity-btn-secondary text-2xl px-12 py-5">RESET LAB</button>
+    </div>
+  </div>
+</section>
+
+<script>
+// GSAP bounce for recycle icon
+gsap.to(".bounce-recycle", {
+  y: -20,
+  duration: 2,
+  repeat: -1,
+  yoyo: true,
+  ease: "power1.inOut"
+});
+
+// Correct matches
+const correctMatches = {
+  smartphone: "security",
+  laptop: "learning",
+  tablet: "gaming",
+  crt: "art",
+  speakers: "planter"
+};
+
+const impactPoints = {
+  waste: 1.2,
+  social: 20,
+  env: 15
+};
+
+let matches = {};
+let correctCount = 0;
+
+const draggables = document.querySelectorAll('.draggable-item');
+const dropZones = document.querySelectorAll('.drop-zone');
+
+draggables.forEach(item => {
+  item.addEventListener('dragstart', e => {
+    e.dataTransfer.setData('text/plain', item.dataset.device);
+    setTimeout(() => item.style.opacity = '0.5', 0);
+  });
+  item.addEventListener('dragend', () => item.style.opacity = '1');
+});
+
+dropZones.forEach(zone => {
+  zone.addEventListener('dragover', e => {
+    e.preventDefault();
+    zone.classList.add('over');
+  });
+  
+  zone.addEventListener('dragleave', () => zone.classList.remove('over'));
+  
+  zone.addEventListener('drop', e => {
+    e.preventDefault();
+    zone.classList.remove('over');
+    
+    const device = e.dataTransfer.getData('text/plain');
+    const target = zone.dataset.target;
+    
+    if (matches[target]) return; // Already occupied
+    
+    matches[target] = device;
+    
+    const feedback = zone.querySelector('.feedback');
+    feedback.classList.remove('hidden');
+    
+    if (correctMatches[device] === target) {
+      feedback.innerHTML = `<span class="text-[#22c55e] font-bold text-xl">High Impact Reuse</span>`;
+      correctCount++;
+      updateCounters();
+      gsap.to(zone, {scale: 1.05, duration: 0.3, yoyo: true, repeat: 1});
+    } else {
+      feedback.innerHTML = `<span class="text-orange-500 font-bold text-xl">Possible but Inefficient</span>`;
+    }
+    
+    const dragged = document.querySelector(`[data-device="${device}"]`);
+    dragged.draggable = false;
+    dragged.style.opacity = '0.6';
+    dragged.style.cursor = 'not-allowed';
+    
+    if (Object.keys(matches).length === 5) {
+      setTimeout(checkCompletion, 1000);
+    }
+  });
+});
+
+function updateCounters() {
+  const waste = (correctCount * impactPoints.waste).toFixed(1);
+  const social = correctCount * impactPoints.social;
+  const env = correctCount * impactPoints.env;
+  
+  gsap.to('#wasteCount', {innerText: waste, duration: 1, snap: {innerText: 0.1}});
+  gsap.to('#socialCount', {innerText: social, duration: 1, snap: {innerText: 1}});
+  gsap.to('#envCount', {innerText: env, duration: 1, snap: {innerText: 1}});
+}
+
+function checkCompletion() {
+  if (correctCount === 5) {
+    document.getElementById('successMessage').classList.remove('hidden');
+    confettiExplosion();
+  }
+}
+
+function resetLab() {
+  matches = {};
+  correctCount = 0;
+  
+  draggables.forEach(item => {
+    item.draggable = true;
+    item.style.opacity = '1';
+    item.style.cursor = 'grab';
+  });
+  
+  dropZones.forEach(zone => {
+    zone.querySelector('.feedback').classList.add('hidden');
+    zone.querySelector('.feedback').innerHTML = '';
+  });
+  
+  document.getElementById('wasteCount').textContent = '0 kg';
+  document.getElementById('socialCount').textContent = '0';
+  document.getElementById('envCount').textContent = '0';
+  
+  document.getElementById('successMessage').classList.add('hidden');
+}
+
+document.getElementById('resetBtn').addEventListener('click', resetLab);
+
+function confettiExplosion() {
+  const colors = ['#2563eb', '#3b82f6', '#60a5fa', '#22c55e'];
+  for (let i = 0; i < 250; i++) {
+    const c = document.createElement('div');
+    c.style.position = 'fixed';
+    c.style.left = Math.random() * 100 + 'vw';
+    c.style.top = '-20px';
+    c.style.width = Math.random() * 10 + 6 + 'px';
+    c.style.height = Math.random() * 30 + 15 + 'px';
+    c.style.background = colors[Math.floor(Math.random() * colors.length)];
+    c.style.borderRadius = Math.random() > 0.5 ? '50%' : '6px';
+    c.style.pointerEvents = 'none';
+    c.style.zIndex = '9999';
+    document.body.appendChild(c);
+    
+    const duration = Math.random() * 4 + 3;
+    const vx = Math.random() * 600 - 300;
+    const spin = Math.random() * 720 - 360;
+    let start = null;
+    
+    function fall(time) {
+      if (!start) start = time;
+      const p = (time - start) / (duration * 1000);
+      if (p < 1) {
+        c.style.top = (p * (window.innerHeight + 100)) - 20 + 'px';
+        c.style.left = parseFloat(c.style.left) + (vx * p * 0.02) + 'vw';
+        c.style.transform = `rotate(${p * spin}deg)`;
+        c.style.opacity = 1 - p;
+        requestAnimationFrame(fall);
+      } else {
+        c.remove();
+      }
+    }
+    requestAnimationFrame(fall);
+  }
+}
+</script>
+
+</body>
+</html>
