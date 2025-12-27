@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Cremica Innovation Lab – From Idea to Shelf</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<style type="text/css">
+  body { font-family: 'Poppins', sans-serif; }
+  h1, h2, h3, h4 { font-family: 'Playfair Display', serif; }
+  p { font-size: 16px; line-height: 1.7; }
+  .grain-overlay {
+    background: url('https://img.freepik.com/free-photo/white-plain-concrete-textured-background_53876-102604.jpg?semt=ais_hybrid&w=740&q=80') repeat;
+    opacity: 0.03;
+    pointer-events: none;
+  }
+  .premium-card {
+    border: 2px solid #cc0000;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15), 0 0 25px rgba(255, 215, 0, 0.3);
+    transition: all 0.4s ease;
+  }
+  .category-card {
+    cursor: pointer;
+    transition: all 0.4s ease;
+  }
+  .category-card.selected {
+    border-color: #cc0000;
+    box-shadow: 0 0 30px rgba(204, 0, 0, 0.4);
+    transform: scale(1.05);
+  }
+  .risk-btn.selected {
+    background: #cc0000;
+    color: white;
+  }
+</style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 via-white to-red-50 min-h-screen py-16">
+
+<div class="fixed inset-0 grain-overlay -z-10"></div>
+
+<button class="fixed top-6 right-6 z-50 bg-gradient-to-br from-red-600 to-blue-700 hover:from-red-500 hover:to-blue-600 text-white p-4 rounded-full shadow-2xl backdrop-blur-sm transition-all duration-300 hover:scale-110 text-2xl font-bold" id="fullscreenBtn">⛶</button>
+
+<div class="max-w-6xl mx-auto px-6">
+  <div class="premium-card bg-white/95 backdrop-blur-md rounded-3xl p-10 shadow-2xl">
+
+    <!-- Intro -->
+    <div id="introSection">
+      <div class="text-center mb-12">
+        <h1 class="text-4xl font-black text-blue-900 mb-6">Cremica Innovation Lab – From Idea to Shelf</h1>
+        <p class="text-xl text-blue-800 mb-8">Chapter 2.3: Product Development & Innovation Pipeline</p>
+        <div class="max-w-4xl mx-auto bg-blue-50 rounded-2xl p-8">
+          <h2 class="text-2xl font-bold text-blue-900 mb-4">Design Challenge</h2>
+          <p class="text-blue-800 mb-4">You are part of Cremica’s Product Development Team. Your task is to design ONE realistic new product that aligns with Cremica’s philosophy of “Affordable Premium” and “Never compromise on quality.”</p>
+          <p class="text-blue-800">Use Cremica’s existing capabilities in biscuits, sauces & condiments, and premium bakery (English Oven). Focus on feasibility, consumer insight, and R&D constraints.</p>
+        </div>
+      </div>
+
+      <!-- Category Selection -->
+      <h3 class="text-2xl font-bold text-blue-900 mb-8 text-center">Step 1: Select Product Category</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        <div class="category-card bg-gradient-to-br from-blue-100 to-blue-50 rounded-2xl p-8 text-center border-4 border-transparent" data-category="biscuits">
+          <h4 class="text-2xl font-bold text-blue-900 mb-4">Biscuits</h4>
+          <p class="text-blue-800">Cream, Marie, health digestives, premium cookies</p>
+        </div>
+        <div class="category-card bg-gradient-to-br from-red-100 to-red-50 rounded-2xl p-8 text-center border-4 border-transparent" data-category="sauces">
+          <h4 class="text-2xl font-bold text-blue-900 mb-4">Sauces & Condiments</h4>
+          <p class="text-blue-800">Ketchup, mayonnaise, spreads, dips</p>
+        </div>
+        <div class="category-card bg-gradient-to-br from-yellow-100 to-yellow-50 rounded-2xl p-8 text-center border-4 border-transparent" data-category="bakery">
+          <h4 class="text-2xl font-bold text-blue-900 mb-4">Bakery (English Oven)</h4>
+          <p class="text-blue-800">Buns, pav, premium breads</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Canvas Form -->
+    <div id="canvasSection" class="hidden">
+      <h3 class="text-2xl font-bold text-blue-900 mb-8 text-center">Step 2: Innovation Canvas</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+
+        <!-- Target Consumer -->
+        <div class="bg-white rounded-2xl p-8 shadow-xl">
+          <h4 class="text-xl font-bold text-blue-900 mb-4">1. Target Consumer</h4>
+          <div class="space-y-4">
+            <div>
+              <p class="font-semibold mb-2">Channel</p>
+              <select id="channel" class="w-full p-3 border rounded-lg">
+                <option value="">Select...</option>
+                <option>Retail consumers</option>
+                <option>QSR partners</option>
+                <option>Export markets</option>
+                <option>Combination</option>
+              </select>
+            </div>
+            <div>
+              <p class="font-semibold mb-2">Geography</p>
+              <select id="geography" class="w-full p-3 border rounded-lg">
+                <option value="">Select...</option>
+                <option>Urban India</option>
+                <option>Semi-urban & rural</option>
+                <option>North India focus</option>
+                <option>Pan-India</option>
+              </select>
+            </div>
+            <div>
+              <p class="font-semibold mb-2">Segment</p>
+              <select id="segment" class="w-full p-3 border rounded-lg">
+                <option value="">Select...</option>
+                <option>Health-conscious</option>
+                <option>Mass premium</option>
+                <option>Families & kids</option>
+                <option>Youth / indulgence</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Consumer Insight -->
+        <div class="bg-white rounded-2xl p-8 shadow-xl">
+          <h4 class="text-xl font-bold text-blue-900 mb-4">2. Consumer Insight</h4>
+          <p class="text-sm text-gray-600 mb-2">What unmet need or problem does this product solve?</p>
+          <textarea id="insight" class="w-full p-4 border rounded-lg h-40" placeholder="e.g., Urban health-conscious families want indulgent cream biscuits without high sugar content for guilt-free snacking..."></textarea>
+        </div>
+
+        <!-- Product Concept -->
+        <div class="bg-white rounded-2xl p-8 shadow-xl">
+          <h4 class="text-xl font-bold text-blue-900 mb-4">3. Product Concept</h4>
+          <div class="space-y-4">
+            <input type="text" id="productName" class="w-full p-3 border rounded-lg" placeholder="e.g., Cremica OatChoc Delight">
+            <input type="text" id="variant" class="w-full p-3 border rounded-lg" placeholder="e.g., Dark Chocolate Cream with Oats">
+            <input type="text" id="texture" class="w-full p-3 border rounded-lg" placeholder="e.g., Crunchy cream sandwich biscuit">
+          </div>
+        </div>
+
+        <!-- Health & Nutrition -->
+        <div class="bg-white rounded-2xl p-8 shadow-xl">
+          <h4 class="text-xl font-bold text-blue-900 mb-4">4. Health & Nutrition Angle</h4>
+          <p class="text-sm text-gray-600 mb-4">Select all that apply (must align with Cremica capabilities)</p>
+          <div class="space-y-3">
+            <label class="flex items-center"><input type="checkbox" class="mr-3" value="Eggless"> Eggless</label>
+            <label class="flex items-center"><input type="checkbox" class="mr-3" value="Low sugar / diabetic-friendly"> Low sugar / diabetic-friendly</label>
+            <label class="flex items-center"><input type="checkbox" class="mr-3" value="High fiber / digestive"> High fiber / digestive</label>
+            <label class="flex items-center"><input type="checkbox" class="mr-3" value="Zero trans-fat"> Zero trans-fat</label>
+            <label class="flex items-center"><input type="checkbox" class="mr-3" value="Clean label"> Clean label / natural ingredients</label>
+          </div>
+        </div>
+
+        <!-- Shelf-Life & Packaging -->
+        <div class="bg-white rounded-2xl p-8 shadow-xl">
+          <h4 class="text-xl font-bold text-blue-900 mb-4">5. Shelf-Life & Packaging Strategy</h4>
+          <div class="space-y-4">
+            <div>
+              <p class="font-semibold mb-2">Packaging technology</p>
+              <select id="packaging" class="w-full p-3 border rounded-lg">
+                <option value="">Select...</option>
+                <option>MAP + nitrogen flushing</option>
+                <option>Hurdle technology</option>
+                <option>Natural preservatives</option>
+                <option>Standard packaging</option>
+              </select>
+            </div>
+            <div>
+              <p class="font-semibold mb-2">Target shelf life</p>
+              <input type="text" id="shelfLife" class="w-full p-3 border rounded-lg" placeholder="e.g., 9 months">
+            </div>
+          </div>
+        </div>
+
+        <!-- R&D Risk Assessment -->
+        <div class="bg-white rounded-2xl p-8 shadow-xl">
+          <h4 class="text-xl font-bold text-blue-900 mb-4">6. R&D Risk Assessment</h4>
+          <p class="text-sm text-gray-600 mb-4">Identify two potential risks and rate them</p>
+          <div class="space-y-6">
+            <div>
+              <input type="text" id="risk1" class="w-full p-3 border rounded-lg mb-2" placeholder="e.g., Flavor masking with low sugar">
+              <div class="flex gap-4">
+                <button class="risk-btn px-6 py-2 rounded-lg bg-gray-200" data-risk="1" data-level="Low">Low</button>
+                <button class="risk-btn px-6 py-2 rounded-lg bg-gray-200" data-risk="1" data-level="Medium">Medium</button>
+                <button class="risk-btn px-6 py-2 rounded-lg bg-gray-200" data-risk="1" data-level="High">High</button>
+              </div>
+            </div>
+            <div>
+              <input type="text" id="risk2" class="w-full p-3 border rounded-lg mb-2" placeholder="e.g., Maintaining crunch during scale-up">
+              <div class="flex gap-4">
+                <button class="risk-btn px-6 py-2 rounded-lg bg-gray-200" data-risk="2" data-level="Low">Low</button>
+                <button class="risk-btn px-6 py-2 rounded-lg bg-gray-200" data-risk="2" data-level="Medium">Medium</button>
+                <button class="risk-btn px-6 py-2 rounded-lg bg-gray-200" data-risk="2" data-level="High">High</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Critical Stage -->
+        <div class="bg-white rounded-2xl p-8 shadow-xl md:col-span-2">
+          <h4 class="text-xl font-bold text-blue-900 mb-4">7. Critical R&D Stage</h4>
+          <p class="text-sm text-gray-600 mb-4">Where is failure most likely in this project?</p>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <button class="stage-btn px-6 py-4 rounded-lg bg-gray-100 hover:bg-gray-200" data-stage="Ideation">Ideation</button>
+            <button class="stage-btn px-6 py-4 rounded-lg bg-gray-100 hover:bg-gray-200" data-stage="Prototyping">Prototyping</button>
+            <button class="stage-btn px-6 py-4 rounded-lg bg-gray-100 hover:bg-gray-200" data-stage="Scaling">Scaling</button>
+            <button class="stage-btn px-6 py-4 rounded-lg bg-gray-100 hover:bg-gray-200" data-stage="Shelf-life validation">Shelf-life validation</button>
+          </div>
+        </div>
+
+        <!-- Justification -->
+        <div class="bg-white rounded-2xl p-8 shadow-xl md:col-span-2">
+          <h4 class="text-xl font-bold text-blue-900 mb-4">8. Justification & Reflection</h4>
+          <div class="space-y-6">
+            <div>
+              <p class="font-semibold mb-2">Why is this product suitable for Cremica?</p>
+              <textarea id="whyCremica" class="w-full p-4 border rounded-lg h-32" placeholder="e.g., Builds on Cremica’s leadership in cream biscuits and health digestives while addressing growing low-sugar demand..."></textarea>
+            </div>
+            <div>
+              <p class="font-semibold mb-2">Which existing capability or plant does it leverage?</p>
+              <textarea id="capability" class="w-full p-4 border rounded-lg h-32" placeholder="e.g., Existing biscuit production lines in Punjab and high-fiber expertise from Oatmeal Digestive range..."></textarea>
+            </div>
+            <div>
+              <p class="font-semibold mb-2">What trade-off did you accept and why?</p>
+              <textarea id="tradeoff" class="w-full p-4 border rounded-lg h-32" placeholder="e.g., Slightly higher cost due to oats and low-GI ingredients, accepted to meet health positioning and command premium pricing..."></textarea>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="text-center space-x-6">
+        <button id="submitBtn" class="px-14 py-6 bg-gradient-to-r from-blue-600 to-red-600 text-white text-xl font-bold rounded-2xl shadow-2xl hover:from-blue-700 hover:to-red-700 transition-all">
+          Generate Innovation Brief
+        </button>
+        <button id="resetBtn" class="px-14 py-6 bg-gray-600 text-white text-xl font-bold rounded-2xl shadow-2xl hover:bg-gray-700 transition-all">
+          Reset & Start Over
+        </button>
+      </div>
+    </div>
+
+    <!-- Output Brief -->
+    <div id="outputSection" class="hidden">
+      <h3 class="text-3xl font-bold text-blue-900 mb-10 text-center">Your Innovation Brief</h3>
+      <div class="bg-white rounded-3xl p-12 shadow-2xl mb-12" id="briefContent"></div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        <div class="bg-gradient-to-br from-green-100 to-green-50 rounded-2xl p-8 text-center">
+          <p class="text-xl font-bold text-green-800">Innovation Fit</p>
+          <p class="text-4xl font-black text-green-900" id="fitScore"></p>
+        </div>
+        <div class="bg-gradient-to-br from-blue-100 to-blue-50 rounded-2xl p-8 text-center">
+          <p class="text-xl font-bold text-blue-800">Feasibility</p>
+          <p class="text-4xl font-black text-blue-900" id="feasScore"></p>
+        </div>
+        <div class="bg-gradient-to-br from-red-100 to-red-50 rounded-2xl p-8 text-center">
+          <p class="text-xl font-bold text-red-800">Brand Alignment</p>
+          <p class="text-4xl font-black text-red-900" id="alignScore"></p>
+        </div>
+      </div>
+
+      <div class="bg-yellow-50 rounded-3xl p-10 text-center">
+        <p class="text-xl font-semibold text-yellow-900 mb-4">Reflective Insight</p>
+        <p class="text-2xl italic text-blue-900" id="failureReason"></p>
+      </div>
+
+      <div class="mt-16 text-center bg-blue-50 rounded-3xl p-10">
+        <p class="text-xl italic text-blue-900">In FMCG, innovation succeeds not by bold ideas alone, but by disciplined execution.</p>
+      </div>
+
+      <div class="text-center mt-12">
+        <button id="newBriefBtn" class="px-14 py-6 bg-gray-600 text-white text-xl font-bold rounded-2xl shadow-2xl hover:bg-gray-700 transition-all">
+          Start New Innovation Brief
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  let selectedCategory = '';
+
+  // Category selection
+  document.querySelectorAll('.category-card').forEach(card => {
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.category-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      selectedCategory = card.dataset.category;
+      gsap.to('#introSection', { opacity: 0, y: -50, duration: 0.8, onComplete: () => {
+        document.getElementById('introSection').classList.add('hidden');
+        document.getElementById('canvasSection').classList.remove('hidden');
+        gsap.from('#canvasSection', { opacity: 0, y: 50, duration: 1 });
+      }});
+    });
+  });
+
+  // Risk buttons
+  document.querySelectorAll('.risk-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const riskNum = btn.dataset.risk;
+      document.querySelectorAll(`[data-risk="${riskNum}"]`).forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+    });
+  });
+
+  // Critical stage
+  document.querySelectorAll('.stage-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.stage-btn').forEach(b => b.classList.remove('selected', 'bg-red-600', 'text-white'));
+      btn.classList.add('selected', 'bg-red-600', 'text-white');
+    });
+  });
+
+  // Reset buttons - now reload the page
+  document.getElementById('resetBtn').addEventListener('click', () => {
+    location.reload();
+  });
+
+  document.getElementById('newBriefBtn').addEventListener('click', () => {
+    location.reload();
+  });
+
+  // Submit
+  document.getElementById('submitBtn').addEventListener('click', () => {
+    if (!selectedCategory) {
+      alert('Please select a product category first.');
+      return;
+    }
+
+    const data = {
+      category: selectedCategory,
+      channel: document.getElementById('channel').value,
+      geography: document.getElementById('geography').value,
+      segment: document.getElementById('segment').value,
+      insight: document.getElementById('insight').value.trim(),
+      name: document.getElementById('productName').value.trim(),
+      variant: document.getElementById('variant').value.trim(),
+      texture: document.getElementById('texture').value.trim(),
+      health: Array.from(document.querySelectorAll('input[type=checkbox]:checked')).map(c => c.value),
+      packaging: document.getElementById('packaging').value,
+      shelfLife: document.getElementById('shelfLife').value.trim(),
+      risk1: document.getElementById('risk1').value.trim(),
+      risk1Level: document.querySelector('[data-risk="1"].selected')?.dataset.level || 'Not rated',
+      risk2: document.getElementById('risk2').value.trim(),
+      risk2Level: document.querySelector('[data-risk="2"].selected')?.dataset.level || 'Not rated',
+      criticalStage: document.querySelector('.stage-btn.selected')?.dataset.stage || 'Not selected',
+      whyCremica: document.getElementById('whyCremica').value.trim(),
+      capability: document.getElementById('capability').value.trim(),
+      tradeoff: document.getElementById('tradeoff').value.trim()
+    };
+
+    // Validation
+    if (!data.insight || !data.name || !data.whyCremica) {
+      alert('Please complete at least: Consumer Insight, Product Name, and “Why suitable for Cremica?”');
+      return;
+    }
+
+    // Generate brief
+    let brief = `
+      <h4 class="text-2xl font-bold text-blue-900 mb-6">New Product Proposal</h4>
+      <p><strong>Category:</strong> ${data.category.charAt(0).toUpperCase() + data.category.slice(1)}</p>
+      <p><strong>Product Name:</strong> ${data.name || 'Not specified'}</p>
+      <p><strong>Variant/Format:</strong> ${data.variant || 'N/A'} – ${data.texture || 'N/A'}</p>
+      <p><strong>Target Consumer:</strong> ${data.segment || 'N/A'} in ${data.geography || 'N/A'} via ${data.channel || 'N/A'}</p>
+      <p class="mt-4"><strong>Consumer Insight:</strong><br>${data.insight || 'Not provided'}</p>
+      <p class="mt-4"><strong>Health & Nutrition:</strong> ${data.health.length ? data.health.join(', ') : 'Standard formulation'}</p>
+      <p class="mt-4"><strong>Packaging & Shelf-Life:</strong> ${data.packaging || 'Standard'} targeting ${data.shelfLife || 'standard stability'}</p>
+      <p class="mt-4"><strong>R&D Risks:</strong><br>• ${data.risk1 || 'Not specified'} (${data.risk1Level})<br>• ${data.risk2 || 'Not specified'} (${data.risk2Level})</p>
+      <p class="mt-4"><strong>Most Likely Failure Point:</strong> ${data.criticalStage}</p>
+      <p class="mt-6 border-t pt-6"><strong>Justification:</strong><br>${data.whyCremica || 'Not provided'}<br><br><strong>Leveraged Capability:</strong> ${data.capability || 'Not specified'}<br><br><strong>Accepted Trade-off:</strong> ${data.tradeoff || 'Not specified'}</p>
+    `;
+
+    document.getElementById('briefContent').innerHTML = brief;
+
+    // Heuristic scores
+    let fit = 65;
+    let feas = 70;
+    let align = 75;
+
+    if (data.health.length >= 2) align += 12;
+    if (data.packaging && data.packaging.includes('MAP')) feas += 12;
+    if (data.criticalStage !== 'Not selected') fit += 8;
+    if (data.insight.length > 30) fit += 12;
+    if (data.whyCremica.length > 30) align += 10;
+
+    document.getElementById('fitScore').textContent = Math.min(100, fit) + '/100';
+    document.getElementById('feasScore').textContent = Math.min(100, feas) + '/100';
+    document.getElementById('alignScore').textContent = Math.min(100, align) + '/100';
+
+    // Reflective failure reason
+    const reasons = [
+      "inadequate flavor masking in health-focused variants",
+      "unexpected oxidation during scale-up",
+      "higher-than-expected raw material cost volatility",
+      "shelf-life shortfall in export climates",
+      "consumer taste acceptance below target in blind tests",
+      "regulatory delay in new ingredient approval"
+    ];
+    const reason = reasons[Math.floor(Math.random() * reasons.length)];
+    document.getElementById('failureReason').textContent = `If this product failed, the most likely reason would be ${reason}.`;
+
+    // Transition to output
+    gsap.to('#canvasSection', { opacity: 0, y: -50, duration: 0.8, onComplete: () => {
+      document.getElementById('canvasSection').classList.add('hidden');
+      document.getElementById('outputSection').classList.remove('hidden');
+      gsap.from('#outputSection', { opacity: 0, y: 50, duration: 1 });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }});
+  });
+
+  // Fullscreen
+  document.getElementById('fullscreenBtn').addEventListener('click', () => {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+    else document.exitFullscreen();
+  });
+</script>
+</body>
+</html>
