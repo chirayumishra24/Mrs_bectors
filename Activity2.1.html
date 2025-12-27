@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Cremica Product Strategist – Biscuit Portfolio Challenge</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/confetti/1.1.1/confetti.min.js"></script>
+<style type="text/css">
+  body { font-family: 'Poppins', sans-serif; }
+  h1, h2, h3 { font-family: 'Playfair Display', serif; }
+  p, li { font-size: 18px !important; line-height: 1.8; }
+  .grain-overlay {
+    background: url('https://img.freepik.com/free-photo/white-plain-concrete-textured-background_53876-102604.jpg?semt=ais_hybrid&w=740&q=80') repeat;
+    opacity: 0.03;
+    pointer-events: none;
+  }
+  .premium-card {
+    border: 2px solid #cc0000;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15), 0 0 25px rgba(255, 215, 0, 0.3);
+    transition: all 0.4s ease;
+  }
+  .premium-card:hover {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2), 0 0 35px rgba(255, 215, 0, 0.5);
+    transform: translateY(-8px);
+  }
+  .category-card {
+    cursor: pointer;
+    transition: all 0.4s ease;
+  }
+  .category-card.selected {
+    border-color: #cc0000;
+    box-shadow: 0 0 30px rgba(204, 0, 0, 0.4);
+    transform: scale(1.05);
+  }
+  .product-card {
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .product-card.selected {
+    border-color: #cc0000;
+    box-shadow: 0 0 25px rgba(204, 0, 0, 0.3);
+    transform: translateY(-5px);
+  }
+  .fit-btn.active {
+    background: #cc0000 !important;
+    color: white !important;
+  }
+  .counter {
+    font-size: 2.8rem;
+    font-weight: bold;
+  }
+</style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 via-white to-red-50 min-h-screen py-20">
+
+<!-- Subtle overlays -->
+<div class="fixed inset-0 grain-overlay -z-10"></div>
+
+<!-- Fullscreen Button -->
+<button class="fixed top-6 right-6 z-50 bg-gradient-to-br from-red-600 to-blue-700 hover:from-red-500 hover:to-blue-600 text-white p-4 rounded-full shadow-2xl backdrop-blur-sm transition-all duration-300 hover:scale-110 text-3xl font-bold" id="fullscreenBtn">⛶</button>
+
+<div class="max-w-6xl mx-auto px-6">
+  <div class="premium-card bg-white/95 backdrop-blur-md rounded-3xl p-12 shadow-2xl">
+    
+    <!-- Title & Purpose -->
+    <div class="text-center mb-12">
+      <h2 class="text-4xl font-black text-blue-900 mb-6">Cremica Product Strategist – Biscuit Portfolio Challenge</h2>
+      <div class="max-w-4xl mx-auto bg-blue-50 rounded-2xl p-8 mb-10">
+        <h3 class="text-2xl font-bold text-blue-900 mb-4">Purpose of this Simulation</h3>
+        <p class="text-lg text-blue-800">In this interactive challenge, you step into the role of a Cremica Product Strategist. Your goal is to understand Cremica’s four core biscuit categories, analyze product-consumer-price-nutrition fit, and make strategic portfolio decisions just like a real brand manager.</p>
+        <p class="text-lg text-blue-800 mt-4">You will face real-world market scenarios and must select the best product from the chosen category to capture market share while balancing revenue, health alignment, and brand equity.</p>
+      </div>
+      <button id="startBtn" class="px-12 py-6 bg-gradient-to-r from-blue-600 to-red-600 text-white text-2xl font-bold rounded-2xl shadow-2xl hover:from-blue-700 hover:to-red-700 transition-all duration-300 hover:scale-105">
+        Start Challenge
+      </button>
+    </div>
+
+    <!-- Main Game Area (Hidden initially) -->
+    <div id="gameArea" class="hidden">
+
+      <!-- SECTION 1: Category Selector -->
+      <h3 class="text-3xl font-bold text-blue-900 text-center mb-10">Step 1: Select a Biscuit Category</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+        <div class="category-card bg-gradient-to-br from-blue-100 to-blue-50 rounded-2xl p-8 text-center border-4 border-transparent" data-category="premium">
+          <h4 class="text-2xl font-bold text-blue-900 mb-4">Premium Biscuits</h4>
+          <p><strong>Share:</strong> 25%</p>
+          <p><strong>Consumer:</strong> Urban Youth</p>
+          <p><strong>Price:</strong> ₹20–45</p>
+          <p><strong>Role:</strong> Indulgence</p>
+        </div>
+        <div class="category-card bg-gradient-to-br from-yellow-100 to-yellow-50 rounded-2xl p-8 text-center border-4 border-transparent" data-category="cookies">
+          <h4 class="text-2xl font-bold text-blue-900 mb-4">Cookies</h4>
+          <p><strong>Share:</strong> 20%</p>
+          <p><strong>Consumer:</strong> Families</p>
+          <p><strong>Price:</strong> ₹25–50</p>
+          <p><strong>Role:</strong> Gifting / Comfort</p>
+        </div>
+        <div class="category-card bg-gradient-to-br from-green-100 to-green-50 rounded-2xl p-8 text-center border-4 border-transparent" data-category="health">
+          <h4 class="text-2xl font-bold text-blue-900 mb-4">Health Biscuits</h4>
+          <p><strong>Share:</strong> 20%</p>
+          <p><strong>Consumer:</strong> Health-Conscious Adults</p>
+          <p><strong>Price:</strong> ₹30–50</p>
+          <p><strong>Role:</strong> Wellness</p>
+        </div>
+        <div class="category-card bg-gradient-to-br from-red-100 to-red-50 rounded-2xl p-8 text-center border-4 border-transparent" data-category="marie">
+          <h4 class="text-2xl font-bold text-blue-900 mb-4">Marie / Milk Biscuits</h4>
+          <p><strong>Share:</strong> 35%</p>
+          <p><strong>Consumer:</strong> Mass / Families</p>
+          <p><strong>Price:</strong> ₹10–30</p>
+          <p><strong>Role:</strong> Everyday Tea-Time</p>
+        </div>
+      </div>
+
+      <!-- SECTION 2: Market Scenario Panel -->
+      <div id="scenarioPanel" class="hidden bg-gradient-to-r from-blue-600 to-red-600 text-white rounded-3xl p-10 mb-16 text-center">
+        <h3 class="text-3xl font-bold mb-6" id="scenarioTitle"></h3>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-lg">
+          <div><strong>Target:</strong> <span id="targetConsumer"></span></div>
+          <div><strong>Price Sensitivity:</strong> <span id="priceSens"></span></div>
+          <div><strong>Health Sensitivity:</strong> <span id="healthSens"></span></div>
+          <div><strong>Priority:</strong> <span id="priority"></span></div>
+        </div>
+      </div>
+
+      <!-- SECTION 3: Product Selection -->
+      <div id="productSection" class="hidden">
+        <h3 class="text-3xl font-bold text-blue-900 text-center mb-10">Step 2: Choose ONE Product</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 mb-12" id="productGrid"></div>
+
+        <!-- Positioning Options -->
+        <div id="positioningPanel" class="hidden bg-gray-100 rounded-3xl p-10 mb-12">
+          <h4 class="text-2xl font-bold text-blue-900 mb-8 text-center">Step 3: Fine-tune Positioning (Optional)</h4>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-4xl mx-auto">
+            <div class="text-center">
+              <p class="font-semibold mb-4">Price Focus</p>
+              <div class="flex justify-center gap-6">
+                <button class="fit-btn px-8 py-4 rounded-xl bg-gray-300 text-lg font-semibold" data-toggle="price" data-value="value">Value</button>
+                <button class="fit-btn px-8 py-4 rounded-xl bg-gray-300 text-lg font-semibold" data-toggle="price" data-value="premium">Premium</button>
+              </div>
+            </div>
+            <div class="text-center">
+              <p class="font-semibold mb-4">Health Emphasis</p>
+              <button class="fit-btn px-12 py-6 rounded-xl bg-gray-300 text-lg font-semibold toggle-health">Add Health Claim</button>
+            </div>
+            <div class="text-center">
+              <p class="font-semibold mb-4">Primary Target</p>
+              <div class="flex justify-center gap-6">
+                <button class="fit-btn px-8 py-4 rounded-xl bg-gray-300 text-lg font-semibold" data-toggle="target" data-value="youth">Youth</button>
+                <button class="fit-btn px-8 py-4 rounded-xl bg-gray-300 text-lg font-semibold" data-toggle="target" data-value="family">Family</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fit Decision -->
+        <div id="fitPanel" class="hidden text-center mb-16">
+          <h4 class="text-2xl font-bold text-blue-900 mb-8">Step 4: Evaluate Fit</h4>
+          <div class="flex justify-center gap-12">
+            <button class="fit-btn px-12 py-6 rounded-2xl text-3xl font-bold bg-green-500 text-white hover:bg-green-600 shadow-lg">✔️ Right Fit</button>
+            <button class="fit-btn px-12 py-6 rounded-2xl text-3xl font-bold bg-yellow-500 text-white hover:bg-yellow-600 shadow-lg">⚠️ Risky Fit</button>
+            <button class="fit-btn px-12 py-6 rounded-2xl text-3xl font-bold bg-red-500 text-white hover:bg-red-600 shadow-lg">❌ Poor Fit</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STRATEGY SCOREBOARD -->
+      <div class="bg-gradient-to-r from-blue-100 to-red-100 rounded-3xl p-10 mb-16">
+        <h3 class="text-3xl font-bold text-blue-900 text-center mb-10">Strategy Scoreboard</h3>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+          <div class="bg-white rounded-2xl p-8 shadow-lg">
+            <p class="text-lg font-semibold text-blue-900">Market Fit Score</p>
+            <div class="counter text-blue-700" id="marketFit">0</div>
+          </div>
+          <div class="bg-white rounded-2xl p-8 shadow-lg">
+            <p class="text-lg font-semibold text-blue-900">Revenue Potential</p>
+            <div class="counter text-green-700" id="revenue">0</div>
+          </div>
+          <div class="bg-white rounded-2xl p-8 shadow-lg">
+            <p class="text-lg font-semibold text-blue-900">Health Alignment</p>
+            <div class="counter text-yellow-700" id="healthAlign">0</div>
+          </div>
+          <div class="bg-white rounded-2xl p-8 shadow-lg">
+            <p class="text-lg font-semibold text-blue-900">Brand Equity Impact</p>
+            <div class="counter text-red-700" id="brandEquity">0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feedback Panel -->
+      <div id="feedbackPanel" class="hidden text-center max-w-4xl mx-auto"></div>
+
+      <!-- Action Buttons -->
+      <div class="text-center mt-12 space-x-6">
+        <button id="retryBtn" class="hidden px-10 py-5 bg-blue-600 text-white text-xl font-bold rounded-xl hover:bg-blue-700 shadow-lg">🔁 Retry Scenario</button>
+        <button id="switchBtn" class="hidden px-10 py-5 bg-red-600 text-white text-xl font-bold rounded-xl hover:bg-red-700 shadow-lg">🔄 Switch Category</button>
+        <button id="newScenarioBtn" class="hidden px-10 py-5 bg-green-600 text-white text-xl font-bold rounded-xl hover:bg-green-700 shadow-lg">Next Scenario</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Data
+  const categories = {
+    premium: {
+      products: [
+        { name: "Bourbon Chocolate Cream", feature: "Rich chocolate cream sandwich", nutrition: "High sugar & fat", priceLow: 25, indulgence: true, health: false, target: "youth" },
+        { name: "Melto Vanilla", feature: "Melt-in-mouth vanilla creme", nutrition: "Moderate sugar", priceLow: 20, indulgence: true, health: false, target: "youth" },
+        { name: "Nonstop Masala Crackers", feature: "Spicy savory crunch", nutrition: "Moderate fat", priceLow: 15, indulgence: true, health: false, target: "youth" }
+      ]
+    },
+    cookies: {
+      products: [
+        { name: "Golden Bites Butter", feature: "Buttery elaichi cookie", nutrition: "High butter fat", priceLow: 30, indulgence: true, health: false, target: "family", gifting: true },
+        { name: "Choco Chip", feature: "Dark chocolate chips", nutrition: "Moderate sugar & fat", priceLow: 25, indulgence: true, health: false, target: "family" },
+        { name: "Pista Almond", feature: "Nutty premium cookie", nutrition: "High fat", priceLow: 35, indulgence: true, health: false, target: "family", gifting: true }
+      ]
+    },
+    health: {
+      products: [
+        { name: "Oatmeal Digestive", feature: "High fiber oats", nutrition: "High fiber, low sugar", priceLow: 35, health: true, indulgence: false, target: "adults" },
+        { name: "Honey Oatmeal", feature: "Natural honey sweetness", nutrition: "Moderate sugar, high fiber", priceLow: 25, health: true, indulgence: false, target: "adults" },
+        { name: "Cornflakes Digestive", feature: "Crunchy cornflakes", nutrition: "High fiber", priceLow: 30, health: true, indulgence: false, target: "adults" }
+      ]
+    },
+    marie: {
+      products: [
+        { name: "Classic Marie", feature: "Light crispy dunkable", nutrition: "Low fat, moderate sugar", priceLow: 15, health: false, indulgence: false, target: "family" },
+        { name: "Bourbon Milk Cream", feature: "Milk cream sandwich", nutrition: "Moderate fat & sugar", priceLow: 20, health: false, indulgence: true, target: "family" },
+        { name: "Magiccreme Elaichi", feature: "Elaichi milk creme", nutrition: "Moderate sugar", priceLow: 18, health: false, indulgence: false, target: "family" }
+      ]
+    }
+  };
+
+  const scenarios = [
+    { title: "Urban youth demand indulgent snacks under ₹40", consumer: "Urban Youth", priceSens: "High", healthSens: "Low", priority: "Volume", bestCategory: "premium" },
+    { title: "Diabetic & fitness consumers rising in Tier-1 cities", consumer: "Health-Conscious Adults", priceSens: "Medium", healthSens: "High", priority: "Margin", bestCategory: "health" },
+    { title: "Mass rural tea-time consumption, price-sensitive", consumer: "Mass Families", priceSens: "Very High", healthSens: "Low", priority: "Volume", bestCategory: "marie" },
+    { title: "Festive gifting season in North India", consumer: "Families", priceSens: "Low", healthSens: "Medium", priority: "Margin", bestCategory: "cookies" },
+    { title: "Young professionals seeking quick healthy snacks", consumer: "Urban Professionals", priceSens: "Medium", healthSens: "High", priority: "Margin", bestCategory: "health" },
+    { title: "Kids' lunchbox indulgence trend in urban areas", consumer: "Kids & Parents", priceSens: "Medium", healthSens: "Low", priority: "Volume", bestCategory: "premium" }
+  ];
+
+  // State
+  let currentCategory = null;
+  let currentScenario = null;
+  let selectedProduct = null;
+  let positioning = { price: null, health: false, target: null };
+  let scoresCalculated = false;
+
+  // Elements
+  const startBtn = document.getElementById('startBtn');
+  const gameArea = document.getElementById('gameArea');
+  const categoryCards = document.querySelectorAll('.category-card');
+  const scenarioPanel = document.getElementById('scenarioPanel');
+  const scenarioTitle = document.getElementById('scenarioTitle');
+  const targetConsumer = document.getElementById('targetConsumer');
+  const priceSens = document.getElementById('priceSens');
+  const healthSens = document.getElementById('healthSens');
+  const priority = document.getElementById('priority');
+  const productGrid = document.getElementById('productGrid');
+  const productSection = document.getElementById('productSection');
+  const positioningPanel = document.getElementById('positioningPanel');
+  const fitPanel = document.getElementById('fitPanel');
+  const feedbackPanel = document.getElementById('feedbackPanel');
+  const counters = {
+    marketFit: document.getElementById('marketFit'),
+    revenue: document.getElementById('revenue'),
+    healthAlign: document.getElementById('healthAlign'),
+    brandEquity: document.getElementById('brandEquity')
+  };
+
+  // Start button
+  startBtn.addEventListener('click', () => {
+    gsap.to(startBtn.parentElement, { opacity: 0, y: -50, duration: 0.8, onComplete: () => {
+      startBtn.parentElement.classList.add('hidden');
+      gameArea.classList.remove('hidden');
+      gsap.from(gameArea, { opacity: 0, y: 50, duration: 1 });
+    }});
+  });
+
+  function loadRandomScenario() {
+    currentScenario = scenarios[Math.floor(Math.random() * scenarios.length)];
+    scenarioTitle.textContent = currentScenario.title;
+    targetConsumer.textContent = currentScenario.consumer;
+    priceSens.textContent = currentScenario.priceSens;
+    healthSens.textContent = currentScenario.healthSens;
+    priority.textContent = currentScenario.priority;
+    scenarioPanel.classList.remove('hidden');
+    gsap.from(scenarioPanel, { opacity: 0, y: 50, duration: 0.8 });
+  }
+
+  function loadProducts(category) {
+    productGrid.innerHTML = '';
+    categories[category].products.forEach(prod => {
+      const card = document.createElement('div');
+      card.className = 'product-card bg-white rounded-2xl p-8 shadow-xl border-4 border-transparent text-center hover:shadow-2xl';
+      card.innerHTML = `
+        <h4 class="text-2xl font-bold text-blue-900 mb-4">${prod.name}</h4>
+        <p class="mb-3"><strong>Feature:</strong> ${prod.feature}</p>
+        <p class="mb-3"><strong>Nutrition:</strong> ${prod.nutrition}</p>
+        <p class="mb-3"><strong>Price band starts:</strong> ₹${prod.priceLow}+</p>
+      `;
+      card.addEventListener('click', () => {
+        document.querySelectorAll('.product-card').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        selectedProduct = prod;
+        positioningPanel.classList.remove('hidden');
+        fitPanel.classList.remove('hidden');
+        gsap.from([positioningPanel, fitPanel], { opacity: 0, y: 40, duration: 0.7, stagger: 0.2 });
+      });
+      productGrid.appendChild(card);
+    });
+  }
+
+  // Category selection
+  categoryCards.forEach(card => {
+    card.addEventListener('click', () => {
+      if (scoresCalculated) return; // Prevent changing after submission
+      categoryCards.forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      currentCategory = card.dataset.category;
+      loadRandomScenario();
+      loadProducts(currentCategory);
+      productSection.classList.remove('hidden');
+      feedbackPanel.classList.add('hidden');
+      document.getElementById('retryBtn').classList.add('hidden');
+      document.getElementById('switchBtn').classList.add('hidden');
+      document.getElementById('newScenarioBtn').classList.add('hidden');
+      resetState();
+      gsap.from(productSection, { opacity: 0, y: 50, duration: 0.8 });
+    });
+  });
+
+  // Positioning toggles
+  document.querySelectorAll('[data-toggle]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const group = btn.dataset.toggle;
+      document.querySelectorAll(`[data-toggle="${group}"]`).forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      positioning[group] = btn.dataset.value;
+    });
+  });
+
+  document.querySelector('.toggle-health').addEventListener('click', function() {
+    this.classList.toggle('active');
+    positioning.health = this.classList.contains('active');
+  });
+
+  // Fit decision
+  document.querySelectorAll('#fitPanel .fit-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (!selectedProduct || scoresCalculated) return;
+      scoresCalculated = true;
+      const fitLevel = btn.textContent.trim();
+      calculateScore(fitLevel);
+    });
+  });
+
+  function calculateScore(fitLevel) {
+    let scores = { marketFit: 20, revenue: 20, healthAlign: 20, brandEquity: 20 };
+
+    // Category match
+    if (currentCategory === currentScenario.bestCategory) {
+      scores.marketFit += 40;
+      scores.brandEquity += 20;
+    } else {
+      scores.marketFit += 10;
+    }
+
+    // Product properties
+    const prod = selectedProduct;
+    if (currentScenario.healthSens === "High" && prod.health) {
+      scores.healthAlign += 50;
+    } else if (currentScenario.healthSens === "Low" && prod.indulgence) {
+      scores.marketFit += 30;
+      scores.brandEquity += 20;
+    }
+
+    if (currentScenario.priority === "Volume" && prod.priceLow <= 30) {
+      scores.revenue += 40;
+    } else if (currentScenario.priority === "Margin" && prod.priceLow >= 30) {
+      scores.revenue += 40;
+    }
+
+    // Positioning bonuses
+    if (positioning.price === "value" && (currentScenario.priceSens === "High" || currentScenario.priceSens === "Very High")) {
+      scores.revenue += 25;
+    }
+    if (positioning.price === "premium" && currentScenario.priceSens === "Low") {
+      scores.revenue += 25;
+    }
+    if (positioning.health && currentScenario.healthSens === "High") {
+      scores.healthAlign += 25;
+    }
+    if (positioning.target && currentScenario.consumer.toLowerCase().includes(positioning.target)) {
+      scores.brandEquity += 30;
+    }
+
+    // Fit multiplier
+    const multiplier = fitLevel === "✔️ Right Fit" ? 1.2 : fitLevel === "⚠️ Risky Fit" ? 0.8 : 0.4;
+    Object.keys(scores).forEach(k => scores[k] = Math.round(scores[k] * multiplier));
+
+    // Cap at 100
+    Object.keys(scores).forEach(k => scores[k] = Math.min(100, scores[k]));
+
+    // Animate counters
+    Object.keys(counters).forEach(key => {
+      gsap.fromTo(counters[key], { innerText: 0 }, {
+        innerText: scores[key],
+        duration: 2,
+        ease: "power2.out",
+        snap: { innerText: 1 },
+        onUpdate: () => counters[key].innerText = Math.round(counters[key].innerText)
+      });
+    });
+
+    showFeedback(scores, fitLevel);
+  }
+
+  function showFeedback(scores, fitLevel) {
+    feedbackPanel.classList.remove('hidden');
+    const avg = Object.values(scores).reduce((a,b) => a+b) / 4;
+
+    let html = '';
+    if (avg >= 80) {
+      html = `<div class="bg-gradient-to-br from-yellow-200 to-gold-300 rounded-3xl p-16 shadow-2xl">
+        <h3 class="text-5xl font-black text-blue-900 mb-8">🎉 PORTFOLIO STRATEGIST UNLOCKED!</h3>
+        <p class="text-3xl text-blue-900">You successfully aligned product, consumer, and category to strengthen Cremica’s market leadership.</p>
+      </div>`;
+      confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
+      document.getElementById('newScenarioBtn').classList.remove('hidden');
+    } else {
+      html = `<div class="bg-red-100 rounded-3xl p-12 shadow-xl">
+        <h3 class="text-4xl font-bold text-red-800 mb-8">Suboptimal Strategy</h3>
+        <p class="text-2xl text-blue-900 mb-6">${fitLevel === "❌ Poor Fit" ? "Significant misalignment with consumer needs." : "Opportunities for better alignment exist."}</p>
+        <p class="text-xl text-blue-900">Review category choice, nutrition cues, price realism, and targeting for stronger results.</p>
+      </div>`;
+    }
+
+    feedbackPanel.innerHTML = html;
+    document.getElementById('retryBtn').classList.remove('hidden');
+    document.getElementById('switchBtn').classList.remove('hidden');
+
+    gsap.from(feedbackPanel, { opacity: 0, scale: 0.9, duration: 1 });
+  }
+
+  function resetState() {
+    selectedProduct = null;
+    positioning = { price: null, health: false, target: null };
+    scoresCalculated = false;
+    Object.values(counters).forEach(c => c.innerText = '0');
+    document.querySelectorAll('.fit-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector('.toggle-health').classList.remove('active');
+    positioningPanel.classList.add('hidden');
+    fitPanel.classList.add('hidden');
+    feedbackPanel.classList.add('hidden');
+  }
+
+  // Action buttons
+  document.getElementById('retryBtn').addEventListener('click', () => {
+    loadRandomScenario();
+    resetState();
+    document.querySelectorAll('.product-card').forEach(c => c.classList.remove('selected'));
+    positioningPanel.classList.add('hidden');
+    fitPanel.classList.add('hidden');
+    feedbackPanel.classList.add('hidden');
+    ['retryBtn','switchBtn','newScenarioBtn'].forEach(id => document.getElementById(id).classList.add('hidden'));
+  });
+
+  document.getElementById('switchBtn').addEventListener('click', () => {
+    categoryCards.forEach(c => c.classList.remove('selected'));
+    scenarioPanel.classList.add('hidden');
+    productSection.classList.add('hidden');
+    resetState();
+    ['retryBtn','switchBtn','newScenarioBtn'].forEach(id => document.getElementById(id).classList.add('hidden'));
+  });
+
+  document.getElementById('newScenarioBtn').addEventListener('click', () => {
+    loadRandomScenario();
+    document.querySelectorAll('.product-card').forEach(c => c.classList.remove('selected'));
+    resetState();
+    positioningPanel.classList.add('hidden');
+    fitPanel.classList.add('hidden');
+    feedbackPanel.classList.add('hidden');
+    document.getElementById('newScenarioBtn').classList.add('hidden');
+  });
+
+  // Fullscreen
+  document.getElementById('fullscreenBtn').addEventListener('click', () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  });
+</script>
+</body>
+</html>
