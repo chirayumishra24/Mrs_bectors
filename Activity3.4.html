@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Run the Cremica Flow: From Factory to Shelf</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<style type="text/css">
+  body { font-family: 'Poppins', sans-serif; }
+  h1, h2, h3 { font-family: 'Playfair Display', serif; }
+  p { font-size: 16px; line-height: 1.7; }
+  .grain-overlay {
+    background: url('https://img.freepik.com/free-photo/white-plain-concrete-textured-background_53876-102604.jpg?semt=ais_hybrid&w=740&q=80') repeat;
+    opacity: 0.03;
+    pointer-events: none;
+  }
+  .premium-card {
+    border: 2px solid #cc0000;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  }
+  .slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 12px;
+    border-radius: 6px;
+    background: #e5e7eb;
+    outline: none;
+    margin: 1rem 0;
+  }
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #cc0000;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  }
+  .stress.green { background: #22c55e; }
+  .stress.yellow { background: #eab308; }
+  .stress.red { background: #ef4444; }
+  .toggle {
+    width: 80px;
+    height: 40px;
+    background: #9ca3af;
+    border-radius: 999px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  .toggle.active {
+    background: #cc0000;
+  }
+  .toggle-knob {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 32px;
+    height: 32px;
+    background: white;
+    border-radius: 50%;
+    transition: left 0.3s;
+  }
+  .toggle.active .toggle-knob {
+    left: 44px;
+  }
+  .alloc-tile {
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .alloc-tile.selected {
+    background: #cc0000;
+    color: white;
+    transform: scale(1.05);
+  }
+  .shelf-slot {
+    width: 120px;
+    height: 160px;
+    background: #f3f4f6;
+    border: 3px dashed #9ca3af;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    text-align: center;
+  }
+  .shelf-slot.filled {
+    border-style: solid;
+    background: #fee2e2;
+    border-color: #cc0000;
+  }
+</style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 via-white to-red-50 min-h-screen py-16">
+
+<div class="fixed inset-0 grain-overlay -z-10"></div>
+
+<button class="fixed top-6 right-6 z-50 bg-gradient-to-br from-red-600 to-blue-700 hover:from-red-500 hover:to-blue-600 text-white p-4 rounded-full shadow-2xl backdrop-blur-sm transition-all duration-300 hover:scale-110 text-xl font-bold" id="fullscreenBtn">⛶</button>
+
+<div class="max-w-6xl mx-auto px-6">
+  <div class="premium-card bg-white/95 backdrop-blur-md rounded-3xl p-10 shadow-2xl">
+
+    <!-- Factory Dashboard -->
+    <div id="factorySection">
+      <div class="text-center mb-12">
+        <h1 class="text-4xl font-black text-blue-900 mb-6">Run the Cremica Flow: From Factory to Shelf</h1>
+        <p class="text-xl text-blue-800 mb-8">Chapter 3.4 – Manufacturing, Sales Promotions and Retail Merchandising</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        <div class="bg-white rounded-3xl p-8 shadow-xl text-center">
+          <p class="text-4xl font-black text-blue-900">102,600 MT</p>
+          <p class="text-lg text-blue-800 mt-2">Annual Production Capacity</p>
+        </div>
+        <div class="bg-white rounded-3xl p-8 shadow-xl text-center">
+          <p class="text-2xl font-bold text-blue-900">Biscuit, Bun & Sauce Lines</p>
+          <p class="text-blue-800 mt-2">Multi-category manufacturing</p>
+        </div>
+        <div class="bg-white rounded-3xl p-8 shadow-xl text-center">
+          <p class="text-2xl font-bold text-blue-900">HACCP & FSSC 22000</p>
+          <p class="text-blue-800 mt-2">World-class quality systems</p>
+        </div>
+      </div>
+
+      <div class="bg-red-50 rounded-3xl p-10 mb-12">
+        <h2 class="text-2xl font-bold text-red-900 mb-6 text-center">Demand Surge Alert</h2>
+        <p class="text-lg text-center">Festive season spike: +40% demand across biscuits and sauces. Production and merchandising must respond without compromising quality.</p>
+      </div>
+
+      <div class="text-center">
+        <button id="nextBtn" class="px-14 py-6 bg-gradient-to-r from-blue-600 to-red-600 text-white text-xl font-bold rounded-2xl shadow-2xl hover:from-blue-700 hover:to-red-700 transition-all">
+          Start Managing the Flow
+        </button>
+      </div>
+    </div>
+
+    <!-- Manufacturing Levers -->
+    <div id="manufacturingSection" class="hidden">
+      <h2 class="text-3xl font-bold text-blue-900 mb-10 text-center">Step 1: Adjust Manufacturing Levers</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        <div class="bg-white rounded-3xl p-8 shadow-xl">
+          <h4 class="font-bold text-blue-900 mb-4">Biscuit Line Speed</h4>
+          <input type="range" min="70" max="120" value="90" class="slider" id="biscuitSpeed">
+          <div class="flex justify-between text-sm text-gray-600">
+            <span>70%</span><span id="biscuitVal">90%</span><span>120%</span>
+          </div>
+          <div class="stress green mt-4 h-8 rounded" id="biscuitStress"></div>
+        </div>
+        <div class="bg-white rounded-3xl p-8 shadow-xl">
+          <h4 class="font-bold text-blue-900 mb-4">Cream Filling Intensity</h4>
+          <input type="range" min="80" max="130" value="100" class="slider" id="creamIntensity">
+          <div class="flex justify-between text-sm text-gray-600">
+            <span>80%</span><span id="creamVal">100%</span><span>130%</span>
+          </div>
+          <div class="stress green mt-4 h-8 rounded" id="creamStress"></div>
+        </div>
+        <div class="bg-white rounded-3xl p-8 shadow-xl">
+          <h4 class="font-bold text-blue-900 mb-4">Sauce Bottling Utilization</h4>
+          <input type="range" min="60" max="110" value="85" class="slider" id="sauceUtil">
+          <div class="flex justify-between text-sm text-gray-600">
+            <span>60%</span><span id="sauceVal">85%</span><span>110%</span>
+          </div>
+          <div class="stress green mt-4 h-8 rounded" id="sauceStress"></div>
+        </div>
+      </div>
+
+      <div class="text-center">
+        <button id="nextToQualityBtn" class="px-14 py-6 bg-gradient-to-r from-blue-600 to-red-600 text-white text-xl font-bold rounded-2xl shadow-2xl hover:from-blue-700 hover:to-red-700 transition-all">
+          Next: Quality Response
+        </button>
+      </div>
+    </div>
+
+    <!-- Quality Alerts -->
+    <div id="qualitySection" class="hidden">
+      <h2 class="text-3xl font-bold text-blue-900 mb-10 text-center">Step 2: Respond to Quality Alerts</h2>
+
+      <div class="space-y-8 mb-12">
+        <div class="bg-red-50 rounded-3xl p-8">
+          <p class="font-bold text-red-900 mb-4">Alert: Seal integrity risk on cream biscuit line</p>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <label class="flex items-center">
+              <div class="toggle" id="qcShiftToggle"><div class="toggle-knob"></div></div>
+              <span class="ml-4">Add QC shift</span>
+            </label>
+            <label class="flex items-center">
+              <div class="toggle" id="slowProdToggle"><div class="toggle-knob"></div></div>
+              <span class="ml-4">Slow production</span>
+            </label>
+            <label class="flex items-center">
+              <div class="toggle" id="contractToggle"><div class="toggle-knob"></div></div>
+              <span class="ml-4">Use contract capacity</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center">
+        <button id="nextToPromoBtn" class="px-14 py-6 bg-gradient-to-r from-blue-600 to-red-600 text-white text-xl font-bold rounded-2xl shadow-2xl hover:from-blue-700 hover:to-red-700 transition-all">
+          Next: Promotion Allocation
+        </button>
+      </div>
+    </div>
+
+    <!-- Promotion Allocation -->
+    <div id="promoSection" class="hidden">
+      <h2 class="text-3xl font-bold text-blue-900 mb-10 text-center">Step 3: Allocate 100 Promotion Points</h2>
+      <p class="text-center text-lg text-blue-800 mb-8">Click tiles to add points (total must = 100)</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+        <div class="alloc-tile bg-white rounded-3xl p-8 shadow-xl text-center">
+          <h4 class="font-bold text-blue-900 mb-4">Sampling & Demos</h4>
+          <p class="text-sm text-gray-600 mb-4">High trial, high cost</p>
+          <p class="text-3xl font-black" id="samplingPoints">0</p>
+        </div>
+        <div class="alloc-tile bg-white rounded-3xl p-8 shadow-xl text-center">
+          <h4 class="font-bold text-blue-900 mb-4">POS Materials</h4>
+          <p class="text-sm text-gray-600 mb-4">Visibility boost</p>
+          <p class="text-3xl font-black" id="posPoints">0</p>
+        </div>
+        <div class="alloc-tile bg-white rounded-3xl p-8 shadow-xl text-center">
+          <h4 class="font-bold text-blue-900 mb-4">Trade Schemes</h4>
+          <p class="text-sm text-gray-600 mb-4">Push sales, margin impact</p>
+          <p class="text-3xl font-black" id="tradePoints">0</p>
+        </div>
+        <div class="alloc-tile bg-white rounded-3xl p-8 shadow-xl text-center">
+          <h4 class="font-bold text-blue-900 mb-4">End-cap Displays</h4>
+          <p class="text-sm text-gray-600 mb-4">Premium placement</p>
+          <p class="text-3xl font-black" id="endcapPoints">0</p>
+        </div>
+      </div>
+
+      <p class="text-center text-xl font-bold">Total Allocated: <span id="totalAlloc">0</span>/100</p>
+
+      <div class="text-center mt-8">
+        <button id="nextToShelfBtn" class="px-14 py-6 bg-gradient-to-r from-blue-600 to-red-600 text-white text-xl font-bold rounded-2xl shadow-2xl hover:from-blue-700 hover:to-red-700 transition-all">
+          Next: Shelf Placement
+        </button>
+      </div>
+    </div>
+
+    <!-- Shelf Space -->
+    <div id="shelfSection" class="hidden">
+      <h2 class="text-3xl font-bold text-blue-900 mb-10 text-center">Step 4: Assign Shelf Placement</h2>
+      <p class="text-center text-lg text-blue-800 mb-12">Click SKUs to place on limited eye-level slots (max 3)</p>
+
+      <div class="bg-gray-200 rounded-3xl p-8 mb-12">
+        <div class="flex justify-around mb-8">
+          <p class="font-bold">Eye Level (Prime)</p>
+        </div>
+        <div class="flex justify-center gap-8">
+          <div class="shelf-slot" data-slot="eye1">Empty</div>
+          <div class="shelf-slot" data-slot="eye2">Empty</div>
+          <div class="shelf-slot" data-slot="eye3">Empty</div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div class="bg-white rounded-2xl p-6 shadow-xl text-center cursor-pointer" data-sku="cream">
+          <p class="font-bold">Cream Biscuits</p>
+        </div>
+        <div class="bg-white rounded-2xl p-6 shadow-xl text-center cursor-pointer" data-sku="marie">
+          <p class="font-bold">Marie Gold</p>
+        </div>
+        <div class="bg-white rounded-2xl p-6 shadow-xl text-center cursor-pointer" data-sku="health">
+          <p class="font-bold">Oat Digestive</p>
+        </div>
+        <div class="bg-white rounded-2xl p-6 shadow-xl text-center cursor-pointer" data-sku="sauce">
+          <p class="font-bold">Tomato Ketchup</p>
+        </div>
+      </div>
+
+      <div class="text-center mt-12">
+        <button id="evaluateBtn" class="px-14 py-6 bg-gradient-to-r from-blue-600 to-red-600 text-white text-xl font-bold rounded-2xl shadow-2xl hover:from-blue-700 hover:to-red-700 transition-all">
+          Evaluate the Flow
+        </button>
+      </div>
+    </div>
+
+    <!-- Outcome -->
+    <div id="outcomeSection" class="hidden">
+      <h2 class="text-3xl font-bold text-blue-900 mb-10 text-center">Your Operational Outcome</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+        <div class="bg-green-100 rounded-3xl p-8 text-center">
+          <p class="font-bold mb-2">Production Efficiency</p>
+          <p class="text-4xl font-black text-green-800" id="effScore">78%</p>
+        </div>
+        <div class="bg-blue-100 rounded-3xl p-8 text-center">
+          <p class="font-bold mb-2">Quality Compliance</p>
+          <p class="text-4xl font-black text-blue-800" id="qualityScore">High</p>
+        </div>
+        <div class="bg-amber-100 rounded-3xl p-8 text-center">
+          <p class="font-bold mb-2">Retail Visibility</p>
+          <p class="text-4xl font-black text-amber-800" id="visScore">82%</p>
+        </div>
+        <div class="bg-purple-100 rounded-3xl p-8 text-center">
+          <p class="font-bold mb-2">Sales Uplift Estimate</p>
+          <p class="text-4xl font-black text-purple-800" id="upliftScore">+28%</p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-3xl p-10 shadow-xl mb-12">
+        <h3 class="text-2xl font-bold text-blue-900 mb-6">Key Bottleneck Insight</h3>
+        <p class="text-lg" id="bottleneckText"></p>
+      </div>
+
+      <div class="bg-blue-50 rounded-3xl p-10 mb-12">
+        <h3 class="text-2xl font-bold text-blue-900 mb-6">Cremica’s Real-World Balancing Act</h3>
+        <p class="text-lg leading-relaxed">
+          Cremica maintains growth by carefully balancing capacity utilization with uncompromising quality, using selective promotions that drive volume without eroding margins, and fighting for prime shelf space through consistent merchandising excellence.<br><br>
+          Every decision from line speed to end-cap placement is interconnected — excellence in one area enables success in others.
+        </p>
+      </div>
+
+      <div class="bg-gradient-to-br from-blue-100 to-red-100 rounded-3xl p-10 text-center">
+        <p class="text-xl italic text-blue-900">In FMCG, every promotion starts at the factory and ends on the shelf.</p>
+      </div>
+
+      <div class="text-center mt-12">
+        <button id="restartBtn" class="px-14 py-6 bg-gray-600 text-white text-xl font-bold rounded-2xl shadow-2xl hover:bg-gray-700 transition-all">
+          Run the Flow Again
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  let biscuitSpeed = 90;
+  let creamIntensity = 100;
+  let sauceUtil = 85;
+  let qcShift = false;
+  let slowProd = false;
+  let contractCap = false;
+  let samplingPoints = 0;
+  let posPoints = 0;
+  let tradePoints = 0;
+  let endcapPoints = 0;
+  let eyeLevel = [];
+
+  document.getElementById('nextBtn').addEventListener('click', () => {
+    gsap.to('#factorySection', { opacity: 0, y: -50, duration: 0.8, onComplete: () => {
+      document.getElementById('factorySection').classList.add('hidden');
+      document.getElementById('manufacturingSection').classList.remove('hidden');
+      gsap.from('#manufacturingSection', { opacity: 0, y: 50, duration: 1 });
+    }});
+  });
+
+  // Sliders
+  document.getElementById('biscuitSpeed').addEventListener('input', function() {
+    biscuitSpeed = this.value;
+    document.getElementById('biscuitVal').textContent = this.value + '%';
+    updateStress('biscuitStress', this.value, 100);
+  });
+  document.getElementById('creamIntensity').addEventListener('input', function() {
+    creamIntensity = this.value;
+    document.getElementById('creamVal').textContent = this.value + '%';
+    updateStress('creamStress', this.value, 110);
+  });
+  document.getElementById('sauceUtil').addEventListener('input', function() {
+    sauceUtil = this.value;
+    document.getElementById('sauceVal').textContent = this.value + '%';
+    updateStress('sauceStress', this.value, 95);
+  });
+
+  function updateStress(id, val, threshold) {
+    const el = document.getElementById(id);
+    if (val <= threshold) el.className = 'stress green mt-4 h-8 rounded';
+    else if (val <= threshold + 10) el.className = 'stress yellow mt-4 h-8 rounded';
+    else el.className = 'stress red mt-4 h-8 rounded';
+  }
+
+  document.getElementById('nextToQualityBtn').addEventListener('click', () => {
+    gsap.to('#manufacturingSection', { opacity: 0, y: -50, duration: 0.8, onComplete: () => {
+      document.getElementById('manufacturingSection').classList.add('hidden');
+      document.getElementById('qualitySection').classList.remove('hidden');
+      gsap.from('#qualitySection', { opacity: 0, y: 50, duration: 1 });
+    }});
+  });
+
+  // Toggles
+  document.querySelectorAll('.toggle').forEach(toggle => {
+    toggle.addEventListener('click', () => {
+      toggle.classList.toggle('active');
+      if (toggle.id === 'qcShiftToggle') qcShift = toggle.classList.contains('active');
+      if (toggle.id === 'slowProdToggle') slowProd = toggle.classList.contains('active');
+      if (toggle.id === 'contractToggle') contractCap = toggle.classList.contains('active');
+    });
+  });
+
+  document.getElementById('nextToPromoBtn').addEventListener('click', () => {
+    gsap.to('#qualitySection', { opacity: 0, y: -50, duration: 0.8, onComplete: () => {
+      document.getElementById('qualitySection').classList.add('hidden');
+      document.getElementById('promoSection').classList.remove('hidden');
+      gsap.from('#promoSection', { opacity: 0, y: 50, duration: 1 });
+    }});
+  });
+
+  // Promotion allocation
+  document.querySelectorAll('.alloc-tile').forEach(tile => {
+    tile.addEventListener('click', () => {
+      const total = samplingPoints + posPoints + tradePoints + endcapPoints;
+      if (total < 100) {
+        if (tile.querySelector('#samplingPoints')) samplingPoints += 10;
+        if (tile.querySelector('#posPoints')) posPoints += 10;
+        if (tile.querySelector('#tradePoints')) tradePoints += 10;
+        if (tile.querySelector('#endcapPoints')) endcapPoints += 10;
+
+        tile.querySelector('p.text-3xl').textContent = tile.querySelector('#samplingPoints') ? samplingPoints :
+                                                      tile.querySelector('#posPoints') ? posPoints :
+                                                      tile.querySelector('#tradePoints') ? tradePoints : endcapPoints;
+        document.getElementById('totalAlloc').textContent = total + 10;
+      }
+    });
+  });
+
+  document.getElementById('nextToShelfBtn').addEventListener('click', () => {
+    const total = samplingPoints + posPoints + tradePoints + endcapPoints;
+    if (total !== 100) {
+      alert('Please allocate exactly 100 promotion points.');
+      return;
+    }
+    gsap.to('#promoSection', { opacity: 0, y: -50, duration: 0.8, onComplete: () => {
+      document.getElementById('promoSection').classList.add('hidden');
+      document.getElementById('shelfSection').classList.remove('hidden');
+      gsap.from('#shelfSection', { opacity: 0, y: 50, duration: 1 });
+    }});
+  });
+
+  // Shelf placement
+  document.querySelectorAll('[data-sku]').forEach(sku => {
+    sku.addEventListener('click', () => {
+      if (eyeLevel.length < 3) {
+        eyeLevel.push(sku.dataset.sku);
+        const slots = document.querySelectorAll('.shelf-slot');
+        slots[eyeLevel.length - 1].textContent = sku.textContent.trim();
+        slots[eyeLevel.length - 1].classList.add('filled');
+      }
+    });
+  });
+
+  document.getElementById('evaluateBtn').addEventListener('click', () => {
+    if (eyeLevel.length !== 3) {
+      alert('Please fill all 3 eye-level slots.');
+      return;
+    }
+
+    // Simple scoring
+    const prodStress = (biscuitSpeed > 100 ? 20 : 0) + (creamIntensity > 110 ? 20 : 0) + (sauceUtil > 95 ? 20 : 0);
+    const qualityScore = qcShift || slowProd ? 'High' : prodStress > 30 ? 'At Risk' : 'Good';
+    const visScore = endcapPoints * 0.8 + eyeLevel.length * 10;
+    const uplift = samplingPoints * 0.3 + tradePoints * 0.4 + visScore * 0.3;
+
+    document.getElementById('effScore').textContent = 100 - prodStress + '%';
+    document.getElementById('qualityScore').textContent = qualityScore;
+    document.getElementById('visScore').textContent = Math.round(visScore) + '%';
+    document.getElementById('upliftScore').textContent = '+' + Math.round(uplift) + '%';
+
+    let bottleneck = 'Balanced operation.';
+    if (prodStress > 40) bottleneck = 'Production stress — quality at risk without additional controls.';
+    if (endcapPoints < 20) bottleneck = 'Limited end-cap investment — visibility opportunity missed.';
+
+    document.getElementById('bottleneckText').textContent = bottleneck;
+
+    gsap.to('#shelfSection', { opacity: 0, y: -50, duration: 0.8, onComplete: () => {
+      document.getElementById('shelfSection').classList.add('hidden');
+      document.getElementById('outcomeSection').classList.remove('hidden');
+      gsap.from('#outcomeSection', { opacity: 0, y: 50, duration: 1 });
+    }});
+  });
+
+  document.getElementById('restartBtn').addEventListener('click', () => location.reload());
+
+  document.getElementById('fullscreenBtn').addEventListener('click', () => {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+    else document.exitFullscreen();
+  });
+</script>
+</body>
+</html>
