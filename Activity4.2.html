@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Cremica Business Model X-Ray</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.6.0/confetti.min.js"></script>
+<style type="text/css">
+  body { font-family: 'Poppins', sans-serif; }
+  h1, h2, h3 { font-family: 'Playfair Display', serif; }
+  p { font-size: 16px; line-height: 1.7; }
+  .grain-overlay {
+    background: url('https://img.freepik.com/free-photo/white-plain-concrete-textured-background_53876-102604.jpg?semt=ais_hybrid&w=740&q=80') repeat;
+    opacity: 0.03;
+    pointer-events: none;
+  }
+  .premium-card {
+    border: 2px solid #cc0000;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  }
+  .xray-bg {
+    background: linear-gradient(to bottom, #1e293b, #334155);
+    border-radius: 2rem;
+    padding: 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hotspot {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background: rgba(204, 0, 0, 0.3);
+    border: 3px solid #cc0000;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    color: white;
+  }
+  .hotspot:hover {
+    background: rgba(204, 0, 0, 0.6);
+    transform: scale(1.2);
+  }
+  .hotspot.activated {
+    background: #cc0000;
+    animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(204, 0, 0, 0.7); }
+    70% { box-shadow: 0 0 0 20px rgba(204, 0, 0, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(204, 0, 0, 0); }
+  }
+  .insight-card {
+    background: white;
+    border-left: 6px solid #cc0000;
+    padding: 1.5rem;
+    border-radius: 0 1rem 1rem 0;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    max-width: 600px;
+    margin: 2rem auto;
+  }
+  .toggle {
+    width: 80px;
+    height: 40px;
+    background: #9ca3af;
+    border-radius: 999px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  .toggle.active {
+    background: #cc0000;
+  }
+  .toggle-knob {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 32px;
+    height: 32px;
+    background: white;
+    border-radius: 50%;
+    transition: left 0.3s;
+  }
+  .toggle.active .toggle-knob {
+    left: 44px;
+  }
+  .mcq-option {
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .mcq-option.selected {
+    border-color: #cc0000;
+    background: #fee2e2;
+    transform: scale(1.02);
+  }
+  .meter {
+    height: 24px;
+    background: #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .meter-fill {
+    height: 100%;
+    transition: width 1.2s ease;
+  }
+</style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 via-white to-red-50 min-h-screen py-16">
+
+<div class="fixed inset-0 grain-overlay -z-10"></div>
+
+<button class="fixed top-6 right-6 z-50 bg-gradient-to-br from-red-600 to-blue-700 hover:from-red-500 hover:to-blue-600 text-white p-4 rounded-full shadow-2xl backdrop-blur-sm transition-all duration-300 hover:scale-110 text-xl font-bold" id="fullscreenBtn">⛶</button>
+
+<div class="max-w-6xl mx-auto px-6">
+  <div class="premium-card bg-white/95 backdrop-blur-md rounded-3xl p-10 shadow-2xl">
+
+    <!-- Intro -->
+    <div id="introSection">
+      <div class="text-center mb-12">
+        <h1 class="text-4xl font-black text-blue-900 mb-6">Cremica Business Model X-Ray</h1>
+        <p class="text-xl text-blue-800 mb-8">Chapter 4.2 – Key Resources, Activities & Partners</p>
+        <p class="text-lg text-blue-900 max-w-4xl mx-auto">
+          You are in X-Ray Mode — you can see inside Cremica’s business model.<br><br>
+          Your job is to diagnose how the company actually runs by examining resources, activities, and partners.
+        </p>
+      </div>
+
+      <div class="xray-bg text-center text-white mb-12">
+        <p class="text-2xl font-bold mb-8">Activate X-Ray Mode</p>
+        <div class="text-6xl mb-8">🔬</div>
+      </div>
+
+      <div class="text-center">
+        <button id="activateBtn" class="px-14 py-6 bg-gradient-to-r from-blue-600 to-red-600 text-white text-xl font-bold rounded-2xl shadow-2xl hover:from-blue-700 hover:to-red-700 transition-all">
+          Activate X-Ray
+        </button>
+      </div>
+    </div>
+
+    <!-- Phase 1: Resource X-Ray -->
+    <div id="resourceSection" class="hidden">
+      <h2 class="text-3xl font-bold text-blue-900 mb-10 text-center">Phase 1: Resource X-Ray</h2>
+      <p class="text-center text-lg text-blue-800 mb-12">Click the hotspots to reveal hidden resources.</p>
+
+      <div class="xray-bg relative">
+        <div class="hotspot" style="top: 100px; left: 150px;" data-insight="plants">🏭</div>
+        <div class="hotspot" style="top: 180px; left: 400px;" data-insight="automation">🤖</div>
+        <div class="hotspot" style="top: 280px; left: 200px;" data-insight="recipes">📜</div>
+        <div class="hotspot" style="top: 120px; right: 200px;" data-insight="raw">🌾</div>
+
+        <div class="text-center text-white py-20">
+          <p class="text-2xl">Cremica Manufacturing Ecosystem</p>
+        </div>
+      </div>
+
+      <div id="insightDisplay" class="hidden insight-card"></div>
+
+      <div id="resourceQuestion" class="hidden mt-12">
+        <p class="text-center text-xl font-bold mb-8">Which resource would cause the MOST disruption if removed?</p>
+        <div class="space-y-6">
+          <div class="mcq-option bg-white rounded-2xl p-8 shadow-xl border-4 border-transparent text-center" data-answer="plants">
+            <p class="text-lg font-medium">Manufacturing Plants</p>
+          </div>
+          <div class="mcq-option bg-white rounded-2xl p-8 shadow-xl border-4 border-transparent text-center" data-answer="recipes">
+            <p class="text-lg font-medium">Proprietary Recipes</p>
+          </div>
+          <div class="mcq-option bg-white rounded-2xl p-8 shadow-xl border-4 border-transparent text-center" data-answer="automation">
+            <p class="text-lg font-medium">Automation Systems</p>
+          </div>
+          <div class="mcq-option bg-white rounded-2xl p-8 shadow-xl border-4 border-transparent text-center" data-answer="raw">
+            <p class="text-lg font-medium">Certified Raw Material Network</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center mt-12">
+        <button id="nextPhase1Btn" class="hidden px-14 py-6 bg-gradient-to-r from-blue-600 to-red-600 text-white text-xl font-bold rounded-2xl shadow-2xl hover:from-blue-700 hover:to-red-700 transition-all">
+          Next Phase
+        </button>
+      </div>
+    </div>
+
+    <!-- Phase 2: Activity Load Test -->
+    <div id="activitySection" class="hidden">
+      <h2 class="text-3xl font-bold text-blue-900 mb-10 text-center">Phase 2: Activity Load Test</h2>
+      <p class="text-center text-lg text-blue-800 mb-12">Festive demand increases by 25%. Toggle ON the activities that MUST be active to meet demand efficiently.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+        <div class="bg-white rounded-3xl p-8 shadow-xl text-center">
+          <p class="font-bold text-blue-900 mb-4">High-volume production</p>
+          <div class="toggle" id="prodToggle"><div class="toggle-knob"></div></div>
+        </div>
+        <div class="bg-white rounded-3xl p-8 shadow-xl text-center">
+          <p class="font-bold text-blue-900 mb-4">Quality audits</p>
+          <div class="toggle" id="qualityToggle"><div class="toggle-knob"></div></div>
+        </div>
+        <div class="bg-white rounded-3xl p-8 shadow-xl text-center">
+          <p class="font-bold text-blue-900 mb-4">Supply chain forecasting</p>
+          <div class="toggle" id="forecastToggle"><div class="toggle-knob"></div></div>
+        </div>
+        <div class="bg-white rounded-3xl p-8 shadow-xl text-center">
+          <p class="font-bold text-blue-900 mb-4">Retail promotions</p>
+          <div class="toggle" id="promoToggle"><div class="toggle-knob"></div></div>
+        </div>
+        <div class="bg-white rounded-3xl p-8 shadow-xl text-center">
+          <p class="font-bold text-blue-900 mb-4">QSR customization</p>
+          <div class="toggle" id="qsrToggle"><div class="toggle-knob"></div></div>
+        </div>
+      </div>
+
+      <div class="text-center">
+        <button id="nextPhase2Btn" class="px-14 py-6 bg-gradient-to-r from-blue-600 to-red-600 text-white text-xl font-bold rounded-2xl shadow-2xl hover:from-blue-700 hover:to-red-700 transition-all">
+          Next Phase
+        </button>
+      </div>
+    </div>
+
+    <!-- Phase 3: Partner Dependency Scan -->
+    <div id="partnerSection" class="hidden">
+      <h2 class="text-3xl font-bold text-blue-900 mb-10 text-center">Phase 3: Partner Dependency Scan</h2>
+      <p class="text-center text-lg text-blue-800 mb-12">If QSR partners paused orders for 30 days, which area cushions the impact most?</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        <div class="mcq-option bg-white rounded-3xl p-8 shadow-xl border-4 border-transparent text-center" data-answer="retail">
+          <p class="text-2xl font-bold text-blue-900 mb-4">Retail Chains</p>
+          <p class="text-blue-800">Volume growth, brand building</p>
+        </div>
+        <div class="mcq-option bg-white rounded-3xl p-8 shadow-xl border-4 border-transparent text-center" data-answer="ecom">
+          <p class="text-2xl font-bold text-blue-900 mb-4">E-commerce Platforms</p>
+          <p class="text-blue-800">Direct-to-consumer reach</p>
+        </div>
+        <div class="mcq-option bg-white rounded-3xl p-8 shadow-xl border-4 border-transparent text-center" data-answer="none">
+          <p class="text-2xl font-bold text-blue-900 mb-4">No single area — diversified model</p>
+          <p class="text-blue-800">Balanced across partners</p>
+        </div>
+      </div>
+
+      <div class="text-center">
+        <button id="nextPhase3Btn" class="px-14 py-6 bg-gradient-to-r from-blue-600 to-red-600 text-white text-xl font-bold rounded-2xl shadow-2xl hover:from-blue-700 hover:to-red-700 transition-all">
+          Next Phase
+        </button>
+      </div>
+    </div>
+
+    <!-- Phase 4: Diagnosis MCQs -->
+    <div id="diagnosisSection" class="hidden">
+      <h2 class="text-3xl font-bold text-blue-900 mb-10 text-center">Phase 4: Rapid Diagnosis</h2>
+
+      <div id="scenario1" class="mb-12">
+        <p class="text-xl font-bold text-center mb-8">Scenario 1: Raw material prices increase by 12%</p>
+        <div class="space-y-6">
+          <div class="mcq-option bg-white rounded-2xl p-8 shadow-xl border-4 border-transparent" data-scenario="1" data-answer="qsr">
+            <p class="text-lg">Leverage QSR contract pricing stability</p>
+          </div>
+          <div class="mcq-option bg-white rounded-2xl p-8 shadow-xl border-4 border-transparent" data-scenario="1" data-answer="retail">
+            <p class="text-lg">Pass cost increase to retail consumers</p>
+          </div>
+          <div class="mcq-option bg-white rounded-2xl p-8 shadow-xl border-4 border-transparent" data-scenario="1" data-answer="cut">
+            <p class="text-lg">Cut marketing budget</p>
+          </div>
+          <div class="mcq-option bg-white rounded-2xl p-8 shadow-xl border-4 border-transparent" data-scenario="1" data-answer="stock">
+            <p class="text-lg">Increase inventory stockpiling</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="scenario2" class="hidden mb-12">
+        <p class="text-xl font-bold text-center mb-8">Scenario 2: Major logistics disruption</p>
+        <div class="space-y-6">
+          <div class="mcq-option bg-white rounded-2xl p-8 shadow-xl border-4 border-transparent" data-scenario="2" data-answer="regional">
+            <p class="text-lg">Shift production to regional plants</p>
+          </div>
+          <div class="mcq-option bg-white rounded-2xl p-8 shadow-xl border-4 border-transparent" data-scenario="2" data-answer="qsr">
+            <p class="text-lg">Prioritise QSR direct supply</p>
+          </div>
+          <div class="mcq-option bg-white rounded-2xl p-8 shadow-xl border-4 border-transparent" data-scenario="2" data-answer="air">
+            <p class="text-lg">Air-freight critical stock</p>
+          </div>
+          <div class="mcq-option bg-white rounded-2xl p-8 shadow-xl border-4 border-transparent" data-scenario="2" data-answer="pause">
+            <p class="text-lg">Pause all promotions</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="scenario3" class="hidden mb-12">
+        <p class="text-xl font-bold text-center mb-8">Scenario 3: Sudden quality audit failure</p>
+        <div class="space-y-6">
+          <div class="mcq-option bg-white rounded-2xl p-8 shadow-xl border-4 border-transparent" data-scenario="3" data-answer="halt">
+            <p class="text-lg">Halt affected line immediately</p>
+          </div>
+          <div class="mcq-option bg-white rounded-2xl p-8 shadow-xl border-4 border-transparent" data-scenario="3" data-answer="recall">
+            <p class="text-lg">Proactive product recall</p>
+          </div>
+          <div class="mcq-option bg-white rounded-2xl p-8 shadow-xl border-4 border-transparent" data-scenario="3" data-answer="downplay">
+            <p class="text-lg">Downplay and fix quietly</p>
+          </div>
+          <div class="mcq-option bg-white rounded-2xl p-8 shadow-xl border-4 border-transparent" data-scenario="3" data-answer="blame">
+            <p class="text-lg">Blame supplier</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center mt-12">
+        <button id="evaluateBtn" class="px-14 py-6 bg-gradient-to-r from-blue-600 to-red-600 text-white text-xl font-bold rounded-2xl shadow-2xl hover:from-blue-700 hover:to-red-700 transition-all">
+          Diagnose Business Model
+        </button>
+      </div>
+    </div>
+
+    <!-- Final Output -->
+    <div id="finalSection" class="hidden">
+      <h2 class="text-3xl font-bold text-blue-900 mb-10 text-center">Business Model Resilience Diagnosis</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        <div class="bg-blue-100 rounded-3xl p-8 text-center">
+          <p class="font-bold mb-2">Resources Stability</p>
+          <div class="meter"><div id="resourcesMeter" class="meter-fill" style="width: 0%; background: #3b82f6"></div></div>
+          <p class="text-3xl font-black mt-4" id="resourcesScore">0%</p>
+        </div>
+        <div class="bg-amber-100 rounded-3xl p-8 text-center">
+          <p class="font-bold mb-2">Activity Efficiency</p>
+          <div class="meter"><div id="activitiesMeter" class="meter-fill" style="width: 0%; background: #f59e0b"></div></div>
+          <p class="text-3xl font-black mt-4" id="activitiesScore">0%</p>
+        </div>
+        <div class="bg-purple-100 rounded-3xl p-8 text-center">
+          <p class="font-bold mb-2">Partner Dependence</p>
+          <div class="meter"><div id="partnersMeter" class="meter-fill" style="width: 0%; background: #8b5cf6"></div></div>
+          <p class="text-3xl font-black mt-4" id="partnersScore">0%</p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-3xl p-10 shadow-xl mb-12">
+        <h3 class="text-2xl font-bold text-blue-900 mb-6 text-center">Your Diagnosis Insight</h3>
+        <p class="text-lg text-center" id="insightText"></p>
+      </div>
+
+      <div class="bg-gradient-to-br from-blue-100 to-red-100 rounded-3xl p-10 text-center">
+        <p class="text-xl italic text-blue-900">A strong business model is invisible when it works — and very visible when it doesn’t.</p>
+      </div>
+
+      <div class="text-center mt-12">
+        <button id="restartBtn" class="px-14 py-6 bg-gray-600 text-white text-xl font-bold rounded-2xl shadow-2xl hover:bg-gray-700 transition-all">
+          Run X-Ray Again
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  let hotspotsActivated = 0;
+  let resourceAnswer = '';
+  let prodActive = false;
+  let qualityActive = false;
+  let forecastActive = false;
+  let promoActive = false;
+  let qsrActive = false;
+  let partnerAnswer = '';
+  let scenarioAnswers = {1: '', 2: '', 3: ''};
+
+  const insights = {
+    plants: "Multiple manufacturing plants provide scale and redundancy — core capacity asset.",
+    automation: "Advanced automation and Peri tools enable consistent quality at high volume.",
+    recipes: "Proprietary recipes are the heart of taste differentiation — guarded intellectual property.",
+    raw: "Certified raw material network ensures consistent supply and quality standards."
+  };
+
+  document.getElementById('activateBtn').addEventListener('click', () => {
+    gsap.to('#introSection', { opacity: 0, y: -50, duration: 0.8, onComplete: () => {
+      document.getElementById('introSection').classList.add('hidden');
+      document.getElementById('resourceSection').classList.remove('hidden');
+      gsap.from('#resourceSection', { opacity: 0, y: 50, duration: 1 });
+    }});
+  });
+
+  document.querySelectorAll('.hotspot').forEach(hotspot => {
+    hotspot.addEventListener('click', () => {
+      if (hotspot.classList.contains('activated')) return;
+      hotspot.classList.add('activated');
+      hotspotsActivated++;
+
+      const insight = insights[hotspot.dataset.insight];
+      const display = document.getElementById('insightDisplay');
+      display.innerHTML = `<p class="font-bold text-blue-900 mb-2">${hotspot.dataset.insight.toUpperCase().replace('_', ' ')}</p><p>${insight}</p>`;
+      display.classList.remove('hidden');
+
+      if (hotspotsActivated === 4) {
+        document.getElementById('resourceQuestion').classList.remove('hidden');
+        document.getElementById('nextPhase1Btn').classList.remove('hidden');
+      }
+    });
+  });
+
+  document.querySelectorAll('#resourceQuestion .mcq-option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      document.querySelectorAll('#resourceQuestion .mcq-option').forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      resourceAnswer = opt.dataset.answer;
+    });
+  });
+
+  document.getElementById('nextPhase1Btn').addEventListener('click', () => {
+    if (!resourceAnswer) {
+      alert('Please select an answer.');
+      return;
+    }
+    gsap.to('#resourceSection', { opacity: 0, y: -50, duration: 0.8, onComplete: () => {
+      document.getElementById('resourceSection').classList.add('hidden');
+      document.getElementById('activitySection').classList.remove('hidden');
+      gsap.from('#activitySection', { opacity: 0, y: 50, duration: 1 });
+    }});
+  });
+
+  document.querySelectorAll('#activitySection .toggle').forEach(toggle => {
+    toggle.addEventListener('click', () => {
+      toggle.classList.toggle('active');
+      if (toggle.id === 'prodToggle') prodActive = toggle.classList.contains('active');
+      if (toggle.id === 'qualityToggle') qualityActive = toggle.classList.contains('active');
+      if (toggle.id === 'forecastToggle') forecastActive = toggle.classList.contains('active');
+      if (toggle.id === 'promoToggle') promoActive = toggle.classList.contains('active');
+      if (toggle.id === 'qsrToggle') qsrActive = toggle.classList.contains('active');
+    });
+  });
+
+  document.getElementById('nextPhase2Btn').addEventListener('click', () => {
+    gsap.to('#activitySection', { opacity: 0, y: -50, duration: 0.8, onComplete: () => {
+      document.getElementById('activitySection').classList.add('hidden');
+      document.getElementById('partnerSection').classList.remove('hidden');
+      gsap.from('#partnerSection', { opacity: 0, y: 50, duration: 1 });
+    }});
+  });
+
+  document.querySelectorAll('#partnerSection .mcq-option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      document.querySelectorAll('#partnerSection .mcq-option').forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      partnerAnswer = opt.dataset.answer;
+    });
+  });
+
+  document.getElementById('nextPhase3Btn').addEventListener('click', () => {
+    if (!partnerAnswer) {
+      alert('Please select an answer.');
+      return;
+    }
+    gsap.to('#partnerSection', { opacity: 0, y: -50, duration: 0.8, onComplete: () => {
+      document.getElementById('partnerSection').classList.add('hidden');
+      document.getElementById('diagnosisSection').classList.remove('hidden');
+      document.getElementById('scenario1').classList.remove('hidden');
+      document.getElementById('evaluateBtn').classList.remove('hidden');
+      gsap.from('#diagnosisSection', { opacity: 0, y: 50, duration: 1 });
+    }});
+  });
+
+  document.querySelectorAll('.mcq-option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      const scenarioDiv = opt.closest('[id^="scenario"]');
+      if (!scenarioDiv) return;
+
+      const scenarioNum = parseInt(scenarioDiv.id.replace('scenario', ''));
+      scenarioDiv.querySelectorAll('.mcq-option').forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      scenarioAnswers[scenarioNum] = opt.dataset.answer;
+
+      // Show next scenario if not last
+      if (scenarioNum < 3) {
+        setTimeout(() => {
+          document.getElementById(`scenario${scenarioNum}`).classList.add('hidden');
+          document.getElementById(`scenario${scenarioNum + 1}`).classList.remove('hidden');
+        }, 600);
+      }
+    });
+  });
+
+  document.getElementById('evaluateBtn').addEventListener('click', () => {
+    if (scenarioAnswers[1] === '' || scenarioAnswers[2] === '' || scenarioAnswers[3] === '') {
+      alert('Please answer all three scenarios.');
+      return;
+    }
+
+    // Scoring
+    let resourcesScore = resourceAnswer === 'plants' ? 100 : resourceAnswer === 'recipes' ? 80 : 60;
+    let activitiesScore = (prodActive && qualityActive && forecastActive && !promoActive && qsrActive) ? 100 : 70;
+    let partnersScore = partnerAnswer === 'none' ? 100 : 70;
+    let diagnosisScore = 0;
+    if (scenarioAnswers[1] === 'qsr') diagnosisScore += 33;
+    if (scenarioAnswers[2] === 'regional') diagnosisScore += 33;
+    if (scenarioAnswers[3] === 'halt') diagnosisScore += 34;
+
+    gsap.to('#resourcesMeter', { width: resourcesScore + '%', backgroundColor: '#3b82f6', duration: 1 });
+    gsap.to('#activitiesMeter', { width: activitiesScore + '%', backgroundColor: '#f59e0b', duration: 1 });
+    gsap.to('#partnersMeter', { width: partnersScore + '%', backgroundColor: '#8b5cf6', duration: 1 });
+
+    document.getElementById('resourcesScore').textContent = resourcesScore + '%';
+    document.getElementById('activitiesScore').textContent = activitiesScore + '%';
+    document.getElementById('partnersScore').textContent = partnersScore + '%';
+
+    let insight = 'Strong diagnosis — you understand Cremica’s interconnected system.';
+    if ((resourcesScore + activitiesScore + partnersScore + diagnosisScore) / 4 < 80) insight = 'Good insight — focus on how core resources and stable partners enable flexibility.';
+
+    document.getElementById('insightText').textContent = insight;
+
+    // Celebration if high score
+    if ((resourcesScore + activitiesScore + partnersScore + diagnosisScore) > 280) {
+      confetti({
+        particleCount: 150,
+        spread: 80,
+        origin: { y: 0.6 },
+        colors: ['#cc0000', '#0066cc', '#ffcc00', '#00cc66']
+      });
+      const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3');
+      audio.play();
+    }
+
+    gsap.to('#diagnosisSection', { opacity: 0, y: -50, duration: 0.8, onComplete: () => {
+      document.getElementById('diagnosisSection').classList.add('hidden');
+      document.getElementById('finalSection').classList.remove('hidden');
+      gsap.from('#finalSection', { opacity: 0, y: 50, duration: 1 });
+    }});
+  });
+
+  document.getElementById('restartBtn').addEventListener('click', () => location.reload());
+</script>
+</body>
+</html>
