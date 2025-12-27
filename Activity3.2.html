@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Build the Media Mix: Cremica Campaign Planner</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<style type="text/css">
+  body { font-family: 'Poppins', sans-serif; }
+  h1, h2, h3 { font-family: 'Playfair Display', serif; }
+  p { font-size: 16px; line-height: 1.7; }
+  .grain-overlay {
+    background: url('https://img.freepik.com/free-photo/white-plain-concrete-textured-background_53876-102604.jpg?semt=ais_hybrid&w=740&q=80') repeat;
+    opacity: 0.03;
+    pointer-events: none;
+  }
+  .premium-card {
+    border: 2px solid #cc0000;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  }
+  .objective-card, .media-card {
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .objective-card.selected, .media-card.selected {
+    border-color: #cc0000;
+    box-shadow: 0 0 25px rgba(204, 0, 0, 0.3);
+    transform: scale(1.05);
+  }
+  .token {
+    width: 60px;
+    height: 60px;
+    background: #cc0000;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 2.4rem;
+    line-height: 1;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  }
+  .allocated-tokens {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+  }
+</style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 via-white to-red-50 min-h-screen py-16">
+
+<div class="fixed inset-0 grain-overlay -z-10"></div>
+
+<button class="fixed top-6 right-6 z-50 bg-gradient-to-br from-red-600 to-blue-700 hover:from-red-500 hover:to-blue-600 text-white p-4 rounded-full shadow-2xl backdrop-blur-sm transition-all duration-300 hover:scale-110 text-xl font-bold" id="fullscreenBtn">⛶</button>
+
+<div class="max-w-6xl mx-auto px-6">
+  <div class="premium-card bg-white/95 backdrop-blur-md rounded-3xl p-10 shadow-2xl">
+
+    <!-- Scenario -->
+    <div id="scenarioSection">
+      <div class="text-center mb-12">
+        <h1 class="text-4xl font-black text-blue-900 mb-6">Build the Media Mix: Cremica Campaign Planner</h1>
+        <p class="text-xl text-blue-800 mb-8">Chapter 3.2 – Advertising and Digital Campaigns</p>
+        <div class="bg-blue-50 rounded-3xl p-10">
+          <h2 class="text-2xl font-bold text-blue-900 mb-6">Campaign Brief</h2>
+          <ul class="text-left space-y-3 text-blue-800 max-w-3xl mx-auto text-lg">
+            <li>• <strong>Product:</strong> Cremica Biscuits (cream, Marie, health range)</li>
+            <li>• <strong>Market:</strong> North India</li>
+            <li>• <strong>Season:</strong> Festive (Diwali & New Year)</li>
+            <li>• <strong>Budget:</strong> Limited – must prioritise efficiency</li>
+            <li>• <strong>Constraint:</strong> Select only 4 media channels</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3 class="text-2xl font-bold text-blue-900 mb-8 text-center">Step 1: Select Primary Campaign Objective</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        <div class="objective-card bg-white rounded-2xl p-8 shadow-xl border-4 border-transparent text-center" data-objective="trial">
+          <h4 class="text-2xl font-bold text-blue-900 mb-4">Drive Trial</h4>
+          <p class="text-blue-800">Encourage first-time purchase among new consumers</p>
+        </div>
+        <div class="objective-card bg-white rounded-2xl p-8 shadow-xl border-4 border-transparent text-center" data-objective="repeat">
+          <h4 class="text-2xl font-bold text-blue-900 mb-4">Encourage Repeat</h4>
+          <p class="text-blue-800">Increase frequency among existing buyers</p>
+        </div>
+        <div class="objective-card bg-white rounded-2xl p-8 shadow-xl border-4 border-transparent text-center" data-objective="visibility">
+          <h4 class="text-2xl font-bold text-blue-900 mb-4">Build Visibility</h4>
+          <p class="text-blue-800">Maximize brand salience during festive season</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Media Mix Builder -->
+    <div id="mixSection" class="hidden">
+      <h3 class="text-2xl font-bold text-blue-900 mb-8 text-center">Step 2: Select 4 Media Channels (Click to Choose)</h3>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
+        <div class="media-card bg-white rounded-2xl p-6 shadow-xl border-4 border-transparent text-center" data-media="instagram">
+          <h4 class="font-bold text-blue-900 mb-2">Instagram Reels</h4>
+          <p class="text-sm text-gray-700">Short video, high engagement</p>
+        </div>
+        <div class="media-card bg-white rounded-2xl p-6 shadow-xl border-4 border-transparent text-center" data-media="youtube">
+          <h4 class="font-bold text-blue-900 mb-2">YouTube Shorts</h4>
+          <p class="text-sm text-gray-700">Mass reach, snackable content</p>
+        </div>
+        <div class="media-card bg-white rounded-2xl p-6 shadow-xl border-4 border-transparent text-center" data-media="whatsapp">
+          <h4 class="font-bold text-blue-900 mb-2">WhatsApp Contest</h4>
+          <p class="text-sm text-gray-700">Viral sharing, low cost</p>
+        </div>
+        <div class="media-card bg-white rounded-2xl p-6 shadow-xl border-4 border-transparent text-center" data-media="tv">
+          <h4 class="font-bold text-blue-900 mb-2">TV Spot</h4>
+          <p class="text-sm text-gray-700">High visibility, premium feel</p>
+        </div>
+        <div class="media-card bg-white rounded-2xl p-6 shadow-xl border-4 border-transparent text-center" data-media="influencer">
+          <h4 class="font-bold text-blue-900 mb-2">Influencer Collaboration</h4>
+          <p class="text-sm text-gray-700">Trust & authenticity</p>
+        </div>
+        <div class="media-card bg-white rounded-2xl p-6 shadow-xl border-4 border-transparent text-center" data-media="ecommerce">
+          <h4 class="font-bold text-blue-900 mb-2">E-commerce Banner</h4>
+          <p class="text-sm text-gray-700">Direct conversion</p>
+        </div>
+        <div class="media-card bg-white rounded-2xl p-6 shadow-xl border-4 border-transparent text-center" data-media="instore">
+          <h4 class="font-bold text-blue-900 mb-2">In-store Display</h4>
+          <p class="text-sm text-gray-700">Point-of-purchase impact</p>
+        </div>
+      </div>
+
+      <h3 class="text-2xl font-bold text-blue-900 mb-8 text-center">Step 3: Allocate Budget (Click on channel to add token)</h3>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+        <div>
+          <p class="font-semibold text-center mb-4">Remaining Tokens: <span id="remainingTokens">10</span></p>
+          <div class="text-center p-8 bg-gray-100 rounded-3xl">
+            <p class="text-lg text-gray-600">Click a selected channel below to allocate one token</p>
+          </div>
+        </div>
+        <div id="selectedMedia" class="space-y-8"></div>
+      </div>
+
+      <div class="text-center mt-12">
+        <button id="evaluateBtn" class="hidden px-14 py-6 bg-gradient-to-r from-blue-600 to-red-600 text-white text-xl font-bold rounded-2xl shadow-2xl hover:from-blue-700 hover:to-red-700 transition-all">
+          Evaluate Media Plan
+        </button>
+      </div>
+    </div>
+
+    <!-- Feedback & Reality -->
+    <div id="feedbackSection" class="hidden">
+      <h2 class="text-3xl font-bold text-blue-900 mb-10 text-center">Your Media Plan Assessment</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+        <div class="bg-green-100 rounded-3xl p-8 text-center">
+          <p class="font-bold mb-2">Reach Strength</p>
+          <p class="text-4xl font-black text-green-800" id="reachScore"></p>
+        </div>
+        <div class="bg-blue-100 rounded-3xl p-8 text-center">
+          <p class="font-bold mb-2">Conversion Strength</p>
+          <p class="text-4xl font-black text-blue-800" id="convScore"></p>
+        </div>
+        <div class="bg-amber-100 rounded-3xl p-8 text-center">
+          <p class="font-bold mb-2">FMCG Suitability</p>
+          <p class="text-4xl font-black text-amber-800" id="fmcgScore"></p>
+        </div>
+        <div class="bg-purple-100 rounded-3xl p-8 text-center">
+          <p class="font-bold mb-2">Budget Efficiency</p>
+          <p class="text-4xl font-black text-purple-800" id="effScore"></p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-3xl p-10 shadow-xl mb-12">
+        <h3 class="text-2xl font-bold text-blue-900 mb-6">How Scores Are Calculated</h3>
+        <ul class="space-y-4 text-lg">
+          <li><strong>Reach:</strong> +10 points per token on Instagram Reels or YouTube Shorts</li>
+          <li><strong>Conversion:</strong> +10 points per token on WhatsApp, E-commerce, or In-store</li>
+          <li><strong>FMCG Suitability:</strong> +8 points per token on WhatsApp or Influencer</li>
+          <li><strong>Budget Efficiency:</strong> +10 points per allocated token (spread across channels)</li>
+          <li>All scores capped at 100</li>
+        </ul>
+      </div>
+
+      <div class="bg-white rounded-3xl p-10 shadow-xl mb-12">
+        <h3 class="text-2xl font-bold text-blue-900 mb-6">Personalised Feedback & Improvement Suggestions</h3>
+        <div class="space-y-6 text-lg" id="feedbackText"></div>
+      </div>
+
+      <div class="bg-blue-50 rounded-3xl p-10 mb-12">
+        <h3 class="text-2xl font-bold text-blue-900 mb-6">Cremica’s Real Campaign Approach</h3>
+        <p class="text-lg leading-relaxed">Cremica prioritised digital-first activation during festive seasons:</p>
+        <ul class="list-disc pl-8 space-y-3 mt-4 text-lg">
+          <li>Heavy focus on Instagram Reels & YouTube Shorts for mass reach at low CPM</li>
+          <li>WhatsApp contests for viral sharing and database building</li>
+          <li>Selective TV spots only on high-viewership festive programming</li>
+          <li>In-store displays and e-commerce promotions to drive conversion</li>
+        </ul>
+        <p class="mt-6 italic">Digital dominance delivered higher ROI while maintaining premium visibility.</p>
+      </div>
+
+      <div class="bg-gradient-to-br from-blue-100 to-red-100 rounded-3xl p-10 text-center">
+        <p class="text-xl italic text-blue-900">Great advertising is not about spending more — it’s about choosing better.</p>
+      </div>
+
+      <div class="text-center mt-12">
+        <button id="restartBtn" class="px-14 py-6 bg-gray-600 text-white text-xl font-bold rounded-2xl shadow-2xl hover:bg-gray-700 transition-all">
+          Plan New Campaign
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  let selectedObjective = '';
+  let selectedMedia = [];
+  let allocated = {};
+  let remainingTokens = 10;
+
+  // Objective selection
+  document.querySelectorAll('.objective-card').forEach(card => {
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.objective-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      selectedObjective = card.dataset.objective;
+      gsap.to('#scenarioSection', { opacity: 0, y: -50, duration: 0.8, onComplete: () => {
+        document.getElementById('scenarioSection').classList.add('hidden');
+        document.getElementById('mixSection').classList.remove('hidden');
+        renderSelectedMedia();
+        gsap.from('#mixSection', { opacity: 0, y: 50, duration: 1 });
+      }});
+    });
+  });
+
+  // Media selection
+  document.querySelectorAll('.media-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const media = card.dataset.media;
+      if (selectedMedia.includes(media)) {
+        selectedMedia = selectedMedia.filter(m => m !== media);
+        allocated[media] = 0;
+        card.classList.remove('selected');
+      } else if (selectedMedia.length < 4) {
+        selectedMedia.push(media);
+        allocated[media] = 0;
+        card.classList.add('selected');
+      } else {
+        alert('You can select only 4 channels.');
+      }
+      renderSelectedMedia();
+    });
+  });
+
+  function renderSelectedMedia() {
+    const container = document.getElementById('selectedMedia');
+    container.innerHTML = '';
+    selectedMedia.forEach(media => {
+      const div = document.createElement('div');
+      div.className = 'bg-white rounded-3xl p-8 shadow-xl';
+      div.innerHTML = `
+        <h4 class="font-bold text-blue-900 text-center mb-4">${getMediaName(media)}</h4>
+        <div class="allocated-tokens" id="tokens-${media}"></div>
+        <p class="text-center mt-4 font-semibold">Allocated: <span id="count-${media}">0</span> tokens</p>
+        <div class="text-center mt-4">
+          <button class="add-token-btn px-8 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700" data-media="${media}" ${remainingTokens === 0 ? 'disabled' : ''}>
+            Add Token
+          </button>
+        </div>
+      `;
+      container.appendChild(div);
+    });
+
+    // Add token buttons
+    document.querySelectorAll('.add-token-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (remainingTokens > 0) {
+          const media = btn.dataset.media;
+          allocated[media]++;
+          remainingTokens--;
+          updateAllocation(media);
+          checkComplete();
+        }
+      });
+    });
+  }
+
+  function updateAllocation(media) {
+    document.getElementById('remainingTokens').textContent = remainingTokens;
+    document.getElementById('count-' + media).textContent = allocated[media];
+    const tokensDiv = document.getElementById('tokens-' + media);
+    tokensDiv.innerHTML = '';
+    for (let i = 0; i < allocated[media]; i++) {
+      const token = document.createElement('div');
+      token.className = 'token';
+      token.textContent = '₹';
+      tokensDiv.appendChild(token);
+    }
+    // Update button state
+    document.querySelectorAll('.add-token-btn').forEach(b => {
+      b.disabled = remainingTokens === 0;
+    });
+  }
+
+  function getMediaName(code) {
+    const names = {
+      instagram: 'Instagram Reels',
+      youtube: 'YouTube Shorts',
+      whatsapp: 'WhatsApp Contest',
+      tv: 'TV Spot',
+      influencer: 'Influencer Collaboration',
+      ecommerce: 'E-commerce Banner',
+      instore: 'In-store Display'
+    };
+    return names[code] || code;
+  }
+
+  function checkComplete() {
+    if (selectedMedia.length === 4 && remainingTokens === 0) {
+      document.getElementById('evaluateBtn').classList.remove('hidden');
+      gsap.from('#evaluateBtn', { opacity: 0, y: 50, duration: 1 });
+    }
+  }
+
+  document.getElementById('evaluateBtn').addEventListener('click', () => {
+    let reach = 0, conv = 0, fmcg = 0, eff = 0;
+    selectedMedia.forEach(m => {
+      const weight = allocated[m] || 0;
+      if (['instagram', 'youtube'].includes(m)) reach += weight * 10;
+      if (['whatsapp', 'ecommerce', 'instore'].includes(m)) conv += weight * 10;
+      if (['whatsapp', 'influencer'].includes(m)) fmcg += weight * 8;
+      eff += weight * 10;
+    });
+
+    reach = Math.min(100, reach);
+    conv = Math.min(100, conv);
+    fmcg = Math.min(100, fmcg);
+    eff = Math.min(100, eff);
+
+    document.getElementById('reachScore').textContent = reach + '/100';
+    document.getElementById('convScore').textContent = conv + '/100';
+    document.getElementById('fmcgScore').textContent = fmcg + '/100';
+    document.getElementById('effScore').textContent = eff + '/100';
+
+    // Personalised feedback
+    let feedback = [];
+
+    if (reach >= 70) feedback.push('Excellent reach – strong digital video focus delivers mass visibility efficiently.');
+    else if (reach < 40) feedback.push('Reach could be improved – consider more allocation to Instagram Reels or YouTube Shorts for broader festive exposure.');
+
+    if (conv >= 70) feedback.push('Strong conversion potential – good emphasis on channels that drive trial and purchase.');
+    else if (conv < 40) feedback.push('Conversion focus is low – adding WhatsApp, E-commerce or In-store would help turn awareness into sales.');
+
+    if (selectedMedia.includes('tv') && allocated['tv'] >= 5) feedback.push('Heavy TV allocation gives premium feel but reduces overall budget efficiency in a limited-spend scenario.');
+    if (selectedMedia.includes('whatsapp') && allocated['whatsapp'] >= 3) feedback.push('Smart use of WhatsApp – perfect for festive viral sharing and low-cost engagement.');
+
+    if (selectedMedia.includes('influencer') && allocated['influencer'] >= 4) feedback.push('Influencers build trust well, but ensure micro-influencers for better ROI in North India.');
+
+    if (feedback.length === 0) feedback.push('Balanced starting point – experiment with more digital-heavy allocation for higher efficiency.');
+
+    feedback.push('<strong>Suggestion for improvement:</strong> In real Cremica campaigns, digital channels (Reels, Shorts, WhatsApp) dominate for better targeting and measurable ROI during festive peaks.');
+
+    document.getElementById('feedbackText').innerHTML = feedback.map(f => `<p>${f}</p>`).join('');
+
+    gsap.to('#mixSection', { opacity: 0, y: -50, duration: 0.8, onComplete: () => {
+      document.getElementById('mixSection').classList.add('hidden');
+      document.getElementById('feedbackSection').classList.remove('hidden');
+      gsap.from('#feedbackSection', { opacity: 0, y: 50, duration: 1 });
+    }});
+  });
+
+  document.getElementById('restartBtn').addEventListener('click', () => location.reload());
+
+  document.getElementById('fullscreenBtn').addEventListener('click', () => {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+    else document.exitFullscreen();
+  });
+</script>
+</body>
+</html>
