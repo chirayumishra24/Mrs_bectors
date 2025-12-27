@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Cremica Resource Allocation Arena</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.6.0/confetti.min.js"></script>
+<style type="text/css">
+  body { font-family: 'Poppins', sans-serif; }
+  h1, h2, h3 { font-family: 'Playfair Display', serif; }
+  p { font-size: 16px; line-height: 1.7; }
+  .grain-overlay {
+    background: url('https://img.freepik.com/free-photo/white-plain-concrete-textured-background_53876-102604.jpg?semt=ais_hybrid&w=740&q=80') repeat;
+    opacity: 0.03;
+    pointer-events: none;
+  }
+  .premium-card {
+    border: 2px solid #cc0000;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  }
+  .alloc-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 0;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  .alloc-btn {
+    width: 40px;
+    height: 40px;
+    background: #e5e7eb;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    user-select: none;
+  }
+  .alloc-btn:hover {
+    background: #cc0000;
+    color: white;
+  }
+  .alloc-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .points-display {
+    min-width: 80px;
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #1e40af;
+  }
+  .indicator {
+    height: 20px;
+    background: #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 1rem 0;
+  }
+  .indicator-fill {
+    height: 100%;
+    transition: width 0.8s ease, background 0.8s ease;
+  }
+  .growth { background: #22c55e; }
+  .margin { background: #3b82f6; }
+  .stability { background: #f59e0b; }
+  .tooltip {
+    position: relative;
+    cursor: help;
+  }
+  .tooltip .tooltip-text {
+    visibility: hidden;
+    width: 280px;
+    background: #1e293b;
+    color: white;
+    text-align: center;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    position: absolute;
+    z-index: 20;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -140px;
+    opacity: 0;
+    transition: opacity 0.4s;
+    font-size: 0.9rem;
+  }
+  .tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+  }
+  .feedback-item {
+    background: #f8fafc;
+    border-left: 5px solid #cc0000;
+    padding: 1.5rem;
+    border-radius: 0 0.75rem 0.75rem 0;
+    margin-bottom: 1rem;
+  }
+</style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 via-white to-red-50 min-h-screen py-16">
+
+<div class="fixed inset-0 grain-overlay -z-10"></div>
+
+<button class="fixed top-6 right-6 z-50 bg-gradient-to-br from-red-600 to-blue-700 hover:from-red-500 hover:to-blue-600 text-white p-4 rounded-full shadow-2xl backdrop-blur-sm transition-all duration-300 hover:scale-110 text-xl font-bold" id="fullscreenBtn">⛶</button>
+
+<div class="max-w-6xl mx-auto px-6">
+  <div class="premium-card bg-white/95 backdrop-blur-md rounded-3xl p-10 shadow-2xl">
+
+    <!-- CEO Context -->
+    <div id="ceoSection">
+      <div class="text-center mb-12">
+        <h1 class="text-4xl font-black text-blue-900 mb-6">Cremica Resource Allocation Arena</h1>
+        <p class="text-xl text-blue-800 mb-8">Chapter 4.1 – Cremica Business Model Canvas</p>
+        <p class="text-lg text-blue-900 max-w-4xl mx-auto">
+          You are the CEO of Cremica.<br><br>
+          You have <strong>100 strategy points</strong> to allocate across Customer Segments, Value Propositions, and Channels.<br><br>
+          Your choices will shape the business model — and its outcomes.
+        </p>
+      </div>
+
+      <div class="text-center mb-12">
+        <p class="text-3xl font-black text-blue-900">Remaining Points: <span id="remainingPoints">100</span></p>
+      </div>
+
+      <div class="text-center">
+        <button id="startBtn" class="px-14 py-6 bg-gradient-to-r from-blue-600 to-red-600 text-white text-xl font-bold rounded-2xl shadow-2xl hover:from-blue-700 hover:to-red-700 transition-all">
+          Begin Allocation
+        </button>
+      </div>
+    </div>
+
+    <!-- Allocation Dashboard -->
+    <div id="allocSection" class="hidden">
+      <h2 class="text-3xl font-bold text-blue-900 mb-10 text-center">Allocate Your 100 Strategy Points</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
+        <!-- Customer Segments -->
+        <div class="bg-white rounded-3xl p-8 shadow-xl">
+          <h3 class="text-2xl font-bold text-blue-900 text-center mb-8 tooltip">
+            Customer Segments
+            <span class="tooltip-text">Who we serve — the groups that generate revenue. Allocation here determines revenue stability vs growth potential.</span>
+          </h3>
+          <div class="alloc-row">
+            <span class="font-medium">Retail Consumers</span>
+            <div class="flex items-center gap-4">
+              <div class="alloc-btn" data-dir="-1" data-target="retailPoints">-</div>
+              <div class="points-display" id="retailPoints">0</div>
+              <div class="alloc-btn" data-dir="1" data-target="retailPoints">+</div>
+            </div>
+          </div>
+          <div class="alloc-row">
+            <span class="font-medium">Institutional / QSR</span>
+            <div class="flex items-center gap-4">
+              <div class="alloc-btn" data-dir="-1" data-target="institutionalPoints">-</div>
+              <div class="points-display" id="institutionalPoints">0</div>
+              <div class="alloc-btn" data-dir="1" data-target="institutionalPoints">+</div>
+            </div>
+          </div>
+          <div class="alloc-row">
+            <span class="font-medium">Export Markets</span>
+            <div class="flex items-center gap-4">
+              <div class="alloc-btn" data-dir="-1" data-target="exportPoints">-</div>
+              <div class="points-display" id="exportPoints">0</div>
+              <div class="alloc-btn" data-dir="1" data-target="exportPoints">+</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Value Propositions -->
+        <div class="bg-white rounded-3xl p-8 shadow-xl">
+          <h3 class="text-2xl font-bold text-blue-900 text-center mb-8 tooltip">
+            Value Propositions
+            <span class="tooltip-text">Why customers choose us — the core benefits we deliver. Drives brand perception and pricing power.</span>
+          </h3>
+          <div class="alloc-row">
+            <span class="font-medium">Indulgent Taste</span>
+            <div class="flex items-center gap-4">
+              <div class="alloc-btn" data-dir="-1" data-target="tastePoints">-</div>
+              <div class="points-display" id="tastePoints">0</div>
+              <div class="alloc-btn" data-dir="1" data-target="tastePoints">+</div>
+            </div>
+          </div>
+          <div class="alloc-row">
+            <span class="font-medium">Reliability & Quality</span>
+            <div class="flex items-center gap-4">
+              <div class="alloc-btn" data-dir="-1" data-target="reliabilityPoints">-</div>
+              <div class="points-display" id="reliabilityPoints">0</div>
+              <div class="alloc-btn" data-dir="1" data-target="reliabilityPoints">+</div>
+            </div>
+          </div>
+          <div class="alloc-row">
+            <span class="font-medium">Health & Clean Label</span>
+            <div class="flex items-center gap-4">
+              <div class="alloc-btn" data-dir="-1" data-target="healthPoints">-</div>
+              <div class="points-display" id="healthPoints">0</div>
+              <div class="alloc-btn" data-dir="1" data-target="healthPoints">+</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Channels -->
+        <div class="bg-white rounded-3xl p-8 shadow-xl">
+          <h3 class="text-2xl font-bold text-blue-900 text-center mb-8 tooltip">
+            Channels
+            <span class="tooltip-text">How we reach customers — distribution paths that affect reach, cost, and control.</span>
+          </h3>
+          <div class="alloc-row">
+            <span class="font-medium">Traditional Distribution</span>
+            <div class="flex items-center gap-4">
+              <div class="alloc-btn" data-dir="-1" data-target="traditionalPoints">-</div>
+              <div class="points-display" id="traditionalPoints">0</div>
+              <div class="alloc-btn" data-dir="1" data-target="traditionalPoints">+</div>
+            </div>
+          </div>
+          <div class="alloc-row">
+            <span class="font-medium">Direct QSR Supply</span>
+            <div class="flex items-center gap-4">
+              <div class="alloc-btn" data-dir="-1" data-target="qsrPoints">-</div>
+              <div class="points-display" id="qsrPoints">0</div>
+              <div class="alloc-btn" data-dir="1" data-target="qsrPoints">+</div>
+            </div>
+          </div>
+          <div class="alloc-row">
+            <span class="font-medium">Digital / E-commerce</span>
+            <div class="flex items-center gap-4">
+              <div class="alloc-btn" data-dir="-1" data-target="digitalPoints">-</div>
+              <div class="points-display" id="digitalPoints">0</div>
+              <div class="alloc-btn" data-dir="1" data-target="digitalPoints">+</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-gray-100 rounded-3xl p-8 mb-12">
+        <h3 class="text-2xl font-bold text-blue-900 mb-6 text-center">Live Consequences</h3>
+        <div class="space-y-6">
+          <div class="tooltip">
+            <p class="font-medium mb-2">Growth Potential</p>
+            <span class="tooltip-text">Driven by retail consumer focus, digital channels, and indulgent taste — higher volume growth but volatile.</span>
+            <div class="indicator"><div id="growthFill" class="indicator-fill growth" style="width: 50%"></div></div>
+          </div>
+          <div class="tooltip">
+            <p class="font-medium mb-2">Margin Strength</p>
+            <span class="tooltip-text">Supported by institutional/QSR contracts, reliability focus, and premium positioning — stable profitability.</span>
+            <div class="indicator"><div id="marginFill" class="indicator-fill margin" style="width: 50%"></div></div>
+          </div>
+          <div class="tooltip">
+            <p class="font-medium mb-2">Stability Level</p>
+            <span class="tooltip-text">Provided by B2B contracts and reliability investments — buffers against market fluctuations.</span>
+            <div class="indicator"><div id="stabilityFill" class="indicator-fill stability" style="width: 50%"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center">
+        <button id="evaluateBtn" class="px-14 py-6 bg-gradient-to-r from-blue-600 to-red-600 text-white text-xl font-bold rounded-2xl shadow-2xl hover:from-blue-700 hover:to-red-700 transition-all">
+          Reveal Your Business Model
+        </button>
+      </div>
+    </div>
+
+    <!-- Result -->
+    <div id="resultSection" class="hidden">
+      <h2 class="text-3xl font-bold text-blue-900 mb-10 text-center">Your Allocated Business Model</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        <div class="bg-white rounded-3xl p-8 shadow-xl text-center">
+          <p class="text-xl font-bold text-blue-900 mb-4">Business Model Type</p>
+          <p class="text-3xl font-black text-red-600" id="modelType">Hybrid Mid-Premium</p>
+        </div>
+        <div class="bg-white rounded-3xl p-8 shadow-xl text-center">
+          <p class="text-xl font-bold text-blue-900 mb-4">Revenue Mix</p>
+          <p class="text-2xl" id="revenueMix">60% B2C • 40% B2B</p>
+        </div>
+        <div class="bg-amber-100 rounded-3xl p-8 text-center">
+          <p class="text-xl font-bold text-blue-900 mb-4">Strategic Risk Note</p>
+          <p class="text-lg" id="riskNote">Well-balanced — stable funding with growth potential</p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-3xl p-10 shadow-xl mb-12">
+        <h3 class="text-2xl font-bold text-blue-900 mb-8 text-center">Detailed Feedback</h3>
+        <div class="space-y-6">
+          <div class="feedback-item">
+            <p class="font-bold text-blue-900 mb-2">Growth Potential</p>
+            <p id="growthFeedback">Balanced — good retail and digital investment supports volume expansion.</p>
+          </div>
+          <div class="feedback-item">
+            <p class="font-bold text-blue-900 mb-2">Margin Strength</p>
+            <p id="marginFeedback">Strong — institutional contracts and reliability focus protect profitability.</p>
+          </div>
+          <div class="feedback-item">
+            <p class="font-bold text-blue-900 mb-2">Stability Level</p>
+            <p id="stabilityFeedback">Solid — B2B base provides cash flow buffer for brand building.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-blue-50 rounded-3xl p-10 mb-12">
+        <h3 class="text-2xl font-bold text-blue-900 mb-6 text-center">Cremica’s Actual Model</h3>
+        <p class="text-lg leading-relaxed text-center">
+          Cremica runs a <strong>hybrid model</strong>: ~60% B2C retail for brand building and innovation, funded by ~40% stable B2B (especially QSR contracts).<br><br>
+          This creates a virtuous cycle: B2B cash flow enables retail marketing → stronger consumer brand → higher export and premium potential.
+        </p>
+      </div>
+
+      <div class="bg-gradient-to-br from-blue-100 to-red-100 rounded-3xl p-10 text-center">
+        <p class="text-xl italic text-blue-900">Capital allocation is strategy.</p>
+      </div>
+
+      <div class="text-center mt-12">
+        <button id="restartBtn" class="px-14 py-6 bg-gray-600 text-white text-xl font-bold rounded-2xl shadow-2xl hover:bg-gray-700 transition-all">
+          Allocate Again
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  let remaining = 100;
+  const points = {
+    retailPoints: 0,
+    institutionalPoints: 0,
+    exportPoints: 0,
+    tastePoints: 0,
+    reliabilityPoints: 0,
+    healthPoints: 0,
+    traditionalPoints: 0,
+    qsrPoints: 0,
+    digitalPoints: 0
+  };
+
+  document.getElementById('startBtn').addEventListener('click', () => {
+    gsap.to('#ceoSection', { opacity: 0, y: -50, duration: 0.8, onComplete: () => {
+      document.getElementById('ceoSection').classList.add('hidden');
+      document.getElementById('allocSection').classList.remove('hidden');
+      gsap.from('#allocSection', { opacity: 0, y: 50, duration: 1 });
+    }});
+  });
+
+  document.querySelectorAll('.alloc-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const dir = parseInt(btn.dataset.dir);
+      const target = btn.dataset.target;
+      const current = points[target];
+
+      if (dir === 1 && remaining > 0) {
+        points[target]++;
+        remaining--;
+      } else if (dir === -1 && current > 0) {
+        points[target]--;
+        remaining++;
+      } else {
+        return;
+      }
+
+      document.getElementById(target).textContent = points[target];
+      document.getElementById('remainingPoints').textContent = remaining;
+
+      updateConsequences();
+    });
+  });
+
+  function updateConsequences() {
+    const b2b = points.institutionalPoints + points.qsrPoints;
+    const retail = points.retailPoints + points.traditionalPoints + points.digitalPoints;
+    const healthFocus = points.healthPoints;
+
+    // Growth: retail + digital + taste
+    const growth = retail + points.digitalPoints + points.tastePoints;
+    gsap.to('#growthFill', { width: Math.min(100, growth) + '%', duration: 0.8 });
+
+    // Margin: institutional + reliability + qsr
+    const margin = points.institutionalPoints + points.reliabilityPoints + points.qsrPoints;
+    gsap.to('#marginFill', { width: Math.min(100, margin * 1.5) + '%', duration: 0.8 });
+
+    // Stability: B2B focus
+    gsap.to('#stabilityFill', { width: Math.min(100, b2b * 2) + '%', duration: 0.8 });
+  }
+
+  document.getElementById('evaluateBtn').addEventListener('click', () => {
+    if (remaining !== 0) {
+      alert('Please allocate all 100 points before evaluating.');
+      return;
+    }
+
+    const b2bShare = points.institutionalPoints + points.qsrPoints;
+    const retailShare = points.retailPoints + points.traditionalPoints + points.digitalPoints;
+    const exportShare = points.exportPoints;
+
+    let model = 'Hybrid Mid-Premium';
+    if (b2bShare > 60) model = 'B2B-Dominant Stability';
+    if (retailShare > 70) model = 'Retail-Led Growth';
+    if (points.healthPoints > 40) model = 'Health-Focused Premium';
+
+    let revenue = `${Math.round(retailShare / 100 * 100)}% B2C • ${Math.round(b2bShare / 100 * 100)}% B2B`;
+    let risk = 'Well-balanced — stable funding with growth potential';
+
+    if (b2bShare < 30) risk = 'Low B2B base — limited cash flow for innovation and brand building';
+    if (retailShare < 40) risk = 'Under-invested in consumer brand — long-term growth at risk';
+
+    document.getElementById('modelType').textContent = model;
+    document.getElementById('revenueMix').textContent = revenue;
+    document.getElementById('riskNote').textContent = risk;
+
+    // Detailed feedback
+    const growthScore = retailShare + points.digitalPoints + points.tastePoints;
+    let growthText = 'Strong growth trajectory — heavy retail and digital investment drives volume.';
+    if (growthScore < 60) growthText = 'Moderate growth — more retail/digital focus could accelerate expansion.';
+    if (growthScore < 30) growthText = 'Limited growth — heavy B2B reliance may cap consumer brand development.';
+
+    const marginScore = points.institutionalPoints + points.reliabilityPoints + points.qsrPoints;
+    let marginText = 'Healthy margins — B2B contracts and reliability emphasis protect profitability.';
+    if (marginScore < 50) marginText = 'Margin pressure — insufficient B2B or reliability investment.';
+    if (marginScore < 30) marginText = 'High margin risk — over-reliance on volatile retail channels.';
+
+    const stabilityScore = b2bShare * 2;
+    let stabilityText = 'Excellent stability — strong B2B base provides cash flow buffer.';
+    if (stabilityScore < 60) stabilityText = 'Moderate stability — balanced but vulnerable to retail fluctuations.';
+    if (stabilityScore < 40) stabilityText = 'Low stability — heavy retail focus increases volatility risk.';
+
+    document.getElementById('growthFeedback').textContent = growthText;
+    document.getElementById('marginFeedback').textContent = marginText;
+    document.getElementById('stabilityFeedback').textContent = stabilityText;
+
+    // Celebration if well-balanced
+    if (b2bShare >= 35 && b2bShare <= 50 && retailShare >= 50) {
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#cc0000', '#0066cc', '#ffcc00']
+      });
+      const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3');
+      audio.play();
+    }
+
+    gsap.to('#allocSection', { opacity: 0, y: -50, duration: 0.8, onComplete: () => {
+      document.getElementById('allocSection').classList.add('hidden');
+      document.getElementById('resultSection').classList.remove('hidden');
+      gsap.from('#resultSection', { opacity: 0, y: 50, duration: 1 });
+    }});
+  });
+
+  document.getElementById('restartBtn').addEventListener('click', () => location.reload());
+</script>
+</body>
+</html>
