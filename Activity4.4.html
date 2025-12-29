@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Cremica Distribution Express</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.6.0/confetti.min.js"></script>
+<style>
+  body { font-family: 'Poppins', sans-serif; }
+  h1, h2, h3 { font-family: 'Playfair Display', serif; }
+  .grain-overlay { background: url('https://img.freepik.com/free-photo/white-plain-concrete-textured-background_53876-102604.jpg') repeat; opacity: 0.03; pointer-events: none; }
+  .premium-card { border: 2px solid #cc0000; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+  .option-card { cursor: pointer; transition: all 0.3s ease; border: 4px solid transparent; }
+  .option-card:hover { border-color: #cc0000; transform: scale(1.05); box-shadow: 0 12px 30px rgba(204,0,0,0.3); }
+  .option-card.selected.correct { background: #d4edda; border-color: #28a745; }
+  .option-card.selected.wrong { background: #f8d7da; border-color: #dc3545; }
+  .progress-route { height: 14px; background: #e5e7eb; border-radius: 999px; overflow: hidden; box-shadow: inset 0 4px 10px rgba(0,0,0,0.1); }
+  .progress-fill { height: 100%; background: linear-gradient(to right, #cc0000, #ff4444); width: 0%; transition: width 0.8s ease; }
+  .moving-bg { background: linear-gradient(to right, #dbeafe, #fee2e2, #dbeafe); background-size: 200% 100%; animation: moveBg 15s linear infinite; }
+  @keyframes moveBg { 0% { background-position: 0 0; } 100% { background-position: 200% 0; } }
+  .truck-icon { width: 120px; height: 60px; animation: drive 4s linear infinite; }
+  @keyframes drive { 0% { transform: translateX(-100px); } 100% { transform: translateX(calc(100vw + 100px)); } }
+  .result-item { transition: all 0.5s; opacity: 0; transform: translateY(20px); }
+  .result-item.visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 via-white to-red-50 min-h-screen py-16">
+<div class="fixed inset-0 grain-overlay -z-10"></div>
+
+<!-- Animated Truck Icon -->
+<div class="fixed bottom-10 left-0 z-40 pointer-events-none">
+  <svg class="truck-icon" viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="40" width="120" height="40" fill="#cc0000" rx="10"/>
+    <rect x="140" y="50" width="40" height="30" fill="#cc0000" rx="5"/>
+    <circle cx="40" cy="85" r="15" fill="#333"/>
+    <circle cx="140" cy="85" r="15" fill="#333"/>
+    <text x="60" y="65" fill="white" font-size="24" font-weight="bold">🚚</text>
+  </svg>
+</div>
+
+<div class="max-w-5xl mx-auto px-6">
+  <div class="premium-card bg-white rounded-3xl p-12 shadow-2xl">
+
+    <!-- Title Screen -->
+    <div id="titleSection">
+      <div class="text-center mb-12">
+        <h1 class="text-4xl font-black text-blue-900 mb-6">Cremica Distribution Express 🚚</h1>
+        <p class="text-xl text-blue-800 mb-12">Follow the journey from factory to 550,000+ stores.</p>
+      </div>
+      <div class="text-center mb-12">
+        <!-- Changed to a sleek modern animated truck GIF -->
+        <img src="https://i.pinimg.com/originals/1c/f2/7e/1cf27e45568cae86327b0bf542dc6938.gif" alt="Modern logistics truck animation" class="mx-auto rounded-2xl shadow-2xl w-full max-w-2xl">
+      </div>
+      <div class="progress-route mx-auto w-3/4 mb-12"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="text-center">
+        <button id="startBtn" class="px-16 py-7 bg-gradient-to-r from-blue-600 to-red-600 text-white text-xl font-bold rounded-full shadow-2xl hover:from-blue-700 hover:to-red-700 transition-all transform hover:scale-110">
+          Begin the Journey
+        </button>
+      </div>
+    </div>
+
+    <!-- Quiz Questions -->
+    <div id="quizSection" class="hidden relative overflow-hidden rounded-3xl">
+      <div class="moving-bg absolute inset-0 opacity-40"></div>
+      <div class="relative z-10">
+        <div class="progress-route mx-auto w-4/5 mb-10"><div class="progress-fill" id="quizProgress"></div></div>
+        <div id="questionContainer"></div>
+      </div>
+    </div>
+
+    <!-- Final Results -->
+    <div id="finalSection" class="hidden text-center">
+      <h2 class="text-4xl font-black text-blue-900 mb-10">Distribution Mastered! 🎉</h2>
+      <p class="text-2xl text-blue-800 mb-12" id="scoreText"></p>
+
+      <div class="max-w-4xl mx-auto text-left bg-gradient-to-br from-blue-50 to-red-50 rounded-3xl p-12 shadow-2xl space-y-8">
+        <h3 class="text-2xl font-bold text-blue-900 text-center mb-10">Detailed Results & Explanations</h3>
+        <div id="resultsContainer"></div>
+      </div>
+
+      <img src="https://cdn.prod.website-files.com/64700b7f349828a5b8dc81ab/64f1086d8f2eda598432e3c9_Warehouse-Management-System-WMS.png" alt="Truck arriving at warehouse" class="mx-auto rounded-2xl shadow-2xl my-16 w-full max-w-2xl">
+
+      <p class="text-xl italic text-blue-900 mb-16 max-w-3xl mx-auto">
+        In FMCG, great products win hearts.<br>
+        Great distribution wins markets.
+      </p>
+
+      <button id="resetBtn" class="px-16 py-7 bg-gradient-to-r from-green-600 to-blue-600 text-white text-xl font-bold rounded-full shadow-2xl hover:from-green-700 hover:to-blue-700 transition-all transform hover:scale-110">
+        Restart the Journey
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const questions = [
+    {
+      q: "How extensive is Cremica’s retail distribution network in India?",
+      opts: ["A. 150,000 outlets", "B. 300,000 outlets", "C. 550,000+ outlets", "D. 1 million outlets"],
+      correct: 2,
+      img: "https://urbanemissions.info/wp-content/uploads/images/india_pop_2011.png",
+      explanation: "Cremica reaches over 550,000 retail outlets across India, giving it one of the widest distribution networks in the biscuits and sauces category. This massive scale ensures high visibility and availability, driving consistent volume growth."
+    },
+    {
+      q: "Which channel dominates Cremica’s domestic distribution?",
+      opts: ["A. Modern trade", "B. General trade", "C. E-commerce", "D. Institutional only"],
+      correct: 1,
+      img: "https://m.economictimes.com/thumb/msid-105545164,width-1200,height-900,resizemode-4,imgsize-2415554/kirana.jpg",
+      explanation: "General trade (traditional kirana stores and small retailers) remains the dominant channel for Cremica, accounting for the majority of domestic sales. In Indian FMCG, depth in general trade is far more important than presence in modern trade or e-commerce."
+    },
+    {
+      q: "Which region forms Cremica’s strongest distribution base?",
+      opts: ["A. South India", "B. East India", "C. North India", "D. North-East India"],
+      correct: 2,
+      img: "https://mondediplo.com/local/cache-vignettes/L890xH735/lmd_0719_04_inde_elections2019_rgb-2-c495e-7971d.jpg",
+      explanation: "North India is Cremica’s stronghold, with the deepest penetration and highest sales contribution. The company’s manufacturing plants are located in Punjab and Uttar Pradesh, providing a natural logistical advantage in the northern markets."
+    },
+    {
+      q: "Why is Cremica’s multi-plant setup critical for QSR supply?",
+      opts: ["A. Lower marketing costs", "B. Faster logistics & consistent supply", "C. Higher export margins", "D. Premium branding"],
+      correct: 1,
+      img: "https://blog.arkieva.com/wp-content/uploads/2017/09/fast-food-supply-chain-infographic.png",
+      explanation: "Quick Service Restaurants demand just-in-time delivery and zero stock-outs. Cremica’s plants in multiple locations (Philaur, Greater Noida, etc.) enable faster response times, reduced transportation costs, and reliable supply to pan-India QSR chains like McDonald’s."
+    },
+    {
+      q: "How does Cremica manage exports to 69 countries?",
+      opts: ["A. Direct factory shipping", "B. Third-party exporters", "C. UAE-based subsidiary", "D. Distributor-only model"],
+      correct: 2,
+      img: "https://assets.weforum.org/article/image/large_TqQ3j4f5JYvafIZTZO9BNYEfBH6KHPlKk5Vt7IUR7Ys.jpg",
+      explanation: "Cremica operates a dedicated subsidiary in the UAE that acts as a central hub for exports. This setup streamlines logistics, handles regulatory compliance across markets, and provides better control over international distribution."
+    }
+  ];
+
+  let currentQ = 0;
+  let score = 0;
+  let userAnswers = [];
+
+  document.getElementById('startBtn').addEventListener('click', startQuiz);
+  document.getElementById('resetBtn').addEventListener('click', () => location.reload());
+
+  function startQuiz() {
+    gsap.to('#titleSection', {opacity: 0, x: -200, duration: 1, onComplete: () => {
+      document.getElementById('titleSection').classList.add('hidden');
+      document.getElementById('quizSection').classList.remove('hidden');
+      currentQ = 0;
+      score = 0;
+      userAnswers = new Array(questions.length).fill(null);
+      loadQuestion();
+    }});
+  }
+
+  function loadQuestion() {
+    const qData = questions[currentQ];
+    const container = document.getElementById('questionContainer');
+    container.innerHTML = `
+      <div class="question-slide text-center py-12" style="opacity:0; transform: translateX(100%)">
+        <img src="${qData.img}" alt="Visual" class="mx-auto rounded-2xl shadow-2xl mb-10 max-h-80 object-cover">
+        <h2 class="text-3xl font-bold text-blue-900 mb-12 px-8">${qData.q}</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-4xl mx-auto">
+          ${qData.opts.map((opt, i) => `
+            <div class="option-card bg-white rounded-3xl p-10 shadow-xl text-center" data-index="${i}">
+              <p class="text-lg font-medium">${opt}</p>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+
+    gsap.to('.question-slide', {opacity: 1, x: 0, duration: 1.2, ease: "power2.out"});
+
+    document.querySelectorAll('.option-card').forEach(card => {
+      card.addEventListener('click', () => {
+        if (card.classList.contains('selected')) return;
+        document.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected', 'correct', 'wrong'));
+        card.classList.add('selected');
+        const idx = parseInt(card.dataset.index);
+        userAnswers[currentQ] = idx;
+
+        if (idx === qData.correct) {
+          card.classList.add('correct');
+          score++;
+          gsap.to(card, {scale: 1.1, y: -20, duration: 0.4, yoyo: true, repeat: 1});
+        } else {
+          card.classList.add('wrong');
+          gsap.to(card, {x: [-30, 30, -20, 20, 0], duration: 0.6});
+        }
+        setTimeout(nextQuestion, 1800);
+      });
+    });
+
+    gsap.to('#quizProgress', {width: ((currentQ + 1)/questions.length * 100) + '%', duration: 1});
+  }
+
+  function nextQuestion() {
+    currentQ++;
+    if (currentQ >= questions.length) {
+      showFinal();
+    } else {
+      gsap.to('.question-slide', {opacity: 0, x: -200, duration: 0.8, onComplete: loadQuestion});
+    }
+  }
+
+  function showFinal() {
+    gsap.to('#quizSection', {opacity: 0, duration: 1, onComplete: () => {
+      document.getElementById('quizSection').classList.add('hidden');
+      document.getElementById('finalSection').classList.remove('hidden');
+
+      const percentage = Math.round((score / questions.length) * 100);
+      document.getElementById('scoreText').innerHTML = `
+        You scored <span class="text-4xl font-black text-green-600">${score}/${questions.length}</span><br>
+        <span class="text-xl">(${percentage}% Mastery!)</span>
+      `;
+
+      const resultsDiv = document.getElementById('resultsContainer');
+      resultsDiv.innerHTML = '';
+      questions.forEach((q, i) => {
+        const item = document.createElement('div');
+        item.className = 'result-item border-l-6 pl-8 py-6 rounded-r-2xl shadow-lg ' + 
+                         (userAnswers[i] === q.correct ? 'border-green-600 bg-green-50' : 'border-red-600 bg-red-50');
+        item.innerHTML = `
+          <p class="font-bold text-lg mb-3">${i+1}. ${q.q}</p>
+          <p class="mt-2"><strong>Your answer:</strong> ${userAnswers[i] !== null ? q.opts[userAnswers[i]] : "Skipped"}</p>
+          <p class="mt-1"><strong>Correct answer:</strong> ${q.opts[q.correct]}</p>
+          <p class="mt-4 text-blue-900 font-medium">${q.explanation}</p>
+        `;
+        resultsDiv.appendChild(item);
+      });
+
+      gsap.to('.result-item', {opacity: 1, y: 0, stagger: 0.2, duration: 0.8, delay: 0.5});
+
+      confetti({particleCount: 300, spread: 100, origin: {y: 0.5}});
+      setTimeout(() => confetti({particleCount: 200, spread: 120, origin: {y: 0.6}}), 500);
+      const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3');
+      audio.play().catch(() => {});
+    }});
+  }
+</script>
+</body>
+</html>
