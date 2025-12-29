@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Passport to Profit – Cremica’s Global Expansion</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.6.0/confetti.min.js"></script>
+<style>
+  body { font-family: 'Poppins', sans-serif; }
+  h1, h2, h3 { font-family: 'Playfair Display', serif; }
+  .grain-overlay { background: url('https://img.freepik.com/free-photo/white-plain-concrete-textured-background_53876-102604.jpg') repeat; opacity: 0.03; pointer-events: none; }
+  .premium-card { border: 2px solid #cc0000; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+  .option-card { 
+    cursor: pointer; 
+    transition: all 0.3s ease; 
+    border: 4px solid transparent; 
+    max-width: 420px; 
+    margin: 0 auto;
+  }
+  .option-card:hover { border-color: #cc0000; transform: scale(1.05); box-shadow: 0 12px 30px rgba(204,0,0,0.3); }
+  .option-card.selected { border-color: #cc0000; transform: scale(1.08); background: linear-gradient(to bottom, #fffaf0, #ffffff); }
+  .progress-route { height: 14px; background: #e5e7eb; border-radius: 999px; overflow: hidden; box-shadow: inset 0 4px 10px rgba(0,0,0,0.1); }
+  .progress-fill { height: 100%; background: linear-gradient(to right, #cc0000, #ff4444); width: 0%; transition: width 0.8s ease; }
+  .moving-bg { background: linear-gradient(to right, #dbeafe, #fee2e2, #dbeafe); background-size: 200% 100%; animation: moveBg 15s linear infinite; }
+  @keyframes moveBg { 0% { background-position: 0 0; } 100% { background-position: 200% 0; } }
+  .plane-icon { width: 140px; height: 80px; animation: fly 20s linear infinite; }
+  @keyframes fly { 0% { transform: translateX(-200px) translateY(0); } 100% { transform: translateX(calc(100vw + 200px)) translateY(-50px); } }
+  .stamp { opacity: 0; transform: scale(0) rotate(-30deg); }
+  .stamp.visible { opacity: 1; transform: scale(1) rotate(0); transition: all 0.8s ease-out; }
+  .explanation { max-width: 800px; margin: 0 auto; }
+</style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 via-white to-red-50 min-h-screen py-16">
+<div class="fixed inset-0 grain-overlay -z-10"></div>
+
+<!-- Full Screen Button -->
+<button class="fixed top-6 right-6 z-50 bg-gradient-to-br from-red-600 to-blue-700 hover:from-red-500 hover:to-blue-600 text-white p-4 rounded-full shadow-2xl backdrop-blur-sm transition-all duration-300 hover:scale-110 text-2xl font-bold" onclick="toggleFullScreen()">
+  ⛶
+</button>
+
+<!-- Animated Plane Icon -->
+<div class="fixed top-20 left-0 z-40 pointer-events-none">
+  <svg class="plane-icon" viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg">
+    <path d="M20 50 L180 50 L160 30 L180 50 L160 70 Z" fill="#cc0000"/>
+    <rect x="60" y="45" width="80" height="10" fill="#cc0000" rx="5"/>
+    <text x="80" y="65" fill="white" font-size="36" font-weight="bold">✈️</text>
+  </svg>
+</div>
+
+<div class="max-w-5xl mx-auto px-6">
+  <div class="premium-card bg-white rounded-3xl p-12 shadow-2xl">
+
+    <!-- Slide 1: Mission Brief -->
+    <div id="slide1" class="text-center">
+      <h1 class="text-4xl font-black text-blue-900 mb-8">Passport to Profit<br>Cremica’s Global Expansion ✈️</h1>
+      <p class="text-xl text-blue-800 mb-8 max-w-3xl mx-auto leading-relaxed explanation">
+        You are Cremica’s International Expansion Lead. Your mission: choose profitable markets and smart entry strategies that balance opportunity with real-world barriers like tariffs, regulations, and logistics.
+      </p>
+      <img src="./gif/Outer Space Animation GIF by Cat Chmaj.gif" alt="Rotating globe" class="mx-auto rounded-2xl shadow-2xl mb-12 w-full max-w-xl">
+      <div class="progress-route mx-auto w-3/4 mb-12"><div class="progress-fill" id="progressFill"></div></div>
+      <button id="startBtn" class="px-16 py-7 bg-gradient-to-r from-blue-600 to-red-600 text-white text-xl font-bold rounded-full shadow-2xl hover:from-blue-700 hover:to-red-700 transition-all transform hover:scale-110">
+        Start the Journey
+      </button>
+    </div>
+
+    <!-- Slide 2: Choose Market -->
+    <div id="slide2" class="hidden text-center py-12">
+      <h2 class="text-3xl font-bold text-blue-900 mb-6">Step 1: Select Your Target Market</h2>
+      <p class="text-lg text-blue-800 mb-12 explanation">
+        Each market has unique size, growth potential, and barriers. Choose wisely — not every big market is easy to enter profitably.
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-5xl mx-auto">
+        <div class="option-card bg-white rounded-3xl p-10 shadow-xl" data-market="us">
+          <p class="text-6xl mb-4">🇺🇸</p>
+          <p class="text-2xl font-bold text-blue-900">United States</p>
+          <p class="text-lg text-gray-700 mt-4">Large Market · High Barriers</p>
+        </div>
+        <div class="option-card bg-white rounded-3xl p-10 shadow-xl" data-market="au">
+          <p class="text-6xl mb-4">🇦🇺</p>
+          <p class="text-2xl font-bold text-blue-900">Australia</p>
+          <p class="text-lg text-gray-700 mt-4">Premium Consumers · Strict Compliance</p>
+        </div>
+        <div class="option-card bg-white rounded-3xl p-10 shadow-xl" data-market="uae">
+          <p class="text-6xl mb-4">🇦🇪</p>
+          <p class="text-2xl font-bold text-blue-900">Middle East (UAE)</p>
+          <p class="text-lg text-gray-700 mt-4">Fast Growth · Distributor Friendly</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 3: Barrier Reveal -->
+    <div id="slide3" class="hidden text-center py-12 relative overflow-hidden rounded-3xl">
+      <div class="moving-bg absolute inset-0 opacity-40"></div>
+      <div class="relative z-10">
+        <h2 class="text-3xl font-bold text-blue-900 mb-6" id="barrierTitle">Entry Barriers</h2>
+        <p class="text-lg text-blue-800 mb-12 explanation">
+          These are the real challenges Cremica faces in this market. High barriers can eat into margins unless the right strategy is chosen.
+        </p>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto mb-12" id="barriersContainer"></div>
+        <button id="toStrategyBtn" class="px-14 py-6 bg-gradient-to-r from-blue-600 to-red-600 text-white text-lg font-bold rounded-full shadow-2xl hover:scale-110 transition">
+          Choose Entry Strategy →
+        </button>
+      </div>
+    </div>
+
+    <!-- Slide 4: Strategy Selection -->
+    <div id="slide4" class="hidden text-center py-12">
+      <h2 class="text-3xl font-bold text-blue-900 mb-6">Step 2: Select Your Entry Strategy</h2>
+      <p class="text-lg text-blue-800 mb-12 explanation">
+        Private label protects margins in tough markets. Branded entry builds long-term equity but is riskier. Distributors accelerate reach but share profits.
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-5xl mx-auto">
+        <div class="option-card bg-white rounded-3xl p-10 shadow-xl" data-strategy="private">
+          <p class="text-6xl mb-4">🏷️</p>
+          <p class="text-2xl font-bold text-blue-900">Private Label</p>
+          <p class="text-lg text-gray-700 mt-4">High volume, retailer absorbs costs</p>
+        </div>
+        <div class="option-card bg-white rounded-3xl p-10 shadow-xl" data-strategy="branded">
+          <p class="text-6xl mb-4">🌍</p>
+          <p class="text-2xl font-bold text-blue-900">Branded Entry</p>
+          <p class="text-lg text-gray-700 mt-4">Build Cremica brand equity</p>
+        </div>
+        <div class="option-card bg-white rounded-3xl p-10 shadow-xl" data-strategy="distributor">
+          <p class="text-6xl mb-4">🤝</p>
+          <p class="text-2xl font-bold text-blue-900">Local Distributor</p>
+          <p class="text-lg text-gray-700 mt-4">Fast reach via local partners</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 5: Outcome Simulation (Result Dashboard) -->
+    <div id="slide5" class="hidden text-center py-12">
+      <h2 class="text-3xl font-bold text-blue-900 mb-6">Your Profitability Outcome</h2>
+      <p class="text-lg text-blue-800 mb-12 explanation">
+        Here’s how your chosen market + strategy combination impacts key business metrics.
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-5xl mx-auto mb-12" id="dashboardContainer"></div>
+      <button id="toInsightBtn" class="px-14 py-6 bg-gradient-to-r from-blue-600 to-red-600 text-white text-lg font-bold rounded-full shadow-2xl hover:scale-110 transition">
+        View Strategic Insight →
+      </button>
+    </div>
+
+    <!-- Slide 6: Strategy Insight -->
+    <div id="slide6" class="hidden text-center py-12">
+      <h2 class="text-3xl font-bold text-blue-900 mb-6">Why This Works (or Doesn’t)</h2>
+      <div class="bg-gradient-to-br from-blue-50 to-red-50 rounded-3xl p-12 shadow-2xl max-w-4xl mx-auto">
+        <p class="text-xl text-blue-800 leading-relaxed" id="insightText"></p>
+      </div>
+      <button id="toFinalBtn" class="mt-12 px-14 py-6 bg-gradient-to-r from-blue-600 to-red-600 text-white text-lg font-bold rounded-full shadow-2xl hover:scale-110 transition">
+        See Final Result →
+      </button>
+    </div>
+
+    <!-- Slide 7: Final Result & Celebration -->
+    <div id="slide7" class="hidden text-center py-20">
+      <h2 class="text-4xl font-black text-blue-900 mb-12">Journey Complete!</h2>
+      <div class="stamp mb-12 mx-auto w-80 h-80 bg-red-100 rounded-full flex flex-col items-center justify-center shadow-2xl border-8 border-red-600" id="stampContainer">
+        <p class="text-8xl mb-6" id="stampEmoji"></p>
+        <p class="text-3xl font-black text-red-700 px-8" id="stampText"></p>
+      </div>
+      <p class="text-xl italic text-blue-900 mb-16 max-w-3xl mx-auto explanation">
+        International expansion is not about ambition alone — it’s about choosing the right path that protects margins while scaling profitably.
+      </p>
+      <button id="restartBtn" class="px-20 py-8 bg-gradient-to-r from-green-600 to-blue-600 text-white text-2xl font-bold rounded-full shadow-2xl hover:scale-110 transition">
+        Restart Journey
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function toggleFullScreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen();
+  } else if (document.exitFullscreen) {
+    document.exitFullscreen();
+  }
+}
+
+let selectedMarket = '';
+let selectedStrategy = '';
+let progress = 0;
+
+const markets = {
+  us: { name: "United States", flag: "🇺🇸", barriers: [
+    {icon: "💰", text: "High import tariffs"},
+    {icon: "📜", text: "Strict FDA compliance"},
+    {icon: "🚚", text: "Complex cold chain"},
+    {icon: "🏪", text: "Competitive shelf access"}
+  ]},
+  au: { name: "Australia", flag: "🇦🇺", barriers: [
+    {icon: "📜", text: "Strict biosecurity rules"},
+    {icon: "💰", text: "High compliance costs"},
+    {icon: "🚚", text: "Expensive remote logistics"},
+    {icon: "🏪", text: "Premium retail gatekeepers"}
+  ]},
+  uae: { name: "Middle East (UAE)", flag: "🇦🇪", barriers: [
+    {icon: "📜", text: "Halal certification required"},
+    {icon: "💰", text: "Labeling & customs rules"},
+    {icon: "🚚", text: "Hot climate logistics"},
+    {icon: "🏪", text: "Local distributors dominate"}
+  ]}
+};
+
+const outcomes = {
+  us_private: { profit: "High", risk: "Low", scale: "Fast", insight: "Private label is Cremica’s proven path in high-barrier markets like the US. Retailers absorb compliance costs while guaranteeing massive volume.", stamp: "Market Entered Successfully", emoji: "✅", success: true },
+  us_branded: { profit: "Medium", risk: "High", scale: "Slow", insight: "Branded entry faces heavy regulatory and competitive pressure. Margins get squeezed before brand equity pays off.", stamp: "Profitable but High Risk", emoji: "⚠️", success: false },
+  us_distributor: { profit: "Medium", risk: "Medium", scale: "Medium", insight: "Distributors help with access, but shared margins limit profitability compared to private label.", stamp: "Moderate Outcome", emoji: "🟡", success: false },
+  au_private: { profit: "High", risk: "Low", scale: "Fast", insight: "Private label perfectly offsets Australia’s strict standards. Premium retailers welcome high-quality store brands.", stamp: "Market Entered Successfully", emoji: "✅", success: true },
+  au_branded: { profit: "Low", risk: "High", scale: "Slow", insight: "Direct branded entry struggles against biosecurity delays and high costs — rarely profitable quickly.", stamp: "Low Margin Outcome", emoji: "🔴", success: false },
+  au_distributor: { profit: "Medium-High", risk: "Medium", scale: "Medium", insight: "Distributors ease compliance, but private label delivers better margin protection.", stamp: "Solid but Not Optimal", emoji: "🟡", success: false },
+  uae_distributor: { profit: "High", risk: "Low", scale: "Fast", insight: "Local distributors are the fastest, lowest-risk route in the Middle East. Cremica leverages strong partners for rapid growth.", stamp: "Market Entered Successfully", emoji: "✅", success: true },
+  uae_private: { profit: "Medium", risk: "Low", scale: "Medium", insight: "Private label works well but misses the speed and reach of distributor networks in this growth region.", stamp: "Moderate Outcome", emoji: "🟡", success: false },
+  uae_branded: { profit: "Medium", risk: "Medium", scale: "Medium", insight: "Branded entry has potential among expats, but distributors remain the smarter first step.", stamp: "Balanced but Slower", emoji: "🟡", success: false }
+};
+
+function updateProgress(p) {
+  progress = p;
+  gsap.to('#progressFill', {width: p + '%', duration: 1});
+}
+
+function resetSelection(cards) {
+  cards.forEach(c => c.classList.remove('selected'));
+}
+
+// Navigation
+document.getElementById('startBtn').addEventListener('click', () => {
+  gsap.to('#slide1', {opacity: 0, x: -300, duration: 0.8, onComplete: () => {
+    document.getElementById('slide1').classList.add('hidden');
+    document.getElementById('slide2').classList.remove('hidden');
+    updateProgress(20);
+  }});
+});
+
+document.querySelectorAll('#slide2 .option-card').forEach(card => {
+  card.addEventListener('click', () => {
+    resetSelection(document.querySelectorAll('#slide2 .option-card'));
+    card.classList.add('selected');
+    selectedMarket = card.dataset.market;
+    gsap.to(card, {scale: 1.15, duration: 0.4, yoyo: true, repeat: 1});
+    setTimeout(showBarriers, 1200);
+  });
+});
+
+function showBarriers() {
+  gsap.to('#slide2', {opacity: 0, x: -300, duration: 0.8, onComplete: () => {
+    document.getElementById('slide2').classList.add('hidden');
+    document.getElementById('slide3').classList.remove('hidden');
+    updateProgress(40);
+
+    const marketData = markets[selectedMarket];
+    document.getElementById('barrierTitle').innerHTML = `Barriers in ${marketData.flag} ${marketData.name}`;
+    const container = document.getElementById('barriersContainer');
+    container.innerHTML = '';
+    marketData.barriers.forEach((b, i) => {
+      const div = document.createElement('div');
+      div.className = 'text-center opacity-0 scale-50';
+      div.innerHTML = `<p class="text-6xl mb-4">${b.icon}</p><p class="text-lg font-medium text-blue-800">${b.text}</p>`;
+      container.appendChild(div);
+      gsap.to(div, {opacity: 1, scale: 1, delay: i * 0.3, duration: 0.8, ease: "back.out(1.4)"});
+    });
+  }});
+}
+
+document.getElementById('toStrategyBtn').addEventListener('click', () => {
+  gsap.to('#slide3', {opacity: 0, x: -300, duration: 0.8, onComplete: () => {
+    document.getElementById('slide3').classList.add('hidden');
+    document.getElementById('slide4').classList.remove('hidden');
+    updateProgress(60);
+  }});
+});
+
+document.querySelectorAll('#slide4 .option-card').forEach(card => {
+  card.addEventListener('click', () => {
+    resetSelection(document.querySelectorAll('#slide4 .option-card'));
+    card.classList.add('selected');
+    selectedStrategy = card.dataset.strategy;
+    gsap.to(card, {scale: 1.15, duration: 0.4, yoyo: true, repeat: 1});
+    setTimeout(showDashboard, 1200);
+  });
+});
+
+function showDashboard() {
+  gsap.to('#slide4', {opacity: 0, x: -300, duration: 0.8, onComplete: () => {
+    document.getElementById('slide4').classList.add('hidden');
+    document.getElementById('slide5').classList.remove('hidden');
+    updateProgress(80);
+
+    const key = selectedMarket + '_' + selectedStrategy;
+    const o = outcomes[key];
+    document.getElementById('dashboardContainer').innerHTML = `
+      <div class="bg-gradient-to-br from-green-50 to-white rounded-3xl p-10 shadow-xl">
+        <p class="text-xl font-semibold text-gray-700">Margin Impact</p>
+        <p class="text-6xl font-black mt-6 ${o.profit.includes('High') ? 'text-green-600' : o.profit.includes('Medium') ? 'text-yellow-600' : 'text-red-600'}">${o.profit}</p>
+      </div>
+      <div class="bg-gradient-to-br from-yellow-50 to-white rounded-3xl p-10 shadow-xl">
+        <p class="text-xl font-semibold text-gray-700">Risk Level</p>
+        <p class="text-6xl font-black mt-6 ${o.risk === 'Low' ? 'text-green-600' : o.risk === 'Medium' ? 'text-yellow-600' : 'text-red-600'}">${o.risk}</p>
+      </div>
+      <div class="bg-gradient-to-br from-blue-50 to-white rounded-3xl p-10 shadow-xl">
+        <p class="text-xl font-semibold text-gray-700">Time to Scale</p>
+        <p class="text-6xl font-black mt-6 ${o.scale === 'Fast' ? 'text-green-600' : o.scale === 'Medium' ? 'text-yellow-600' : 'text-red-600'}">${o.scale}</p>
+      </div>
+    `;
+    gsap.from('#dashboardContainer > div', {opacity: 0, y: 50, stagger: 0.3, duration: 1});
+  }});
+}
+
+document.getElementById('toInsightBtn').addEventListener('click', () => {
+  gsap.to('#slide5', {opacity: 0, x: -300, duration: 0.8, onComplete: () => {
+    document.getElementById('slide5').classList.add('hidden');
+    document.getElementById('slide6').classList.remove('hidden');
+    updateProgress(90);
+
+    const key = selectedMarket + '_' + selectedStrategy;
+    document.getElementById('insightText').textContent = outcomes[key].insight;
+  }});
+});
+
+document.getElementById('toFinalBtn').addEventListener('click', () => {
+  gsap.to('#slide6', {opacity: 0, x: -300, duration: 0.8, onComplete: () => {
+    document.getElementById('slide6').classList.add('hidden');
+    document.getElementById('slide7').classList.remove('hidden');
+    updateProgress(100);
+
+    const key = selectedMarket + '_' + selectedStrategy;
+    const o = outcomes[key];
+    document.getElementById('stampText').textContent = o.stamp;
+    document.getElementById('stampEmoji').textContent = o.emoji;
+    document.getElementById('stampContainer').classList.add('visible');
+
+    if (o.success) {
+      confetti({particleCount: 400, spread: 100, origin: {y: 0.6}});
+      setTimeout(() => confetti({particleCount: 300, spread: 120}), 400);
+    }
+  }});
+});
+
+document.getElementById('restartBtn').addEventListener('click', () => location.reload());
+</script>
+</body>
+</html>
