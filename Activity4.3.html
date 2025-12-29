@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Cremica Profitability Control Room</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.6.0/confetti.min.js"></script>
+<style type="text/css">
+  body { font-family: 'Poppins', sans-serif; }
+  h1, h2, h3 { font-family: 'Playfair Display', serif; }
+  .grain-overlay {
+    background: url('https://img.freepik.com/free-photo/white-plain-concrete-textured-background_53876-102604.jpg?semt=ais_hybrid&w=740&q=80') repeat;
+    opacity: 0.03;
+    pointer-events: none;
+  }
+  .premium-card {
+    border: 2px solid #cc0000;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  }
+  .toggle {
+    width: 100px;
+    height: 50px;
+    background: #9ca3af;
+    border-radius: 999px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  .toggle.active {
+    background: #cc0000;
+  }
+  .toggle-knob {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 40px;
+    height: 40px;
+    background: white;
+    border-radius: 50%;
+    transition: left 0.3s;
+  }
+  .toggle.active .toggle-knob {
+    left: 55px;
+  }
+  .meter {
+    height: 32px;
+    background: #e5e7eb;
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .meter-fill {
+    height: 100%;
+    transition: width 1s ease;
+  }
+  .mcq-option, .unit-card {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 4px solid transparent;
+  }
+  .mcq-option:hover, .unit-card:hover {
+    border-color: #cc0000;
+    transform: scale(1.02);
+    box-shadow: 0 8px 25px rgba(204,0,0,0.2);
+  }
+  .mcq-option.selected, .unit-card.selected {
+    border-color: #cc0000 !important;
+    background: #fee2e2;
+    transform: scale(1.02);
+  }
+  .unit-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  }
+  .phase-description {
+    background: linear-gradient(to right, #dbeafe, #fee2e2);
+    border-left: 6px solid #cc0000;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border-radius: 0.75rem;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #1e3a8a;
+  }
+</style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 via-white to-red-50 min-h-screen py-16">
+<div class="fixed inset-0 grain-overlay -z-10"></div>
+<button class="fixed top-6 right-6 z-50 bg-gradient-to-br from-red-600 to-blue-700 hover:from-red-500 hover:to-blue-600 text-white p-4 rounded-full shadow-2xl backdrop-blur-sm transition-all duration-300 hover:scale-110 text-xl font-bold" onclick="document.documentElement.requestFullscreen()">⛶</button>
+
+<div class="max-w-6xl mx-auto px-6">
+  <div class="premium-card bg-white rounded-3xl p-10 shadow-2xl">
+
+    <!-- Intro -->
+    <div id="introSection">
+      <div class="text-center mb-12">
+        <h1 class="text-4xl font-black text-blue-900 mb-6">Cremica Profitability Control Room</h1>
+        <p class="text-xl text-blue-800 mb-8">Chapter 4.3 – Revenue Streams, Cost Structure & Profitability</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+        <div class="bg-blue-100 rounded-3xl p-8 text-center"><p class="text-4xl font-black text-blue-900">₹1,963 Cr</p><p class="text-lg mt-2">Revenue (FY24)</p></div>
+        <div class="bg-green-100 rounded-3xl p-8 text-center"><p class="text-4xl font-black text-green-800">~15%</p><p class="text-lg mt-2">EBITDA Margin</p></div>
+        <div class="bg-amber-100 rounded-3xl p-8 text-center"><p class="text-4xl font-black text-amber-800">60:40</p><p class="text-lg mt-2">B2C : B2B Mix</p></div>
+        <div class="bg-red-100 rounded-3xl p-8 text-center"><p class="text-4xl font-black text-red-800">High</p><p class="text-lg mt-2">Raw Material Pressure</p></div>
+      </div>
+      <p class="text-center text-lg text-blue-900 mb-12 max-w-4xl mx-auto">
+        You are inside Cremica’s profitability control room.<br><br>
+        Your goal is to protect margins while growing revenue.
+      </p>
+      <div class="text-center">
+        <button id="startBtn" class="px-14 py-6 bg-gradient-to-r from-blue-600 to-red-600 text-white text-xl font-bold rounded-2xl shadow-2xl hover:from-blue-700 hover:to-red-700 transition-all">
+          Enter Control Room
+        </button>
+      </div>
+    </div>
+
+    <!-- Phase 1: Revenue Mix -->
+    <div id="mixSection" class="hidden">
+      <div class="phase-description">
+        <strong>Phase 1: Revenue Mix Simulator</strong><br>
+        Cremica operates in two channels: B2C (branded retail products sold to consumers) and B2B (supplying biscuits and sauces to Quick Service Restaurants like McDonald’s). 
+        B2C drives higher revenue growth potential through brand building and wider distribution, but requires heavy marketing spend. 
+        B2B offers more stable, higher margins with lower customer acquisition costs due to long-term contracts. 
+        Here you decide the strategic focus — growth via retail or stability via institutional business.
+      </div>
+      <h2 class="text-3xl font-bold text-blue-900 mb-10 text-center">Phase 1: Revenue Mix Simulator</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
+        <div class="bg-white rounded-3xl p-12 shadow-xl text-center">
+          <p class="text-2xl font-bold text-blue-900 mb-8">Increase B2C Retail Focus</p>
+          <div class="toggle large mx-auto" id="b2cToggle"><div class="toggle-knob"></div></div>
+        </div>
+        <div class="bg-white rounded-3xl p-12 shadow-xl text-center">
+          <p class="text-2xl font-bold text-blue-900 mb-8">Increase B2B QSR Focus</p>
+          <div class="toggle large mx-auto" id="b2bToggle"><div class="toggle-knob"></div></div>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
+        <div class="bg-green-100 rounded-3xl p-8">
+          <p class="font-bold text-center mb-4">Revenue Growth Potential</p>
+          <div class="meter"><div id="growthMeter" class="meter-fill bg-green-600" style="width: 50%"></div></div>
+        </div>
+        <div class="bg-blue-100 rounded-3xl p-8">
+          <p class="font-bold text-center mb-4">EBITDA Margin Stability</p>
+          <div class="meter"><div id="marginMeter" class="meter-fill bg-blue-600" style="width: 50%"></div></div>
+        </div>
+      </div>
+      <div class="text-center">
+        <button id="nextPhase1Btn" class="px-14 py-6 bg-gradient-to-r from-blue-600 to-red-600 text-white text-xl font-bold rounded-2xl shadow-2xl hover:from-blue-700 hover:to-red-700 transition-all">
+          Next: Cost Pressure Scenarios
+        </button>
+      </div>
+    </div>
+
+    <!-- Phase 2: Cost Pressure -->
+    <div id="costSection" class="hidden">
+      <div class="phase-description">
+        <strong>Phase 2: Cost Pressure Scenarios</strong><br>
+        FMCG companies like Cremica face frequent raw material and logistics inflation. 
+        When input costs rise, management must decide how to respond: absorb the hit (protect volume/market share), pass it on via price hikes (risk volume), or offset through internal efficiency. 
+        You will face three real-world cost shocks and choose the best response to protect EBITDA margins.
+      </div>
+      <h2 class="text-3xl font-bold text-blue-900 mb-10 text-center">Phase 2: Cost Pressure Scenarios</h2>
+      <div id="scenario1" class="mb-12">
+        <p class="text-xl font-bold text-center mb-8">Scenario 1: Wheat & sugar prices rise 12%</p>
+        <div class="space-y-6">
+          <div class="mcq-option bg-white rounded-2xl p-8 shadow-xl" data-scen="1" data-choice="price"><p class="text-lg">Selective price hike on premium SKUs</p></div>
+          <div class="mcq-option bg-white rounded-2xl p-8 shadow-xl" data-scen="1" data-choice="absorb"><p class="text-lg">Absorb cost increase</p></div>
+          <div class="mcq-option bg-white rounded-2xl p-8 shadow-xl" data-scen="1" data-choice="efficiency"><p class="text-lg">Drive production efficiency gains</p></div>
+          <div class="mcq-option bg-white rounded-2xl p-8 shadow-xl" data-scen="1" data-choice="mix"><p class="text-lg">Shift to higher-margin product mix</p></div>
+        </div>
+      </div>
+      <div id="scenario2" class="hidden mb-12">
+        <p class="text-xl font-bold text-center mb-8">Scenario 2: Logistics costs increase due to fuel prices</p>
+        <div class="space-y-6">
+          <div class="mcq-option bg-white rounded-2xl p-8 shadow-xl" data-scen="2" data-choice="optimize"><p class="text-lg">Optimize distribution routes & load</p></div>
+          <div class="mcq-option bg-white rounded-2xl p-8 shadow-xl" data-scen="2" data-choice="pass"><p class="text-lg">Pass cost to trade partners</p></div>
+          <div class="mcq-option bg-white rounded-2xl p-8 shadow-xl" data-scen="2" data-choice="reduce"><p class="text-lg">Reduce delivery frequency</p></div>
+          <div class="mcq-option bg-white rounded-2xl p-8 shadow-xl" data-scen="2" data-choice="shift"><p class="text-lg">Shift volume to QSR direct supply</p></div>
+        </div>
+      </div>
+      <div id="scenario3" class="hidden mb-12">
+        <p class="text-xl font-bold text-center mb-8">Scenario 3: Packaging material inflation</p>
+        <div class="space-y-6">
+          <div class="mcq-option bg-white rounded-2xl p-8 shadow-xl" data-scen="3" data-choice="light"><p class="text-lg">Light-weight packaging redesign</p></div>
+          <div class="mcq-option bg-white rounded-2xl p-8 shadow-xl" data-scen="3" data-choice="bulk"><p class="text-lg">Increase bulk / family pack share</p></div>
+          <div class="mcq-option bg-white rounded-2xl p-8 shadow-xl" data-scen="3" data-choice="supplier"><p class="text-lg">Renegotiate supplier contracts</p></div>
+          <div class="mcq-option bg-white rounded-2xl p-8 shadow-xl" data-scen="3" data-choice="absorb"><p class="text-lg">Absorb and protect consumer price</p></div>
+        </div>
+      </div>
+      <div class="bg-blue-100 rounded-3xl p-8 mb-12">
+        <p class="font-bold text-center mb-4">Current EBITDA Margin</p>
+        <div class="meter"><div id="ebitdaMeter" class="meter-fill bg-blue-600" style="width: 75%"></div></div>
+        <p class="text-3xl font-black text-center mt-4" id="ebitdaValue">15%</p>
+      </div>
+      <div class="text-center">
+        <button id="nextPhase2Btn" class="px-14 py-6 bg-gradient-to-r from-blue-600 to-red-600 text-white text-xl font-bold rounded-2xl shadow-2xl hover:from-blue-700 hover:to-red-700 transition-all" style="display:none;">
+          Next: Unit Economics Lens
+        </button>
+      </div>
+    </div>
+
+    <!-- Phase 3: Unit Economics -->
+    <div id="unitSection" class="hidden">
+      <div class="phase-description">
+        <strong>Phase 3: Unit Economics Lens</strong><br>
+        Not all revenue is equal. Here you compare the fundamental economics of a single B2C retail pack versus a B2B QSR contract. 
+        B2C has higher average selling price per unit but requires significant marketing spend and longer payback periods. 
+        B2B has lower price per kg but near-zero customer acquisition cost and fast payback due to recurring volume and long contracts. 
+        The question: which business actually generates the cash that funds future growth and brand building?
+      </div>
+      <h2 class="text-3xl font-bold text-blue-900 mb-10 text-center">Phase 3: Unit Economics Lens</h2>
+      <p class="text-center text-lg text-blue-800 mb-12"><strong>Click on one of the cards below to select which business funds long-term expansion.</strong></p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
+        <div class="unit-card mcq-option" data-answer="b2c">
+          <h3 class="text-2xl font-bold text-blue-900 text-center mb-6">B2C Retail SKU</h3>
+          <div class="space-y-4">
+            <p><strong>ASP:</strong> ₹35/pack</p>
+            <p><strong>CAC:</strong> High (marketing heavy)</p>
+            <p><strong>LTV:</strong> Medium (repeat purchase)</p>
+            <p><strong>Payback:</strong> 8–12 months</p>
+          </div>
+        </div>
+        <div class="unit-card mcq-option" data-answer="b2b">
+          <h3 class="text-2xl font-bold text-blue-900 text-center mb-6">B2B QSR Contract</h3>
+          <div class="space-y-4">
+            <p><strong>ASP:</strong> ₹28/kg (volume)</p>
+            <p><strong>CAC:</strong> Low (relationship-based)</p>
+            <p><strong>LTV:</strong> High (long-term contracts)</p>
+            <p><strong>Payback:</strong> 3–6 months</p>
+          </div>
+        </div>
+      </div>
+      <div class="text-center">
+        <button id="nextPhase3Btn" class="px-14 py-6 bg-gradient-to-r from-blue-600 to-red-600 text-white text-xl font-bold rounded-2xl shadow-2xl hover:from-blue-700 hover:to-red-700 transition-all">
+          Final Challenge
+        </button>
+      </div>
+    </div>
+
+    <!-- Phase 4: Final Challenge -->
+    <div id="finalSection" class="hidden">
+      <div class="phase-description">
+        <strong>Final Challenge: Margin Protection</strong><br>
+        Despite best efforts, EBITDA margin has dipped below 14% due to sustained commodity inflation. 
+        You can only pull <em>one</em> major lever this year to recover the margin. 
+        Each option has trade-offs: premiumisation takes time, QSR expansion strengthens the stable engine, marketing cuts risk growth, and delaying capex preserves cash but slows capacity addition. 
+        Choose wisely — this decision defines the resilience of Cremica’s profitability engine.
+      </div>
+      <h2 class="text-3xl font-bold text-blue-900 mb-10 text-center">Final Challenge: Margin Protection</h2>
+      <p class="text-center text-lg text-blue-800 mb-12"><strong>Click on one of the options below to choose ONE lever.</strong></p>
+      <div class="space-y-6 mb-12">
+        <div class="mcq-option bg-white rounded-2xl p-8 shadow-xl" data-choice="premium"><p class="text-lg font-medium">Increase premium SKU share</p></div>
+        <div class="mcq-option bg-white rounded-2xl p-8 shadow-xl" data-choice="qsr"><p class="text-lg font-medium">Expand QSR contract volumes</p></div>
+        <div class="mcq-option bg-white rounded-2xl p-8 shadow-xl" data-choice="cut"><p class="text-lg font-medium">Cut marketing spend by 15%</p></div>
+        <div class="mcq-option bg-white rounded-2xl p-8 shadow-xl" data-choice="delay"><p class="text-lg font-medium">Delay capex projects</p></div>
+      </div>
+      <div class="text-center">
+        <button id="evaluateBtn" class="px-14 py-6 bg-gradient-to-r from-blue-600 to-red-600 text-white text-xl font-bold rounded-2xl shadow-2xl hover:from-blue-700 hover:to-red-700 transition-all">
+          Evaluate Profitability Strategy
+        </button>
+      </div>
+    </div>
+
+    <!-- Result Section -->
+    <div id="resultSection" class="hidden">
+      <h2 class="text-3xl font-bold text-blue-900 mb-10 text-center">Profitability Stability Diagnosis</h2>
+      <div class="bg-blue-100 rounded-3xl p-8 mb-12 text-center">
+        <p class="font-bold mb-4">Your Profitability Stability Score</p>
+        <p class="text-5xl font-black text-blue-900" id="stabilityScore">85%</p>
+      </div>
+      <div class="bg-white rounded-3xl p-10 shadow-xl mb-12">
+        <h3 class="text-2xl font-bold text-blue-900 mb-6 text-center">Key Insight Summary</h3>
+        <div class="space-y-6">
+          <div class="bg-green-50 rounded-xl p-6">
+            <p class="font-bold text-green-900">What drives margins</p>
+            <p id="driverText">Stable B2B contracts and operational efficiency provide the foundation for healthy profitability.</p>
+          </div>
+          <div class="bg-red-50 rounded-xl p-6">
+            <p class="font-bold text-red-900">What risks margins</p>
+            <p id="riskText">Raw material volatility and heavy retail dependence can erode margins quickly.</p>
+          </div>
+          <div class="bg-blue-50 rounded-xl p-6">
+            <p class="font-bold text-blue-900">Why Cremica remains resilient</p>
+            <p>Balanced B2C-B2B mix allows B2B cash flow to fund B2C brand building while protecting overall margins.</p>
+          </div>
+        </div>
+      </div>
+      <div class="bg-gradient-to-br from-blue-100 to-red-100 rounded-3xl p-10 text-center">
+        <p class="text-xl italic text-blue-900">In FMCG, revenue is visible. Margins are engineered.</p>
+      </div>
+      <div class="text-center mt-12">
+        <button id="restartBtn" class="px-14 py-6 bg-gray-600 text-white text-xl font-bold rounded-2xl shadow-2xl hover:bg-gray-700 transition-all">
+          Run Control Room Again
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  let b2cFocus = false;
+  let b2bFocus = false;
+  let scenarioChoices = {1: '', 2: '', 3: ''};
+  let unitAnswer = '';
+  let finalChoice = '';
+  let score = 0;
+
+  document.getElementById('startBtn').addEventListener('click', () => {
+    gsap.to('#introSection', { opacity: 0, y: -50, duration: 0.8, onComplete: () => {
+      document.getElementById('introSection').classList.add('hidden');
+      document.getElementById('mixSection').classList.remove('hidden');
+      gsap.from('#mixSection', { opacity: 0, y: 50, duration: 1 });
+    }});
+  });
+
+  document.getElementById('b2cToggle').addEventListener('click', () => {
+    document.getElementById('b2cToggle').classList.toggle('active');
+    b2cFocus = document.getElementById('b2cToggle').classList.contains('active');
+    updateMixMeters();
+  });
+  document.getElementById('b2bToggle').addEventListener('click', () => {
+    document.getElementById('b2bToggle').classList.toggle('active');
+    b2bFocus = document.getElementById('b2bToggle').classList.contains('active');
+    updateMixMeters();
+  });
+
+  function updateMixMeters() {
+    let growth = b2cFocus ? 80 : 50;
+    let margin = b2bFocus ? 85 : 60;
+    gsap.to('#growthMeter', { width: growth + '%', duration: 1 });
+    gsap.to('#marginMeter', { width: margin + '%', duration: 1 });
+  }
+
+  document.getElementById('nextPhase1Btn').addEventListener('click', () => {
+    gsap.to('#mixSection', { opacity: 0, y: -50, duration: 0.8, onComplete: () => {
+      document.getElementById('mixSection').classList.add('hidden');
+      document.getElementById('costSection').classList.remove('hidden');
+      document.getElementById('scenario1').classList.remove('hidden');
+      gsap.from('#costSection', { opacity: 0, y: 50, duration: 1 });
+    }});
+  });
+
+  let currentScenario = 1;
+  document.querySelectorAll('#costSection .mcq-option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      const scen = parseInt(opt.dataset.scen);
+      if (scen !== currentScenario) return;
+
+      document.querySelectorAll(`#scenario${scen} .mcq-option`).forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      scenarioChoices[scen] = opt.dataset.choice;
+
+      if (currentScenario < 3) {
+        setTimeout(() => {
+          document.getElementById(`scenario${currentScenario}`).classList.add('hidden');
+          currentScenario++;
+          document.getElementById(`scenario${currentScenario}`).classList.remove('hidden');
+        }, 600);
+      } else {
+        document.getElementById('nextPhase2Btn').style.display = 'block';
+      }
+
+      let current = parseInt(document.getElementById('ebitdaValue').textContent);
+      let change = 0;
+      if (['efficiency', 'mix', 'optimize', 'shift', 'light', 'bulk', 'supplier'].includes(opt.dataset.choice)) change = +1;
+      if (['absorb', 'reduce', 'pass'].includes(opt.dataset.choice)) change = -2;
+      let newMargin = Math.max(10, Math.min(20, current + change));
+      gsap.to('#ebitdaMeter', { width: (newMargin * 5) + '%', duration: 1 });
+      document.getElementById('ebitdaValue').textContent = newMargin + '%';
+    });
+  });
+
+  document.getElementById('nextPhase2Btn').addEventListener('click', () => {
+    gsap.to('#costSection', { opacity: 0, y: -50, duration: 0.8, onComplete: () => {
+      document.getElementById('costSection').classList.add('hidden');
+      document.getElementById('unitSection').classList.remove('hidden');
+      gsap.from('#unitSection', { opacity: 0, y: 50, duration: 1 });
+    }});
+  });
+
+  document.querySelectorAll('#unitSection .mcq-option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      document.querySelectorAll('#unitSection .mcq-option').forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      unitAnswer = opt.dataset.answer;
+    });
+  });
+
+  document.getElementById('nextPhase3Btn').addEventListener('click', () => {
+    if (!unitAnswer) {
+      alert('Please click on one of the cards to select a business.');
+      return;
+    }
+    gsap.to('#unitSection', { opacity: 0, y: -50, duration: 0.8, onComplete: () => {
+      document.getElementById('unitSection').classList.add('hidden');
+      document.getElementById('finalSection').classList.remove('hidden');
+      gsap.from('#finalSection', { opacity: 0, y: 50, duration: 1 });
+    }});
+  });
+
+  document.querySelectorAll('#finalSection .mcq-option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      document.querySelectorAll('#finalSection .mcq-option').forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      finalChoice = opt.dataset.choice;
+    });
+  });
+
+  document.getElementById('evaluateBtn').addEventListener('click', () => {
+    if (!finalChoice) {
+      alert('Please click on one of the options to choose a lever.');
+      return;
+    }
+
+    score = 50;
+    if (b2bFocus) score += 20;
+    if (scenarioChoices[1] === 'efficiency' || scenarioChoices[1] === 'mix') score += 10;
+    if (scenarioChoices[2] === 'shift') score += 10;
+    if (scenarioChoices[3] === 'light' || scenarioChoices[3] === 'bulk') score += 10;
+    if (unitAnswer === 'b2b') score += 20;
+    if (finalChoice === 'qsr') score += 20;
+
+    document.getElementById('stabilityScore').textContent = score + '%';
+
+    let driver = 'Stable B2B contracts and operational efficiency provide the foundation for healthy profitability.';
+    if (score > 80) driver += ' You protected the core engine effectively.';
+    document.getElementById('driverText').textContent = driver;
+    document.getElementById('riskText').textContent = 'Raw material volatility and heavy retail dependence can erode margins quickly.';
+
+    if (score > 80) {
+      confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 }, colors: ['#cc0000', '#0066cc', '#ffcc00', '#00cc66'] });
+      const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3');
+      audio.play().catch(() => {});
+    }
+
+    gsap.to('#finalSection', { opacity: 0, y: -50, duration: 0.8, onComplete: () => {
+      document.getElementById('finalSection').classList.add('hidden');
+      document.getElementById('resultSection').classList.remove('hidden');
+      gsap.from('#resultSection', { opacity: 0, y: 50, duration: 1 });
+    }});
+  });
+
+  document.getElementById('restartBtn').addEventListener('click', () => location.reload());
+</script>
+</body>
+</html>
