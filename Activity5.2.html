@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Build Cremica FY30: Management Decision Simulator</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.6.0/confetti.min.js"></script>
+<style>
+  body { font-family: 'Inter', sans-serif; }
+  h1, h2, h3 { font-family: 'Playfair Display', serif; }
+  .grain-overlay { background: url('https://img.freepik.com/free-photo/white-plain-concrete-textured-background_53876-102604.jpg') repeat; opacity: 0.04; pointer-events: none; }
+  .main-container { background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); min-height: 100vh; }
+  .dashboard-card { background: white; border-radius: 1.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1); transition: transform 0.3s ease; }
+  .dashboard-card:hover { transform: translateY(-8px); }
+  .choice-card { 
+    cursor: pointer; 
+    background: white; 
+    border-radius: 1.5rem; 
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08); 
+    transition: all 0.4s ease; 
+    border: 3px solid transparent;
+  }
+  .choice-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(204,0,0,0.15); }
+  .choice-card.selected { border-color: #cc0000; box-shadow: 0 20px 50px rgba(204,0,0,0.2); transform: scale(1.05); }
+  .metric-bar { height: 16px; background: #f1f5f9; border-radius: 999px; overflow: hidden; }
+  .metric-fill { height: 100%; transition: width 1.2s ease; }
+  .metric-fill.revenue { background: #10b981; }
+  .metric-fill.margin { background: #3b82f6; }
+  .metric-fill.share { background: #f59e0b; }
+  .timeline-dot { width: 16px; height: 16px; background: #cc0000; border-radius: 50%; }
+  .timeline-line { height: 4px; background: #e2e8f0; flex: 1; }
+  .timeline-active { background: #cc0000; }
+
+  /* Reduced Popup Modal */
+  .modal-overlay { 
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0; 
+    background: rgba(0,0,0,0.7); backdrop-filter: blur(10px); 
+    display: flex; align-items: center; justify-content: center; 
+    opacity: 0; visibility: hidden; transition: all 0.4s ease; z-index: 1000;
+  }
+  .modal-overlay.visible { opacity: 1; visibility: visible; }
+  .modal-content { 
+    background: white; border-radius: 1.5rem; padding: 2rem; 
+    max-width: 90%; width: 650px; max-height: 90vh; overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    transform: scale(0.85); transition: transform 0.4s ease;
+  }
+  .modal-overlay.visible .modal-content { transform: scale(1); }
+  .close-btn { position: absolute; top: 1rem; right: 1.5rem; font-size: 2rem; cursor: pointer; color: #666; }
+  .close-btn:hover { color: #333; }
+</style>
+</head>
+<body class="main-container text-gray-800">
+<div class="fixed inset-0 grain-overlay -z-10"></div>
+
+<!-- Full Screen Button -->
+<button class="fixed top-6 right-6 z-50 bg-red-600 hover:bg-red-700 text-white p-4 rounded-full shadow-2xl transition-all hover:scale-110 text-2xl font-bold" onclick="toggleFullScreen()">
+  ⛶
+</button>
+
+<div class="container mx-auto px-6 py-12 max-w-7xl">
+
+  <!-- Header Timeline -->
+  <div class="mb-12">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center space-x-4">
+        <div class="timeline-dot"></div>
+        <div class="timeline-line" id="line1"></div>
+        <div class="timeline-dot" id="dot2"></div>
+        <div class="timeline-line" id="line2"></div>
+        <div class="timeline-dot" id="dot3"></div>
+        <div class="timeline-line" id="line3"></div>
+        <div class="timeline-dot" id="dot4"></div>
+      </div>
+    </div>
+    <div class="flex justify-between mt-4 text-sm font-medium text-gray-600">
+      <span>FY26</span>
+      <span>FY27</span>
+      <span>FY28</span>
+      <span>FY30 Target</span>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+    <!-- Left: Decision Area -->
+    <div class="lg:col-span-2">
+      <div class="dashboard-card p-10">
+
+        <!-- Intro Screen -->
+        <div id="intro" class="text-center">
+          <h1 class="text-5xl font-black text-gray-900 mb-8">Build Cremica FY30<br><span class="text-3xl">Management Decision Simulator</span></h1>
+          <div class="bg-gradient-to-r from-red-50 to-blue-50 rounded-3xl p-10 mb-10">
+            <p class="text-xl leading-relaxed mb-6">
+              You are part of Cremica's Strategy Team (FY26–FY30).<br>
+              <strong>FY25 Baseline:</strong> ~₹2,200 crore revenue | EBITDA ~15%
+            </p>
+            <p class="text-2xl font-bold text-red-700">
+              Vision: ₹5,000–6,000 crore by FY30
+            </p>
+            <p class="text-lg mt-6 text-gray-700">
+              Constraints: Limited capex | Margin pressure | Competition | Slowdown risk
+            </p>
+          </div>
+          <button id="startBtn" class="px-10 py-5 bg-gradient-to-r from-red-600 to-blue-700 text-white text-xl font-bold rounded-full shadow-2xl hover:scale-105 transition">
+            Start FY26 Decisions →
+          </button>
+        </div>
+
+        <!-- Round 1 -->
+        <div id="round1" class="hidden">
+          <h2 class="text-4xl font-bold text-gray-900 mb-6">Round 1: Capacity Expansion (FY26–27)</h2>
+          <p class="text-lg text-gray-600 mb-10">Choose where to invest limited capex for volume growth.</p>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="choice-card p-8 text-center" data-choice="indore">
+              <div class="text-6xl mb-6">🏭</div>
+              <h3 class="text-2xl font-bold mb-4">Indore (MP)</h3>
+              <p class="text-gray-600">Central hub · Access to West & South</p>
+            </div>
+            <div class="choice-card p-8 text-center" data-choice="dhar">
+              <div class="text-6xl mb-6">🔨</div>
+              <h3 class="text-2xl font-bold mb-4">Expand Dhar</h3>
+              <p class="text-gray-600">Ongoing biscuit plant · Fast & low risk</p>
+            </div>
+            <div class="choice-card p-8 text-center" data-choice="defer">
+              <div class="text-6xl mb-6">💰</div>
+              <h3 class="text-2xl font-bold mb-4">Defer Capex</h3>
+              <p class="text-gray-600">Conserve cash · Optimize existing</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Round 2 -->
+        <div id="round2" class="hidden">
+          <h2 class="text-4xl font-bold text-gray-900 mb-6">Round 2: Product Portfolio Focus (FY27–28)</h2>
+          <p class="text-lg text-gray-600 mb-10">Allocate R&D and marketing budget to drive premiumization.</p>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="choice-card p-8 text-center" data-choice="frozen">
+              <div class="text-6xl mb-6">🧊</div>
+              <h3 class="text-2xl font-bold mb-4">Frozen Foods</h3>
+              <p class="text-gray-600">High growth · Needs cold chain</p>
+            </div>
+            <div class="choice-card p-8 text-center" data-choice="health">
+              <div class="text-6xl mb-6">🥗</div>
+              <h3 class="text-2xl font-bold mb-4">Health Snacks</h3>
+              <p class="text-gray-600">Millet/oat-based · Premium margins</p>
+            </div>
+            <div class="choice-card p-8 text-center" data-choice="condiments">
+              <div class="text-6xl mb-6">🥫</div>
+              <h3 class="text-2xl font-bold mb-4">Premium Condiments</h3>
+              <p class="text-gray-600">Mayo/sauces expansion · Export potential</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Round 3 -->
+        <div id="round3" class="hidden">
+          <h2 class="text-4xl font-bold text-gray-900 mb-6">Round 3: Market Push (FY28–30)</h2>
+          <p class="text-lg text-gray-600 mb-10">Prioritize distribution and sales efforts for maximum reach.</p>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="choice-card p-8 text-center" data-choice="exports">
+              <div class="text-6xl mb-6">🌍</div>
+              <h3 class="text-2xl font-bold mb-4">Aggressive Exports</h3>
+              <p class="text-gray-600">Higher margins · Currency/geopolitical risk</p>
+            </div>
+            <div class="choice-card p-8 text-center" data-choice="east">
+              <div class="text-6xl mb-6">🗺️</div>
+              <h3 class="text-2xl font-bold mb-4">East & South India</h3>
+              <p class="text-gray-600">Under-penetrated · High volume potential</p>
+            </div>
+            <div class="choice-card p-8 text-center" data-choice="rural">
+              <div class="text-6xl mb-6">🌾</div>
+              <h3 class="text-2xl font-bold mb-4">Deep Rural Penetration</h3>
+              <p class="text-gray-600">Mass volume · Lower margins</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Right: Live Dashboard -->
+    <div class="space-y-8">
+      <div class="dashboard-card p-8">
+        <h3 class="text-2xl font-bold text-gray-900 mb-8">Live Projection Dashboard</h3>
+        <div class="space-y-10">
+          <div>
+            <div class="flex justify-between mb-3">
+              <span class="font-semibold">Revenue (FY30)</span>
+              <span class="text-2xl font-bold text-green-600" id="revValue">₹2,200 cr</span>
+            </div>
+            <div class="metric-bar"><div class="metric-fill revenue" id="revBar" style="width:36.7%"></div></div>
+            <p class="text-sm text-gray-500 mt-2">Target: ₹5,000–6,000 cr</p>
+          </div>
+
+          <div>
+            <div class="flex justify-between mb-3">
+              <span class="font-semibold">EBITDA Margin</span>
+              <span class="text-2xl font-bold text-blue-600" id="marginValue">15.0%</span>
+            </div>
+            <div class="metric-bar"><div class="metric-fill margin" id="marginBar" style="width:75%"></div></div>
+          </div>
+
+          <div>
+            <div class="flex justify-between mb-3">
+              <span class="font-semibold">Market Share Gain</span>
+              <span class="text-2xl font-bold text-amber-600" id="shareValue">+0.0%</span>
+            </div>
+            <div class="metric-bar"><div class="metric-fill share" id="shareBar" style="width:0%"></div></div>
+          </div>
+
+          <div>
+            <div class="flex justify-between mb-3">
+              <span class="font-semibold">Overall Risk</span>
+              <span class="text-2xl font-bold" id="riskValue">Low</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Reduced Final Result Popup Modal -->
+<div id="resultModal" class="modal-overlay">
+  <div class="modal-content relative">
+    <span class="close-btn" onclick="closeModal()">×</span>
+    <div class="text-center">
+      <h2 class="text-4xl font-black text-gray-900 mb-6" id="modalTitle">FY30 Vision Assessment</h2>
+      <p class="text-8xl mb-6" id="modalEmoji">🎯</p>
+      <p class="text-2xl font-bold mb-8" id="modalAchievement"></p>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-8 text-left bg-gray-50 rounded-2xl p-6">
+        <div>
+          <p class="text-base font-medium text-gray-700">Final Revenue</p>
+          <p class="text-3xl font-black text-green-600 mt-2" id="modalRev"></p>
+        </div>
+        <div>
+          <p class="text-base font-medium text-gray-700">EBITDA Margin</p>
+          <p class="text-3xl font-black text-blue-600 mt-2" id="modalMargin"></p>
+        </div>
+        <div>
+          <p class="text-base font-medium text-gray-700">Overall Risk</p>
+          <p class="text-3xl font-black mt-2" id="modalRisk"></p>
+        </div>
+      </div>
+      <p class="text-lg text-gray-700 leading-relaxed mb-8" id="modalFeedback"></p>
+      <button onclick="location.reload()" class="px-10 py-5 bg-gradient-to-r from-green-600 to-blue-700 text-white text-xl font-bold rounded-full shadow-2xl hover:scale-105 transition">
+        Restart Simulation
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleFullScreen() {
+  if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+  else if (document.exitFullscreen) document.exitFullscreen();
+}
+
+function closeModal() {
+  document.getElementById('resultModal').classList.remove('visible');
+}
+
+let currentRound = 0;
+let choices = ['', '', ''];
+let revenue = 2200;
+let margin = 15;
+let shareGain = 0;
+let totalRisk = 1;
+
+const roundImpacts = {
+  1: { indore: { rev: 900, marg: -0.8, share: 2.2, risk: 2 },
+       dhar: { rev: 650, marg: 0.6, share: 1.6, risk: 1 },
+       defer: { rev: 350, marg: 1.8, share: 0.8, risk: 1 } },
+  2: { frozen: { rev: 1100, marg: -1.2, share: 3.0, risk: 3 },
+       health: { rev: 800, marg: 1.5, share: 2.4, risk: 2 },
+       condiments: { rev: 850, marg: 0.3, share: 2.1, risk: 2 } },
+  3: { exports: { rev: 1300, marg: 1.8, share: 2.0, risk: 3 },
+       east: { rev: 950, marg: 0.2, share: 3.2, risk: 2 },
+       rural: { rev: 700, marg: -1.0, share: 2.8, risk: 1 } }
+};
+
+function updateDashboard() {
+  document.getElementById('revValue').textContent = `₹${Math.round(revenue)} cr`;
+  gsap.to('#revBar', {width: `${Math.min((revenue / 6000) * 100, 100)}%`, duration: 1.2});
+
+  document.getElementById('marginValue').textContent = `${margin.toFixed(1)}%`;
+  gsap.to('#marginBar', {width: `${Math.min((margin / 20) * 100, 100)}%`, duration: 1.2});
+
+  document.getElementById('shareValue').textContent = `+${shareGain.toFixed(1)}%`;
+  gsap.to('#shareBar', {width: `${Math.min((shareGain / 10) * 100, 100)}%`, duration: 1.2});
+
+  const avgRisk = totalRisk / currentRound;
+  const riskText = avgRisk <= 1.5 ? 'Low' : avgRisk <= 2.3 ? 'Medium' : 'High';
+  const riskColor = riskText === 'Low' ? 'text-green-600' : riskText === 'Medium' ? 'text-amber-600' : 'text-red-600';
+  document.getElementById('riskValue').textContent = riskText;
+  document.getElementById('riskValue').className = `text-2xl font-bold ${riskColor}`;
+}
+
+function updateTimeline() {
+  if (currentRound >= 1) gsap.to(['#line1', '#dot2'], {backgroundColor: '#cc0000', duration: 0.8});
+  if (currentRound >= 2) gsap.to(['#line2', '#dot3'], {backgroundColor: '#cc0000', duration: 0.8});
+  if (currentRound >= 3) gsap.to(['#line3', '#dot4'], {backgroundColor: '#cc0000', duration: 0.8});
+}
+
+// Start
+document.getElementById('startBtn').addEventListener('click', () => {
+  gsap.to('#intro', {opacity: 0, y: -50, duration: 0.8, onComplete: () => {
+    document.getElementById('intro').classList.add('hidden');
+    document.getElementById('round1').classList.remove('hidden');
+    currentRound = 1;
+    updateTimeline();
+  }});
+});
+
+// Decision handling
+['round1', 'round2', 'round3'].forEach(roundId => {
+  document.querySelectorAll(`#${roundId} .choice-card`).forEach(card => {
+    card.addEventListener('click', () => {
+      document.querySelectorAll(`#${roundId} .choice-card`).forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      choices[currentRound - 1] = card.dataset.choice;
+
+      const impact = roundImpacts[currentRound][choices[currentRound - 1]];
+      revenue += impact.rev;
+      margin += impact.marg;
+      shareGain += impact.share;
+      totalRisk += impact.risk;
+
+      updateDashboard();
+
+      setTimeout(() => {
+        if (currentRound < 3) {
+          gsap.to(`#${roundId}`, {opacity: 0, y: -50, duration: 0.8, onComplete: () => {
+            document.getElementById(roundId).classList.add('hidden');
+            document.getElementById(`round${currentRound + 1}`).classList.remove('hidden');
+            currentRound++;
+            updateTimeline();
+          }});
+        } else {
+          const achieved = revenue >= 5000;
+          document.getElementById('modalTitle').textContent = achieved ? 'Vision Achieved!' : 'Vision Missed';
+          document.getElementById('modalEmoji').textContent = achieved ? '🏆🎯' : '📉❌';
+          document.getElementById('modalAchievement').textContent = achieved ? 'Congratulations! Target Met' : 'Fell Short of ₹5,000+ cr Goal';
+          document.getElementById('modalRev').textContent = `₹${Math.round(revenue)} cr`;
+          document.getElementById('modalMargin').textContent = `${margin.toFixed(1)}%`;
+          
+          const finalRiskText = totalRisk / 3 <= 1.5 ? 'Low' : totalRisk / 3 <= 2.3 ? 'Medium' : 'High';
+          document.getElementById('modalRisk').textContent = finalRiskText;
+          document.getElementById('modalRisk').className = `text-3xl font-black mt-2 ${finalRiskText === 'Low' ? 'text-green-600' : finalRiskText === 'Medium' ? 'text-amber-600' : 'text-red-600'}`;
+
+          let feedback = achieved 
+            ? "Outstanding strategic execution! You balanced growth, profitability, and risk effectively."
+            : "The FY30 vision was not achieved. Your choices leaned toward caution or short-term gains, limiting scale.";
+
+          feedback += " Management success requires navigating tough trade-offs for long-term value.";
+          document.getElementById('modalFeedback').textContent = feedback;
+
+          if (achieved) {
+            confetti({particleCount: 400, spread: 90, origin: {y: 0.6}});
+          }
+
+          gsap.to('#round3', {opacity: 0, duration: 0.6, onComplete: () => {
+            document.getElementById('round3').classList.add('hidden');
+            document.getElementById('resultModal').classList.add('visible');
+          }});
+        }
+      }, 1500);
+    });
+  });
+});
+</script>
+</body>
+</html>
