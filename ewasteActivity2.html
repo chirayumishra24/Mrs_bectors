@@ -91,7 +91,7 @@
 <!-- Reuse Lab Activity -->
 <section class="py-16 px-6 max-w-7xl mx-auto">
   <div class="content-card text-center relative overflow-hidden">
-    <img class="bounce-recycle absolute top-8 right-12" src="/s/articles/69465c2cb3f1c461218d120a/images/recycle-symbol.png" alt="recycle">
+    <img class="bounce-recycle absolute top-8 right-12" src="https://login.skillizee.io/s/articles/69465c2cb3f1c461218d120a/images/recycle-symbol.png" alt="recycle">
     
     <h1 class="neon-title">Reuse Lab: From Waste to Worth</h1>
     <p class="subtitle">Design smart second lives for old electronics.</p>
@@ -260,10 +260,16 @@ dropZones.forEach(zone => {
       feedback.innerHTML = `<span class="text-orange-500 font-bold text-xl">Possible but Inefficient</span>`;
     }
     
-    const dragged = document.querySelector(`[data-device="${device}"]`);
-    dragged.draggable = false;
-    dragged.style.opacity = '0.6';
-    dragged.style.cursor = 'not-allowed';
+   const dragged = document.querySelector(`[data-device="${device}"]`);
+
+// smooth exit animation
+gsap.to(dragged, {
+  opacity: 0,
+  scale: 0.8,
+  duration: 0.4,
+  onComplete: () => dragged.remove()
+});
+
     
     if (Object.keys(matches).length === 5) {
       setTimeout(checkCompletion, 1000);
