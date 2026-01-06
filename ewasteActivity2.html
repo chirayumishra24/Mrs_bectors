@@ -191,6 +191,9 @@
 </section>
 
 <script>
+  const draggableContainer = document.querySelector('.space-y-6');
+const originalDraggablesHTML = draggableContainer.innerHTML;
+
 // GSAP bounce for recycle icon
 gsap.to(".bounce-recycle", {
   y: -20,
@@ -262,13 +265,13 @@ dropZones.forEach(zone => {
     
    const dragged = document.querySelector(`[data-device="${device}"]`);
 
-// smooth exit animation
 gsap.to(dragged, {
   opacity: 0,
   scale: 0.8,
   duration: 0.4,
   onComplete: () => dragged.remove()
 });
+
 
     
     if (Object.keys(matches).length === 5) {
@@ -297,24 +300,39 @@ function checkCompletion() {
 function resetLab() {
   matches = {};
   correctCount = 0;
-  
-  draggables.forEach(item => {
-    item.draggable = true;
-    item.style.opacity = '1';
-    item.style.cursor = 'grab';
+
+  // Restore draggable items
+  draggableContainer.innerHTML = originalDraggablesHTML;
+
+  // Re-select restored items
+  const newDraggables = document.querySelectorAll('.draggable-item');
+
+  newDraggables.forEach(item => {
+    item.addEventListener('dragstart', e => {
+      e.dataTransfer.setData('text/plain', item.dataset.device);
+      setTimeout(() => item.style.opacity = '0.5', 0);
+    });
+
+    item.addEventListener('dragend', () => {
+      item.style.opacity = '1';
+    });
   });
-  
+
+  // Reset drop zones
   dropZones.forEach(zone => {
     zone.querySelector('.feedback').classList.add('hidden');
     zone.querySelector('.feedback').innerHTML = '';
   });
-  
+
+  // Reset counters
   document.getElementById('wasteCount').textContent = '0 kg';
   document.getElementById('socialCount').textContent = '0';
   document.getElementById('envCount').textContent = '0';
-  
+
+  // Hide success message
   document.getElementById('successMessage').classList.add('hidden');
 }
+
 
 document.getElementById('resetBtn').addEventListener('click', resetLab);
 
