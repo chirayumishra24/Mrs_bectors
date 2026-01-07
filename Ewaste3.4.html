@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Device’s Afterlife: Where Does It Really Go?</title>
+  <style>
+    :root {
+      --bg: #f8f9fa;
+      --text: #333;
+      --primary: #2c7a7b;
+      --accent: #4fd1c5;
+      --card-bg: #ffffff;
+      --border: #e2e8f0;
+      --shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1a202c;
+        --text: #e2e8f0;
+        --card-bg: #2d3748;
+        --border: #4a5568;
+      }
+    }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #app {
+      width: 100%;
+      max-width: 800px;
+      margin: 20px;
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .phase {
+      padding: 40px 30px;
+      text-align: center;
+      min-height: 60vh;
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .phase.active { display: flex; }
+    h1 { font-size: 2.5rem; margin: 0 0 1rem; }
+    h2 { font-size: 1.8rem; margin: 0 0 1.5rem; color: var(--primary); }
+    p { max-width: 600px; font-size: 1.1rem; margin: 0 auto 2rem; }
+    .btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 14px 32px;
+      font-size: 1.1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      min-width: 200px;
+      transition: background 0.3s;
+      margin: 10px;
+    }
+    .btn:hover { background: var(--accent); }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+      margin: 30px 0;
+    }
+    .card {
+      background: var(--bg);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      width: 240px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .card:hover { border-color: var(--primary); transform: translateY(-4px); }
+    .card.selected { border-color: var(--primary); background: #e6fffa; }
+    .card h3 { margin: 10px 0; font-size: 1.4rem; }
+    .card .icon { font-size: 3rem; margin-bottom: 10px; }
+    .progress {
+      height: 6px;
+      background: var(--border);
+      margin: 0 0 20px;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--primary);
+      width: 0%;
+      transition: width 0.5s ease;
+    }
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-width: 600px;
+      margin: 30px auto;
+    }
+    .step {
+      background: var(--bg);
+      padding: 16px;
+      border-radius: 8px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.6s;
+    }
+    .step.visible { opacity: 1; transform: translateY(0); }
+    .step::before {
+      content: '';
+      display: block;
+      width: 4px;
+      height: 40px;
+      background: var(--primary);
+      margin: 0 auto 10px;
+    }
+    .step:first-child::before { display: none; }
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin: 40px 0;
+      max-width: 700px;
+    }
+    .impact-card {
+      background: var(--bg);
+      padding: 24px;
+      border-radius: 12px;
+      text-align: center;
+    }
+    .impact-card .icon { font-size: 2.5rem; margin-bottom: 10px; }
+    .impact-card strong { display: block; font-size: 1.3rem; margin-top: 8px; }
+    .insights { max-width: 600px; text-align: left; }
+    .insights li { margin: 16px 0; font-size: 1.1rem; }
+    .actions { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; margin-top: 30px; }
+    .summary { max-width: 600px; font-style: italic; margin: 20px auto; }
+    @media (max-width: 768px) {
+      .cards { flex-direction: column; align-items: center; }
+      .card { width: 100%; max-width: 300px; }
+      .dashboard { grid-template-columns: 1fr; }
+      h1 { font-size: 2rem; }
+      .phase { padding: 30px 20px; }
+      .actions { flex-direction: column; }
+      .btn { min-width: auto; width: 100%; max-width: 300px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="progress"><div class="progress-fill" id="progress"></div></div>
+
+    <!-- Phase 1: Intro -->
+    <section id="phase1" class="phase active">
+      <h1>Your Device’s Afterlife</h1>
+      <p>When a device stops working, its journey doesn’t end. It begins.</p>
+      <p>In India, electronic waste (e-waste) grows rapidly, with millions of tonnes generated each year. Your disposal choice determines whether it harms the environment and health, or contributes to safe resource recovery.</p>
+      <button class="btn" onclick="nextPhase(2)">START JOURNEY</button>
+    </section>
+
+    <!-- Phase 2: Device Selection -->
+    <section id="phase2" class="phase">
+      <h2>Select Your Device</h2>
+      <div class="cards">
+        <div class="card" data-device="smartphone" onclick="selectDevice(this)">
+          <div class="icon">📱</div>
+          <h3>Smartphone</h3>
+          <p><strong>Average lifespan:</strong> 2–3 years</p>
+          <p><strong>Materials:</strong> Gold, copper, lithium, plastics, lead, mercury</p>
+        </div>
+        <div class="card" data-device="laptop" onclick="selectDevice(this)">
+          <div class="icon">💻</div>
+          <h3>Laptop</h3>
+          <p><strong>Average lifespan:</strong> 4–5 years</p>
+          <p><strong>Materials:</strong> Aluminium, copper, plastics, circuit boards, toxins</p>
+        </div>
+        <div class="card" data-device="television" onclick="selectDevice(this)">
+          <div class="icon">📺</div>
+          <h3>Television</h3>
+          <p><strong>Average lifespan:</strong> 7–10 years</p>
+          <p><strong>Materials:</strong> Glass, plastics, lead, mercury, flame retardants</p>
+        </div>
+      </div>
+      <p>All devices create e-waste — size doesn’t matter.</p>
+      <button class="btn" id="next2" disabled onclick="nextPhase(3)">Next</button>
+    </section>
+
+    <!-- Phase 3: Disposal Decision -->
+    <section id="phase3" class="phase">
+      <h2>Choose How to Dispose of Your <span id="deviceName"></span></h2>
+      <div class="cards">
+        <div class="card" data-option="trash" onclick="selectDisposal(this)">
+          <h3>Throw it in household garbage</h3>
+          <p>Mix it with regular trash for collection.</p>
+        </div>
+        <div class="card" data-option="scrap" onclick="selectDisposal(this)">
+          <h3>Sell it to a local scrap dealer</h3>
+          <p>Hand it over to a neighborhood buyer for parts.</p>
+        </div>
+        <div class="card" data-option="store" onclick="selectDisposal(this)">
+          <h3>Store it unused at home</h3>
+          <p>Keep it in a drawer or storage indefinitely.</p>
+        </div>
+        <div class="card" data-option="authorised" onclick="selectDisposal(this)">
+          <h3>Give it to an authorised e-waste recycler</h3>
+          <p>Drop it off at a certified collection point.</p>
+        </div>
+      </div>
+      <button class="btn" id="next3" disabled onclick="nextPhase(4)">Proceed</button>
+    </section>
+
+    <!-- Phase 4: Afterlife Simulation -->
+    <section id="phase4" class="phase">
+      <h2>The Afterlife of Your <span id="deviceName2"></span></h2>
+      <p id="narrative"></p>
+      <div class="timeline" id="timeline"></div>
+      <p id="indiaImpact"></p>
+      <button class="btn" onclick="nextPhase(5)">Continue</button>
+    </section>
+
+    <!-- Phase 5: Impact Dashboard -->
+    <section id="phase5" class="phase">
+      <h2>Impacts at a Glance</h2>
+      <div class="dashboard" id="dashboard"></div>
+      <button class="btn" onclick="nextPhase(6)">Continue</button>
+    </section>
+
+    <!-- Phase 6: Comparison Insight -->
+    <section id="phase6" class="phase">
+      <h2>Key Insights</h2>
+      <ul class="insights">
+        <li>A single smartphone contains recoverable gold and copper worth up to ₹500.</li>
+        <li>Informal recycling recovers less material at higher human cost, especially in areas like Seelampur, Delhi.</li>
+        <li>Formal recycling reduces India's dependency on imported raw materials and supports a circular economy.</li>
+      </ul>
+      <button class="btn" onclick="nextPhase(7)">Continue</button>
+    </section>
+
+    <!-- Phase 7: Agency (No Reflection Input) -->
+    <section id="phase7" class="phase">
+      <h2>You’ve Seen One Possible Afterlife</h2>
+      <p class="summary" id="pathSummary"></p>
+      <p>Every disposal choice shapes real outcomes for the environment, human health, and resource recovery in India.</p>
+      <p>Exploring different paths helps build awareness of more responsible options.</p>
+      <div class="actions">
+        <button class="btn" onclick="tryDifferent()">Try a Different Disposal Path</button>
+        <button class="btn" onclick="restart()">Restart Journey</button>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    let currentPhase = 1;
+    let selectedDevice = '';
+    let selectedDisposal = '';
+    let deviceDisplayName = '';
+
+    const phases = document.querySelectorAll('.phase');
+    const progressFill = document.getElementById('progress');
+
+    function updateProgress() {
+      progressFill.style.width = `${(currentPhase / 7) * 100}%`;
+    }
+
+    function nextPhase(n) {
+      phases.forEach(p => p.classList.remove('active'));
+      document.getElementById(`phase${n}`).classList.add('active');
+      currentPhase = n;
+      updateProgress();
+      if (n === 4) showSimulation();
+      if (n === 7) showPathSummary();
+    }
+
+    function selectDevice(el) {
+      document.querySelectorAll('#phase2 .card').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+      selectedDevice = el.dataset.device;
+      deviceDisplayName = el.querySelector('h3').textContent;
+      document.getElementById('deviceName').textContent = 
+      document.getElementById('deviceName2').textContent = deviceDisplayName;
+      document.getElementById('next2').disabled = false;
+    }
+
+    function selectDisposal(el) {
+      document.querySelectorAll('#phase3 .card').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+      selectedDisposal = el.dataset.option;
+      document.getElementById('next3').disabled = false;
+    }
+
+    const paths = {
+      trash: {
+        narrative: "Your device ends up mixed with household waste and is transported to a municipal landfill. Over time, it is buried or left exposed. Toxic substances like lead and mercury gradually leach into soil and groundwater.",
+        steps: [
+          "Collected with household waste",
+          "Transported to landfill",
+          "Buried or left in open dump",
+          "Toxins leach into environment"
+        ],
+        indiaImpact: "This contributes to groundwater contamination affecting millions near urban landfills. Valuable metals are lost forever, increasing India's need to import raw materials.",
+        impacts: {
+          env: "High", health: "High", recovery: "0–10%", compliance: "No"
+        },
+        summary: "You chose to throw the device in household garbage. This path leads to high environmental and health risks with almost no resource recovery."
+      },
+      scrap: {
+        narrative: "Your device is sold to a local scrap dealer and enters the informal recycling sector. Workers manually dismantle it using basic tools and open burning or acid baths to extract metals.",
+        steps: [
+          "Sold to local dealer",
+          "Manual dismantling",
+          "Acid burning or open fire extraction",
+          "Partial material sale"
+        ],
+        indiaImpact: "Informal methods dominate 95% of e-waste processing in India. Workers face severe health risks from fumes and chemicals, while incomplete recovery releases pollutants.",
+        impacts: {
+          env: "Medium", health: "High", recovery: "40–60%", compliance: "Partial"
+        },
+        summary: "You chose to sell the device to a local scrap dealer. This common path involves high health risks for workers and partial, inefficient recovery."
+      },
+      store: {
+        narrative: "Your device sits unused in a drawer or cupboard at home, joining millions of others stored across Indian households — often called an 'urban mine'.",
+        steps: [
+          "Stored in home",
+          "Remains unused for years",
+          "Eventually may be discarded",
+          "Resources remain locked away"
+        ],
+        indiaImpact: "India has a massive 'urban mine' of valuable materials locked in homes. Delayed disposal often leads to eventual improper dumping, contributing to the growing national e-waste backlog.",
+        impacts: {
+          env: "Medium", health: "Low", recovery: "0%", compliance: "Yes"
+        },
+        summary: "You chose to store the device at home. Resources stay locked away, delaying potential harm but also preventing recovery."
+      },
+      authorised: {
+        narrative: "Your device is handed over to a certified e-waste recycler. It undergoes safe, regulated dismantling in a controlled facility with proper safety measures.",
+        steps: [
+          "Dropped at authorised collection point",
+          "Transported to certified facility",
+          "Safe mechanical dismantling",
+          "Efficient material recovery"
+        ],
+        indiaImpact: "Formal recycling ensures legal compliance, protects worker health, minimises pollution, and recovers up to 90% of valuable materials, supporting India's circular economy goals.",
+        impacts: {
+          env: "Low", health: "Low", recovery: "70–90%", compliance: "Yes"
+        },
+        summary: "You chose authorised recycling. This path minimises harm and maximises safe, efficient resource recovery."
+      }
+    };
+
+    function showSimulation() {
+      const path = paths[selectedDisposal];
+      document.getElementById('narrative').textContent = path.narrative;
+      document.getElementById('indiaImpact').textContent = path.indiaImpact;
+
+      const timeline = document.getElementById('timeline');
+      timeline.innerHTML = '';
+      path.steps.forEach((step, i) => {
+        const div = document.createElement('div');
+        div.className = 'step';
+        div.textContent = step;
+        timeline.appendChild(div);
+        setTimeout(() => div.classList.add('visible'), (i + 1) * 400);
+      });
+
+      const dash = document.getElementById('dashboard');
+      dash.innerHTML = `
+        <div class="impact-card">
+          <div class="icon">🌍</div>
+          <div>Environmental Impact</div>
+          <strong>${path.impacts.env}</strong>
+        </div>
+        <div class="impact-card">
+          <div class="icon">👨‍👩‍👧</div>
+          <div>Human Health Risk</div>
+          <strong>${path.impacts.health}</strong>
+        </div>
+        <div class="impact-card">
+          <div class="icon">♻️</div>
+          <div>Resource Recovery</div>
+          <strong>${path.impacts.recovery}</strong>
+        </div>
+        <div class="impact-card">
+          <div class="icon">⚖️</div>
+          <div>Legal Compliance</div>
+          <strong>${path.impacts.compliance}</strong>
+        </div>
+      `;
+    }
+
+    function showPathSummary() {
+      const path = paths[selectedDisposal];
+      document.getElementById('pathSummary').textContent = path.summary;
+    }
+
+    function tryDifferent() {
+      nextPhase(3);
+    }
+
+    function restart() {
+      selectedDevice = '';
+      selectedDisposal = '';
+      deviceDisplayName = '';
+      document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+      document.getElementById('next2').disabled = true;
+      document.getElementById('next3').disabled = true;
+      nextPhase(1);
+    }
+
+    updateProgress();
+  </script>
+</body>
+</html>
