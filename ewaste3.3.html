@@ -44,10 +44,9 @@
       padding: 1rem;
     }
 
-    /* Much larger panel for comfortable viewing */
     .container {
-      width: min(98vw, 700px);     /* Significantly wider */
-      height: min(98vh, 900px);    /* Significantly taller */
+      width: min(98vw, 700px);
+      height: min(98vh, 900px);
       max-width: 700px;
       max-height: 900px;
       position: relative;
@@ -55,6 +54,20 @@
       overflow: hidden;
       box-shadow: 0 35px 70px rgba(0,0,0,0.22);
       background: var(--card-bg);
+      transition: all 0.4s ease;
+    }
+
+    /* Fullscreen styles */
+    .container:fullscreen,
+    .container:-webkit-full-screen,
+    .container:-moz-full-screen,
+    .container:-ms-fullscreen {
+      width: 100vw;
+      height: 100vh;
+      max-width: none;
+      max-height: none;
+      border-radius: 0;
+      box-shadow: none;
     }
 
     .screen {
@@ -75,11 +88,10 @@
       transform: translateY(0);
     }
 
-    /* Scrollable content area - smooth and minimal scrollbar */
     .content {
       flex: 1;
       overflow-y: auto;
-      padding-right: 0.5rem; /* Space for scrollbar */
+      padding-right: 0.5rem;
       scrollbar-width: thin;
       scrollbar-color: var(--border) transparent;
     }
@@ -144,6 +156,43 @@
       background: transparent;
       color: var(--text-light);
       border: 1px solid var(--border);
+    }
+
+    /* Fullscreen button - top-right corner */
+    .fullscreen-btn {
+      position: absolute;
+      top: 1.2rem;
+      right: 1.2rem;
+      background: rgba(255,255,255,0.8);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.4rem;
+      color: var(--text);
+      z-index: 100;
+      transition: all 0.2s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .fullscreen-btn:hover {
+      background: white;
+      transform: scale(1.1);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .fullscreen-btn {
+        background: rgba(30,41,59,0.8);
+      }
+      .fullscreen-btn:hover {
+        background: #1e293b;
+      }
     }
 
     .bottom-actions {
@@ -332,7 +381,12 @@
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="container" id="activity-container">
+    <!-- Fullscreen Button -->
+    <button class="fullscreen-btn" id="fullscreen-btn" aria-label="Toggle fullscreen" title="Toggle Fullscreen">
+      ⛶
+    </button>
+
     <!-- Intro -->
     <section id="intro" class="screen active">
       <div class="content">
@@ -410,6 +464,61 @@
   </div>
 
   <script>
+    // Fullscreen functionality
+    const container = document.getElementById('activity-container');
+    const fullscreenBtn = document.getElementById('fullscreen-btn');
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement &&
+          !document.webkitFullscreenElement &&
+          !document.mozFullScreenElement &&
+          !document.msFullscreenElement) {
+        // Enter fullscreen
+        if (container.requestFullscreen) {
+          container.requestFullscreen();
+        } else if (container.webkitRequestFullscreen) {
+          container.webkitRequestFullscreen();
+        } else if (container.mozRequestFullScreen) {
+          container.mozRequestFullScreen();
+        } else if (container.msRequestFullscreen) {
+          container.msRequestFullscreen();
+        }
+        fullscreenBtn.innerHTML = '✖'; // Change icon to exit
+      } else {
+        // Exit fullscreen
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen();
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen();
+        }
+        fullscreenBtn.innerHTML = '⛶'; // Change back to enter icon
+      }
+    }
+
+    // Update icon when fullscreen state changes externally (e.g., Esc key)
+    document.addEventListener('fullscreenchange', updateFullscreenIcon);
+    document.addEventListener('webkitfullscreenchange', updateFullscreenIcon);
+    document.addEventListener('mozfullscreenchange', updateFullscreenIcon);
+    document.addEventListener('MSFullscreenChange', updateFullscreenIcon);
+
+    function updateFullscreenIcon() {
+      if (document.fullscreenElement ||
+          document.webkitFullscreenElement ||
+          document.mozFullScreenElement ||
+          document.msFullscreenElement) {
+        fullscreenBtn.innerHTML = '✖';
+      } else {
+        fullscreenBtn.innerHTML = '⛶';
+      }
+    }
+
+    fullscreenBtn.addEventListener('click', toggleFullscreen);
+
+    // Rest of your existing script (unchanged)
     const questions = [
       { id: "social", title: "How often do you post personal updates on social media?", choices: [
         { text: "Rarely or never", impact: 5, icon: "🔒" },
