@@ -41,6 +41,7 @@
       border-radius: 12px;
       box-shadow: var(--shadow);
       overflow: hidden;
+      position: relative;
     }
     .phase {
       padding: 40px 30px;
@@ -144,7 +145,37 @@
     .insights li { margin: 16px 0; font-size: 1.1rem; }
     .actions { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; margin-top: 30px; }
     .summary { max-width: 600px; font-style: italic; margin: 20px auto; }
+
+    /* Full Screen Button */
+    #fullscreenBtn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.9);
+      color: var(--primary);
+      border: none;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      font-size: 1.6rem;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+    }
+    #fullscreenBtn:hover {
+      background: white;
+      transform: scale(1.1);
+    }
+    @media (prefers-color-scheme: dark) {
+      #fullscreenBtn { background: rgba(45, 55, 72, 0.9); }
+      #fullscreenBtn:hover { background: #2d3748; }
+    }
     @media (max-width: 768px) {
+      #fullscreenBtn { top: 15px; right: 15px; width: 45px; height: 45px; font-size: 1.4rem; }
       .cards { flex-direction: column; align-items: center; }
       .card { width: 100%; max-width: 300px; }
       .dashboard { grid-template-columns: 1fr; }
@@ -156,6 +187,11 @@
   </style>
 </head>
 <body>
+  <!-- Full Screen Toggle Button -->
+  <button id="fullscreenBtn" aria-label="Toggle full screen" title="Toggle full screen">
+    ⛶
+  </button>
+
   <div id="app">
     <div class="progress"><div class="progress-fill" id="progress"></div></div>
 
@@ -245,7 +281,7 @@
       <button class="btn" onclick="nextPhase(7)">Continue</button>
     </section>
 
-    <!-- Phase 7: Agency (No Reflection Input) -->
+    <!-- Phase 7: Agency -->
     <section id="phase7" class="phase">
       <h2>You’ve Seen One Possible Afterlife</h2>
       <p class="summary" id="pathSummary"></p>
@@ -266,6 +302,7 @@
 
     const phases = document.querySelectorAll('.phase');
     const progressFill = document.getElementById('progress');
+    const fullscreenBtn = document.getElementById('fullscreenBtn');
 
     function updateProgress() {
       progressFill.style.width = `${(currentPhase / 7) * 100}%`;
@@ -300,58 +337,30 @@
     const paths = {
       trash: {
         narrative: "Your device ends up mixed with household waste and is transported to a municipal landfill. Over time, it is buried or left exposed. Toxic substances like lead and mercury gradually leach into soil and groundwater.",
-        steps: [
-          "Collected with household waste",
-          "Transported to landfill",
-          "Buried or left in open dump",
-          "Toxins leach into environment"
-        ],
+        steps: ["Collected with household waste","Transported to landfill","Buried or left in open dump","Toxins leach into environment"],
         indiaImpact: "This contributes to groundwater contamination affecting millions near urban landfills. Valuable metals are lost forever, increasing India's need to import raw materials.",
-        impacts: {
-          env: "High", health: "High", recovery: "0–10%", compliance: "No"
-        },
+        impacts: { env: "High", health: "High", recovery: "0–10%", compliance: "No" },
         summary: "You chose to throw the device in household garbage. This path leads to high environmental and health risks with almost no resource recovery."
       },
       scrap: {
         narrative: "Your device is sold to a local scrap dealer and enters the informal recycling sector. Workers manually dismantle it using basic tools and open burning or acid baths to extract metals.",
-        steps: [
-          "Sold to local dealer",
-          "Manual dismantling",
-          "Acid burning or open fire extraction",
-          "Partial material sale"
-        ],
+        steps: ["Sold to local dealer","Manual dismantling","Acid burning or open fire extraction","Partial material sale"],
         indiaImpact: "Informal methods dominate 95% of e-waste processing in India. Workers face severe health risks from fumes and chemicals, while incomplete recovery releases pollutants.",
-        impacts: {
-          env: "Medium", health: "High", recovery: "40–60%", compliance: "Partial"
-        },
+        impacts: { env: "Medium", health: "High", recovery: "40–60%", compliance: "Partial" },
         summary: "You chose to sell the device to a local scrap dealer. This common path involves high health risks for workers and partial, inefficient recovery."
       },
       store: {
         narrative: "Your device sits unused in a drawer or cupboard at home, joining millions of others stored across Indian households — often called an 'urban mine'.",
-        steps: [
-          "Stored in home",
-          "Remains unused for years",
-          "Eventually may be discarded",
-          "Resources remain locked away"
-        ],
+        steps: ["Stored in home","Remains unused for years","Eventually may be discarded","Resources remain locked away"],
         indiaImpact: "India has a massive 'urban mine' of valuable materials locked in homes. Delayed disposal often leads to eventual improper dumping, contributing to the growing national e-waste backlog.",
-        impacts: {
-          env: "Medium", health: "Low", recovery: "0%", compliance: "Yes"
-        },
+        impacts: { env: "Medium", health: "Low", recovery: "0%", compliance: "Yes" },
         summary: "You chose to store the device at home. Resources stay locked away, delaying potential harm but also preventing recovery."
       },
       authorised: {
         narrative: "Your device is handed over to a certified e-waste recycler. It undergoes safe, regulated dismantling in a controlled facility with proper safety measures.",
-        steps: [
-          "Dropped at authorised collection point",
-          "Transported to certified facility",
-          "Safe mechanical dismantling",
-          "Efficient material recovery"
-        ],
+        steps: ["Dropped at authorised collection point","Transported to certified facility","Safe mechanical dismantling","Efficient material recovery"],
         indiaImpact: "Formal recycling ensures legal compliance, protects worker health, minimises pollution, and recovers up to 90% of valuable materials, supporting India's circular economy goals.",
-        impacts: {
-          env: "Low", health: "Low", recovery: "70–90%", compliance: "Yes"
-        },
+        impacts: { env: "Low", health: "Low", recovery: "70–90%", compliance: "Yes" },
         summary: "You chose authorised recycling. This path minimises harm and maximises safe, efficient resource recovery."
       }
     };
@@ -373,38 +382,18 @@
 
       const dash = document.getElementById('dashboard');
       dash.innerHTML = `
-        <div class="impact-card">
-          <div class="icon">🌍</div>
-          <div>Environmental Impact</div>
-          <strong>${path.impacts.env}</strong>
-        </div>
-        <div class="impact-card">
-          <div class="icon">👨‍👩‍👧</div>
-          <div>Human Health Risk</div>
-          <strong>${path.impacts.health}</strong>
-        </div>
-        <div class="impact-card">
-          <div class="icon">♻️</div>
-          <div>Resource Recovery</div>
-          <strong>${path.impacts.recovery}</strong>
-        </div>
-        <div class="impact-card">
-          <div class="icon">⚖️</div>
-          <div>Legal Compliance</div>
-          <strong>${path.impacts.compliance}</strong>
-        </div>
+        <div class="impact-card"><div class="icon">🌍</div><div>Environmental Impact</div><strong>${path.impacts.env}</strong></div>
+        <div class="impact-card"><div class="icon">👨‍👩‍👧</div><div>Human Health Risk</div><strong>${path.impacts.health}</strong></div>
+        <div class="impact-card"><div class="icon">♻️</div><div>Resource Recovery</div><strong>${path.impacts.recovery}</strong></div>
+        <div class="impact-card"><div class="icon">⚖️</div><div>Legal Compliance</div><strong>${path.impacts.compliance}</strong></div>
       `;
     }
 
     function showPathSummary() {
-      const path = paths[selectedDisposal];
-      document.getElementById('pathSummary').textContent = path.summary;
+      document.getElementById('pathSummary').textContent = paths[selectedDisposal].summary;
     }
 
-    function tryDifferent() {
-      nextPhase(3);
-    }
-
+    function tryDifferent() { nextPhase(3); }
     function restart() {
       selectedDevice = '';
       selectedDisposal = '';
@@ -415,7 +404,34 @@
       nextPhase(1);
     }
 
+    // Full Screen Functionality
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+          console.log(`Error attempting fullscreen: ${err.message}`);
+        });
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+    }
+
+    function updateFullscreenButton() {
+      fullscreenBtn.textContent = document.fullscreenElement ? '✖' : '⛶';
+      fullscreenBtn.title = document.fullscreenElement ? 'Exit full screen' : 'Enter full screen';
+      fullscreenBtn.setAttribute('aria-label', fullscreenBtn.title);
+    }
+
+    fullscreenBtn.addEventListener('click', () => {
+      toggleFullscreen();
+    });
+
+    document.addEventListener('fullscreenchange', updateFullscreenButton);
+
+    // Initial states
     updateProgress();
+    updateFullscreenButton();
   </script>
 </body>
 </html>
