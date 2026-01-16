@@ -94,6 +94,10 @@
             <section id="phase6" class="glass rounded-3xl p-10 md:p-12 hidden">
                 <h2 class="text-5xl font-bold text-center mb-12">Outcome Dashboard</h2>
                 <div id="results" class="space-y-12 text-lg"></div>
+                <div class="glass p-10 rounded-2xl mt-12">
+                    <h3 class="text-3xl font-bold mb-6 text-center">AI Strategy Review</h3>
+                    <div id="ai-feedback" class="text-xl leading-relaxed whitespace-pre-wrap"></div>
+                </div>
                 <div class="text-center mt-16">
                     <button class="bg-red-700 hover:bg-red-800 px-12 py-6 rounded-2xl text-2xl font-bold transition transform hover:scale-105" onclick="location.reload()">Play Again with New Scenario</button>
                 </div>
@@ -102,6 +106,9 @@
     </div>
 
     <script>
+        // Groq API Key - REPLACE WITH YOUR REAL KEY
+        const GROQ_API_KEY = "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"; // ← PASTE YOUR REAL GROQ KEY HERE
+
         const state = {
             segment: '', environment: {}, constraints: {}, problem: '', category: '', offerings: [], positioning: '', channel: '',
             price: '', supply: '', shock: '', shockResponse: 'Timed out (no response)',
@@ -125,7 +132,8 @@
             'Indian chutneys': 'http://www.cremicashop.com/cdn/shop/articles/Cremica_Sauces_1024x1024.webp?v=1747983221',
             'general-retail': 'https://www.shutterstock.com/image-photo/supermarket-aisle-biscuits-snacks-cookies-260nw-2010757265.jpg',
             'general-qsr': 'https://i.ytimg.com/vi/OWec7lq6z4w/sddefault.jpg',
-            'factory': 'https://www.cremica.in/staging.cremica.in/img/about-us/manu-unit.jpg'
+            'factory': 'https://www.cremica.in/staging.cremica.in/img/about-us/manu-unit.jpg',
+            'market-environment': 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80'
         };
 
         function randomChoice(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
@@ -147,6 +155,7 @@
                     <p class="text-xl">Price Sensitivity: <span class="font-bold">${state.environment.priceSens}</span><br>
                     Health Trend: <span class="font-bold">${state.environment.healthTrend}</span><br>
                     Supply Volatility: <span class="font-bold">${state.environment.supplyVol}</span></p>
+                    <img src="${productImages['market-environment']}" class="product-img mx-auto mt-6">
                 </div>
                 <div class="glass p-8 rounded-2xl">
                     <h3 class="text-2xl font-bold accent-red mb-4">Business Constraints</h3>
@@ -179,7 +188,7 @@
                     else if (containerId === 'supply') state.supply = title;
                     else if (containerId === 'shock-options') {
                         state.shockResponse = title;
-                        showResults();  // Immediately go to results when choosing a response
+                        showResults();
                     }
                 } else if (type === 'checkbox') {
                     card.classList.toggle('ring-8', 'ring-red-600');
@@ -230,7 +239,6 @@
             if (state.supply === 'Vertical integration') { margin += 25; risk += 30; }
             if (state.price === 'Premium' && state.positioning === 'Affordable Luxury') margin += 20;
 
-            // Bonus for good shock response
             if (state.shockResponse !== 'Timed out (no response)') risk += 15;
 
             const totalScore = (fit * 0.3) + (align * 0.25) + (margin * 0.2) + (state.scores.satisfaction * 0.15) + (risk * 0.1);
@@ -252,7 +260,6 @@
             gsap.from(nextSection.children, { opacity: 0, y: 50, stagger: 0.2, duration: 1, delay: 0.5 });
         }
 
-        // General next buttons
         document.querySelectorAll('.next-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 const current = btn.closest('section');
@@ -261,12 +268,10 @@
             });
         });
 
-        // Phase 2 continue
         document.getElementById('phase2-next').addEventListener('click', () => {
             if (state.problem) transitionTo(document.getElementById('phase3'));
         });
 
-        // Phase 4 submit
         document.getElementById('phase4-submit').addEventListener('click', () => {
             if (!state.price || !state.supply) {
                 alert('Please select both a Price Tier and a Supply Chain Strategy.');
@@ -283,7 +288,6 @@
 
             createCardOptions('shock-options', options, 'radio');
 
-            // Auto-submit after 40 seconds if no choice made
             setTimeout(() => {
                 if (state.shockResponse === 'Timed out (no response)') {
                     showResults();
@@ -293,7 +297,7 @@
             transitionTo(document.getElementById('phase5'));
         });
 
-        function showResults() {
+        async function showResults() {
             const scores = calculateScores();
             const results = document.getElementById('results');
             results.innerHTML = `
@@ -301,30 +305,103 @@
                     <p class="text-8xl font-extrabold accent-red">${scores.grade}</p>
                     <p class="text-4xl mt-4">Strategic Alignment Grade</p>
                 </div>
+                <div class="glass p-8 rounded-2xl mb-12">
+                    <h3 class="text-3xl font-bold mb-6 text-center">Your Choices</h3>
+                    <div class="grid md:grid-cols-2 gap-6 text-lg">
+                        <div>
+                            <p><strong>Problem identified:</strong> ${state.problem}</p>
+                            <p><strong>Category chosen:</strong> ${state.category}</p>
+                            <p><strong>Offerings selected:</strong> ${state.offerings.join(', ') || 'None'}</p>
+                        </div>
+                        <div>
+                            <p><strong>Positioning:</strong> ${state.positioning}</p>
+                            <p><strong>Channel:</strong> ${state.channel}</p>
+                            <p><strong>Price tier:</strong> ${state.price}</p>
+                            <p><strong>Supply strategy:</strong> ${state.supply}</p>
+                        </div>
+                    </div>
+                    <p class="text-xl mt-8 text-center"><strong>Shock response:</strong> ${state.shockResponse}</p>
+                </div>
                 <div class="grid md:grid-cols-2 gap-10 text-lg">
                     <div class="glass p-10 rounded-2xl">
                         <h3 class="text-3xl font-bold mb-4">Problem–Solution Fit: ${scores.fit}%</h3>
-                        <p>Your strategy tackled the core problem. Cremica innovates constantly with new flavors and healthier options to stay relevant.</p>
+                        <p>Pros: Effective match between identified problem and strategy elements.<br>
+                        Cons: May overlook secondary market factors if fit is low.</p>
                     </div>
                     <div class="glass p-10 rounded-2xl">
                         <h3 class="text-3xl font-bold mb-4">Projected Revenue Impact: ${scores.revenue}% Potential</h3>
-                        <p>Strong alignment drives growth. Cremica partners with global QSRs like McDonald's India.</p>
+                        <p>Pros: Strong alignment drives growth through targeted positioning.<br>
+                        Cons: High costs or poor channel choice could limit revenue upside.</p>
                     </div>
                     <div class="glass p-10 rounded-2xl">
                         <h3 class="text-3xl font-bold mb-4">Margin Health: ${scores.margin}%</h3>
-                        <p>Cost control protects profits. Cremica uses scale and backward integration effectively.</p>
+                        <p>Pros: Efficient supply chain protects profits.<br>
+                        Cons: Premium pricing with tight costs may squeeze margins if not managed.</p>
                     </div>
                     <div class="glass p-10 rounded-2xl">
                         <h3 class="text-3xl font-bold mb-4">Brand Trust Index: ${scores.trust}%</h3>
-                        <p>Consistency and quality build loyalty. Responding quickly to shocks strengthens trust.</p>
+                        <p>Pros: Consistent quality and quick shock response build loyalty.<br>
+                        Cons: Unresolved disruptions could erode trust over time.</p>
                     </div>
-                </div>
-                <div class="glass p-8 rounded-2xl mt-12 text-center">
-                    <p class="text-xl">Your response to the shock: <span class="font-bold">${state.shockResponse}</span></p>
                 </div>
             `;
             transitionTo(document.getElementById('phase6'));
             gsap.to('#progress > div', { width: '100%', duration: 1 });
+
+            // Generate AI feedback
+            await generateAIFeedback();
+        }
+
+        async function generateAIFeedback() {
+            const prompt = `
+You are a senior product strategist at Cremica Foods reviewing a student's final strategy in a simulation.
+
+Student's full choices:
+- Segment: ${state.segment}
+- Environment: Price Sensitivity ${state.environment.priceSens}, Health Trend ${state.environment.healthTrend}, Supply Volatility ${state.environment.supplyVol}
+- Constraints: Cost Ceiling ${state.constraints.costCeiling}, Margin Target ${state.constraints.marginTarget}
+- Identified Problem: ${state.problem}
+- Category: ${state.category}
+- Offerings: ${state.offerings.join(', ') || 'None'}
+- Positioning: ${state.positioning}
+- Channel: ${state.channel}
+- Price Tier: ${state.price}
+- Supply Strategy: ${state.supply}
+- Shock: ${state.shock}
+- Response to Shock: ${state.shockResponse}
+
+Provide an honest, professional review (250-350 words):
+- Be direct about what works well and why (specific positives)
+- Clearly point out weaknesses, risks, or missed opportunities
+- Give 3–4 concrete, actionable suggestions to make the strategy stronger for Cremica
+- End with encouragement and realistic outlook
+
+Tone: candid, constructive, business-like — like feedback from a senior manager.
+            `;
+
+            try {
+                const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${GROQ_API_KEY}`,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        model: "llama-3.3-70b-versatile",
+                        messages: [{ role: "user", content: prompt }],
+                        temperature: 0.7,
+                        max_tokens: 500
+                    })
+                });
+
+                if (!response.ok) throw new Error("API error");
+
+                const data = await response.json();
+                const review = data.choices[0].message.content.trim();
+                document.getElementById('ai-feedback').textContent = review;
+            } catch (err) {
+                document.getElementById('ai-feedback').textContent = "Unable to generate AI feedback right now. Please check your API key or try again later.";
+            }
         }
 
         document.getElementById('fullscreen-btn').onclick = () => document.documentElement.requestFullscreen?.();
