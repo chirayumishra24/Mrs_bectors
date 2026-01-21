@@ -464,252 +464,213 @@
   </div>
 
   <script>
-    // Fullscreen functionality
-    const container = document.getElementById('activity-container');
-    const fullscreenBtn = document.getElementById('fullscreen-btn');
+  // Fullscreen elements
+  const container = document.getElementById('activity-container');
+  const fullscreenBtn = document.getElementById('fullscreen-btn');
 
-    function toggleFullscreen() {
-      if (!document.fullscreenElement &&
-          !document.webkitFullscreenElement &&
-          !document.mozFullScreenElement &&
-          !document.msFullscreenElement) {
-        // Enter fullscreen
-        if (container.requestFullscreen) {
-          container.requestFullscreen();
-        } else if (container.webkitRequestFullscreen) {
-          container.webkitRequestFullscreen();
-        } else if (container.mozRequestFullScreen) {
-          container.mozRequestFullScreen();
-        } else if (container.msRequestFullscreen) {
-          container.msRequestFullscreen();
-        }
-        fullscreenBtn.innerHTML = '✖'; // Change icon to exit
-      } else {
-        // Exit fullscreen
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-        } else if (document.webkitExitFullscreen) {
-          document.webkitExitFullscreen();
-        } else if (document.mozCancelFullScreen) {
-          document.mozCancelFullScreen();
-        } else if (document.msExitFullscreen) {
-          document.msExitFullscreen();
-        }
-        fullscreenBtn.innerHTML = '⛶'; // Change back to enter icon
-      }
+  // Toggle fullscreen mode
+  function toggleFullscreen() {
+    if (
+      !document.fullscreenElement &&
+      !document.webkitFullscreenElement &&
+      !document.mozFullScreenElement &&
+      !document.msFullscreenElement
+    ) {
+      if (container.requestFullscreen) container.requestFullscreen();
+      else if (container.webkitRequestFullscreen) container.webkitRequestFullscreen();
+      else if (container.mozRequestFullScreen) container.mozRequestFullScreen();
+      else if (container.msRequestFullscreen) container.msRequestFullscreen();
+      fullscreenBtn.innerHTML = '✖';
+    } else {
+      if (document.exitFullscreen) document.exitFullscreen();
+      else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+      else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
+      else if (document.msExitFullscreen) document.msExitFullscreen();
+      fullscreenBtn.innerHTML = '⛶';
+    }
+  }
+
+  // Sync fullscreen icon with system changes
+  function updateFullscreenIcon() {
+    if (
+      document.fullscreenElement ||
+      document.webkitFullscreenElement ||
+      document.mozFullScreenElement ||
+      document.msFullscreenElement
+    ) {
+      fullscreenBtn.innerHTML = '✖';
+    } else {
+      fullscreenBtn.innerHTML = '⛶';
+    }
+  }
+
+  fullscreenBtn.addEventListener('click', toggleFullscreen);
+  document.addEventListener('fullscreenchange', updateFullscreenIcon);
+  document.addEventListener('webkitfullscreenchange', updateFullscreenIcon);
+  document.addEventListener('mozfullscreenchange', updateFullscreenIcon);
+  document.addEventListener('MSFullscreenChange', updateFullscreenIcon);
+
+  // Question data
+  const questions = [
+    { id: "social", title: "How often do you post personal updates on social media?", choices: [
+      { text: "Rarely or never", impact: 5, icon: "🔒" },
+      { text: "Occasionally (a few times a month)", impact: 15, icon: "📅" },
+      { text: "Frequently (daily or more)", impact: 30, icon: "📢" }
+    ]},
+    { id: "permissions", title: "When an app asks for permissions, you usually...", choices: [
+      { text: "Deny unless absolutely needed", impact: 5, icon: "🚫" },
+      { text: "Allow if convenient", impact: 15, icon: "🤔" },
+      { text: "Allow all", impact: 30, icon: "✅" }
+    ]},
+    { id: "passwords", title: "How do you manage passwords?", choices: [
+      { text: "Unique and strong", impact: 5, icon: "🔐" },
+      { text: "A few reused", impact: 15, icon: "🔑" },
+      { text: "Simple or repeated", impact: 30, icon: "📝" }
+    ]},
+    { id: "oldaccounts", title: "What do you do with old accounts?", choices: [
+      { text: "Delete them", impact: 5, icon: "🗑️" },
+      { text: "Keep but secure", impact: 15, icon: "🔄" },
+      { text: "Ignore them", impact: 30, icon: "💤" }
+    ]},
+    { id: "wifi", title: "Using public Wi-Fi, you usually...", choices: [
+      { text: "Avoid or use VPN", impact: 5, icon: "🛡️" },
+      { text: "Light browsing", impact: 15, icon: "🌐" },
+      { text: "Use freely", impact: 30, icon: "☕" }
+    ]},
+    { id: "shopping", title: "While shopping online, you...", choices: [
+      { text: "Use guest mode", impact: 5, icon: "🕶️" },
+      { text: "Save some info", impact: 15, icon: "💳" },
+      { text: "Auto-fill everything", impact: 30, icon: "⚡" }
+    ]}
+  ];
+
+  // State variables
+  let currentQuestion = 0;
+  let answers = {};
+  let footprintScore = 0;
+
+  // Screen navigation
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    if (id === 'questions') loadQuestion();
+  }
+
+  // Load current question
+  function loadQuestion() {
+    const q = questions[currentQuestion];
+    document.getElementById('question-title').textContent = q.title;
+    document.getElementById('back-btn').style.display = currentQuestion > 0 ? 'block' : 'none';
+
+    const choicesContainer = document.getElementById('choices-container');
+    choicesContainer.innerHTML = '';
+
+    q.choices.forEach((choice, i) => {
+      const div = document.createElement('div');
+      div.className = 'choice';
+      if (answers[q.id] === i) div.classList.add('selected');
+      div.innerHTML = `<span class="choice-icon">${choice.icon}</span><span>${choice.text}</span>`;
+      div.onclick = () => selectChoice(q.id, i);
+      choicesContainer.appendChild(div);
+    });
+
+    updateProgress();
+    updateSimulation();
+  }
+
+  // Handle choice selection
+  function selectChoice(qid, idx) {
+    answers[qid] = idx;
+
+    footprintScore = Object.entries(answers).reduce((sum, [id, index]) => {
+      const q = questions.find(qq => qq.id === id);
+      return sum + (q ? q.choices[index].impact : 0);
+    }, 0);
+
+    loadQuestion();
+  }
+
+  // Update progress bar
+  function updateProgress() {
+    const answeredCurrent = answers[questions[currentQuestion].id] !== undefined ? 1 : 0;
+    const progress = ((currentQuestion + answeredCurrent) / questions.length) * 100;
+    document.querySelector('.progress-fill').style.width = progress + '%';
+  }
+
+  // Update avatar and meter
+  function updateSimulation() {
+    const answered = Object.keys(answers).length || 1;
+    const avg = footprintScore / answered;
+    const percent = Math.min((avg / 30) * 100, 100);
+
+    document.getElementById('meter-fill').style.width = percent + '%';
+
+    const avatar = document.getElementById('avatar');
+    avatar.innerHTML = '<div class="avatar-base"></div>';
+
+    const nodes = Math.floor(percent / 10);
+    for (let i = 0; i < Math.min(nodes, 12); i++) {
+      const node = document.createElement('div');
+      node.className = 'data-node';
+      const angle = (i / 12) * 360;
+      node.style.left = `calc(50% + ${Math.cos(angle * Math.PI / 180) * 65}px)`;
+      node.style.top = `calc(50% + ${Math.sin(angle * Math.PI / 180) * 65}px)`;
+      node.style.opacity = '0.75';
+      node.style.transform = 'translate(-50%, -50%) scale(1)';
+      avatar.appendChild(node);
+    }
+  }
+
+  // Next button logic (FIXED for first option)
+  function nextQuestion() {
+    if (answers[questions[currentQuestion].id] === undefined) {
+      alert("Please choose an option");
+      return;
     }
 
-    // Update icon when fullscreen state changes externally (e.g., Esc key)
-    document.addEventListener('fullscreenchange', updateFullscreenIcon);
-    document.addEventListener('webkitfullscreenchange', updateFullscreenIcon);
-    document.addEventListener('mozfullscreenchange', updateFullscreenIcon);
-    document.addEventListener('MSFullscreenChange', updateFullscreenIcon);
-
-    function updateFullscreenIcon() {
-      if (document.fullscreenElement ||
-          document.webkitFullscreenElement ||
-          document.mozFullScreenElement ||
-          document.msFullscreenElement) {
-        fullscreenBtn.innerHTML = '✖';
-      } else {
-        fullscreenBtn.innerHTML = '⛶';
-      }
+    if (currentQuestion < questions.length - 1) {
+      currentQuestion++;
+      loadQuestion();
+    } else {
+      showScreen('results');
+      showResults();
     }
+  }
 
-    fullscreenBtn.addEventListener('click', toggleFullscreen);
-
-    // Rest of your existing script (unchanged)
-    const questions = [
-      { id: "social", title: "How often do you post personal updates on social media?", choices: [
-        { text: "Rarely or never", impact: 5, icon: "🔒" },
-        { text: "Occasionally (a few times a month)", impact: 15, icon: "📅" },
-        { text: "Frequently (daily or more)", impact: 30, icon: "📢" }
-      ]},
-      { id: "permissions", title: "When an app asks for permissions (location, contacts, camera), you usually...", choices: [
-        { text: "Deny unless absolutely needed", impact: 5, icon: "🚫" },
-        { text: "Allow if it seems convenient", impact: 15, icon: "🤔" },
-        { text: "Allow all to get full features", impact: 30, icon: "✅" }
-      ]},
-      { id: "passwords", title: "How do you manage passwords for your online accounts?", choices: [
-        { text: "Unique and strong for each account", impact: 5, icon: "🔐" },
-        { text: "A few strong ones reused", impact: 15, icon: "🔑" },
-        { text: "Simple or repeated for ease", impact: 30, icon: "📝" }
-      ]},
-      { id: "oldaccounts", title: "What do you do with old or unused online accounts?", choices: [
-        { text: "Delete or deactivate them", impact: 5, icon: "🗑️" },
-        { text: "Leave them but update passwords", impact: 15, icon: "🔄" },
-        { text: "Ignore them completely", impact: 30, icon: "💤" }
-      ]},
-      { id: "wifi", title: "When using public Wi-Fi, you usually...", choices: [
-        { text: "Avoid it or always use a VPN", impact: 5, icon: "🛡️" },
-        { text: "Use it for light browsing only", impact: 15, icon: "🌐" },
-        { text: "Use it freely for anything", impact: 30, icon: "☕" }
-      ]},
-      { id: "shopping", title: "When shopping or logging in online, you usually...", choices: [
-        { text: "Use guest checkout and private browsing", impact: 5, icon: "🕶️" },
-        { text: "Save details for faster checkout", impact: 15, icon: "💳" },
-        { text: "Auto-fill everything for speed", impact: 30, icon: "⚡" }
-      ]}
-    ];
-
-    let currentQuestion = 0;
-    let answers = {};
-    let footprintScore = 0;
-
-    function showScreen(screenId) {
-      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-      document.getElementById(screenId).classList.add('active');
-      if (screenId === 'questions') loadQuestion();
-    }
-
-    function loadQuestion() {
-      const q = questions[currentQuestion];
-      document.getElementById('question-title').textContent = q.title;
-      document.getElementById('back-btn').style.display = currentQuestion > 0 ? 'block' : 'none';
-
-      const container = document.getElementById('choices-container');
-      container.innerHTML = '';
-      q.choices.forEach((choice, i) => {
-        const div = document.createElement('div');
-        div.className = 'choice';
-        if (answers[q.id] === i) div.classList.add('selected');
-        div.innerHTML = `<span class="choice-icon">${choice.icon}</span><span>${choice.text}</span>`;
-        div.onclick = () => selectChoice(q.id, i, choice.impact);
-        container.appendChild(div);
-      });
-
-      updateProgress();
-      updateSimulation();
-    }
-
-    function selectChoice(qid, idx, impact) {
-      answers[qid] = idx;
-      footprintScore = Object.values(answers).reduce((sum, i) => {
-        const key = Object.keys(answers).find(k => answers[k] === i);
-        const q = questions.find(qq => qq.id === key);
-        return sum + (q ? q.choices[i].impact : 0);
-      }, 0);
+  // Back button
+  function prevQuestion() {
+    if (currentQuestion > 0) {
+      currentQuestion--;
       loadQuestion();
     }
+  }
 
-    function updateProgress() {
-      const progress = ((currentQuestion + (answers[questions[currentQuestion]?.id] ? 1 : 0)) / questions.length) * 100;
-      document.querySelector('.progress-fill').style.width = progress + '%';
-    }
+  // Results calculation
+  function showResults() {
+    const level = footprintScore <= 40 ? 'Low' : footprintScore <= 70 ? 'Medium' : 'High';
 
-    function updateSimulation() {
-      const answered = Object.keys(answers).length || 1;
-      const avg = footprintScore / answered;
-      const percentage = Math.min((avg / 30) * 100, 100);
+    document.getElementById('footprint-level').textContent = level;
+    document.getElementById('privacy-level').textContent = level;
+    document.getElementById('citizenship-label').textContent =
+      level === 'Low' ? 'Responsible Digital Citizen' :
+      level === 'Medium' ? 'Aware but Exposed' :
+      'High-Risk Digital User';
 
-      document.getElementById('meter-fill').style.width = percentage + '%';
+    const insightsList = document.getElementById('insights-list');
+    insightsList.innerHTML = `
+      <li>Your online habits directly shape your long-term digital identity.</li>
+      <li>Small mindful changes can significantly reduce privacy exposure.</li>
+    `;
+  }
 
-      const avatar = document.getElementById('avatar');
-      avatar.innerHTML = '<div class="avatar-base"></div>';
-      const nodeCount = Math.floor(percentage / 10);
-      for (let i = 0; i < Math.min(nodeCount, 12); i++) {
-        const node = document.createElement('div');
-        node.className = 'data-node';
-        const angle = (i / 12) * 360;
-        node.style.left = `calc(50% + ${Math.cos(angle * Math.PI / 180) * 65}px)`;
-        node.style.top = `calc(50% + ${Math.sin(angle * Math.PI / 180) * 65}px)`;
-        node.style.opacity = '0.75';
-        node.style.transform = 'translate(-50%, -50%) scale(1)';
-        avatar.appendChild(node);
-      }
-    }
+  // Restart activity
+  function restart() {
+    currentQuestion = 0;
+    answers = {};
+    footprintScore = 0;
+    showScreen('intro');
+  }
+</script>
 
-    function nextQuestion() {
-      if (!answers[questions[currentQuestion].id]) return alert("Please choose an option");
-      if (currentQuestion < questions.length - 1) {
-        currentQuestion++;
-        loadQuestion();
-      } else {
-        showScreen('results');
-        showResults();
-      }
-    }
-
-    function prevQuestion() {
-      if (currentQuestion > 0) {
-        currentQuestion--;
-        loadQuestion();
-      }
-    }
-
-    function showResults() {
-      const total = footprintScore;
-      const level = total <= 40 ? 'Low' : total <= 70 ? 'Medium' : 'High';
-      document.getElementById('footprint-level').textContent = level;
-      document.getElementById('privacy-level').textContent = level;
-      document.getElementById('citizenship-label').textContent = 
-        level === 'Low' ? 'Responsible Digital Citizen' :
-        level === 'Medium' ? 'Aware but Exposed' :
-        'High-Risk Digital User';
-
-      const risky = Object.entries(answers)
-        .map(([id, i]) => ({ q: questions.find(qq => qq.id === id), choiceIdx: i }))
-        .filter(item => item.q.choices[item.choiceIdx].impact >= 20)
-        .sort((a,b) => b.q.choices[b.choiceIdx].impact - a.q.choices[a.choiceIdx].impact);
-
-      const insights = risky.length > 0 ?
-        risky.slice(0,3).map(item => {
-          const q = item.q;
-          return `Your habits around "${q.title.toLowerCase().split('?')[0]}" are adding the most to your digital footprint. Small changes here offer the biggest impact.`;
-        }) :
-        ["Great job! You're already making mindful choices across nearly all areas.", "Your digital habits reflect strong awareness and responsibility."];
-
-      document.getElementById('insights-list').innerHTML = insights.map(t => `<li>${t}</li>`).join('');
-
-      const container = document.getElementById('suggestions-container');
-      container.innerHTML = '';
-
-      let totalPossibleSave = 0;
-
-      if (risky.length === 0) {
-        const card = document.createElement('div');
-        card.className = 'suggestion-card';
-        card.innerHTML = `
-          <div class="suggestion-title">You're Already Optimized!</div>
-          <div class="suggestion-text">Your current habits show excellent digital responsibility. Keep staying aware and periodically reviewing app permissions and old accounts to maintain this strong profile.</div>
-        `;
-        container.appendChild(card);
-      } else {
-        risky.slice(0,4).forEach(item => {
-          const q = item.q;
-          const currentImpact = q.choices[item.choiceIdx].impact;
-          const bestImpact = 5;
-          const save = currentImpact - bestImpact;
-          totalPossibleSave += save;
-
-          const card = document.createElement('div');
-          card.className = 'suggestion-card';
-          card.innerHTML = `
-            <div class="suggestion-title">Consider: ${q.title.split('?')[0]}</div>
-            <div class="suggestion-text">
-              <strong>Current habit:</strong> ${q.choices[item.choiceIdx].text}<br><br>
-              <strong>Recommended shift:</strong> "${q.choices[0].text.toLowerCase()}"<br><br>
-              This single change could reduce your overall digital footprint and privacy exposure while maintaining most convenience.
-            </div>
-          `;
-          container.appendChild(card);
-        });
-      }
-
-      const maxPossible = questions.length * 30;
-      const pct = Math.round((totalPossibleSave / maxPossible) * 100);
-      document.getElementById('potential-reduction').textContent = 
-        risky.length > 0 
-          ? `Implementing these changes could reduce your digital footprint by up to ${pct}%.` 
-          : "Your digital presence is already minimal and well-managed.";
-    }
-
-    function restart() {
-      currentQuestion = 0;
-      answers = {};
-      footprintScore = 0;
-      showScreen('intro');
-    }
-  </script>
 </body>
 </html>
