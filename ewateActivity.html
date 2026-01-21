@@ -159,15 +159,51 @@
     margin-bottom:1.5rem;position:relative;z-index:20;
   }
  
-  /* FULLSCREEN BUTTON */
-  #fullscreenBtn{
-    position:fixed;top:20px;right:20px;z-index:9999;
-    background:#2563eb/90;color:white;padding:1rem;border-radius:50%;
-    width:60px;height:60px;display:flex;align-items:center;justify-content:center;
-    font-size:2rem;box-shadow:0 0 20px rgba(37,99,235,0.6);
-    cursor:pointer;transition:all 0.3s;
-  }
-  #fullscreenBtn:hover{transform:scale(1.15);background:#2563eb;}
+ /* FULLSCREEN BUTTON – HIGH VISIBILITY */
+#fullscreenBtn{
+  position:fixed;
+  top:20px;
+  right:20px;
+  z-index:9999;
+
+  background:linear-gradient(135deg,#3b82f6,#2563eb);
+  color:white;
+
+  padding:1rem;
+  border-radius:50%;
+  width:60px;
+  height:60px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-size:2rem;
+  font-weight:bold;
+
+  border:3px solid #93c5fd;
+  box-shadow:
+    0 0 15px rgba(59,130,246,0.8),
+    0 0 35px rgba(37,99,235,0.6);
+
+  cursor:pointer;
+  transition:all 0.3s ease;
+}
+
+/* Hover effect */
+#fullscreenBtn:hover{
+  transform:scale(1.2);
+  box-shadow:
+    0 0 25px rgba(96,165,250,1),
+    0 0 60px rgba(37,99,235,0.9);
+}
+
+/* Active (pressed) state */
+#fullscreenBtn:active{
+  transform:scale(1.05);
+  box-shadow:
+    0 0 10px rgba(37,99,235,0.8);
+}
 
   .modal-message{
   font-size:18px;
