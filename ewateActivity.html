@@ -168,6 +168,26 @@
     cursor:pointer;transition:all 0.3s;
   }
   #fullscreenBtn:hover{transform:scale(1.15);background:#2563eb;}
+
+  .modal-message{
+  font-size:18px;
+  line-height:1.8;
+  color:#e5e7eb; /* light gray for visibility */
+  text-shadow:0 2px 10px rgba(0,0,0,0.8);
+  position:relative;
+  z-index:20;
+}
+
+/* Dark overlay behind text */
+.modal-content::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,0.55);
+  z-index:10;
+  border-radius:3rem;
+}
+
 </style>
 </head>
 <body class="bg-slate-900">
@@ -298,6 +318,9 @@
 </div>
 
 <script>
+// =========================
+// FULLSCREEN
+// =========================
 function toggleFullScreen() {
   if (!document.fullscreenElement) {
     document.documentElement.requestFullscreen();
@@ -306,21 +329,39 @@ function toggleFullScreen() {
   }
 }
 
+// =========================
+// START ACTIVITY
+// =========================
 function startActivity() {
   document.getElementById('startScreen').style.display = 'none';
   document.getElementById('activitySection').classList.remove('hidden');
 }
 
-// Drag & Drop + Lid Animation
+// =========================
+// DRAG & DROP
+// =========================
 let draggedItem = null;
-const recyclables = ["Old Mobile Phone", "Broken Laptop", "Circuit Boards", "Charger & Cables", "CRT Monitor"];
-const hazardous = ["Used Batteries", "Fluorescent Lamp", "Printer Cartridges"];
+
+const recyclables = [
+  "Old Mobile Phone",
+  "Broken Laptop",
+  "Circuit Boards",
+  "Charger & Cables",
+  "CRT Monitor"
+];
+
+const hazardous = [
+  "Used Batteries",
+  "Fluorescent Lamp",
+  "Printer Cartridges"
+];
 
 document.querySelectorAll('.draggable-item').forEach(item => {
-  item.addEventListener('dragstart', e => {
+  item.addEventListener('dragstart', () => {
     draggedItem = item;
-    setTimeout(() => item.style.opacity = '0.4', 0);
+    item.style.opacity = '0.4';
   });
+
   item.addEventListener('dragend', () => {
     item.style.opacity = '1';
     draggedItem = null;
@@ -330,71 +371,100 @@ document.querySelectorAll('.draggable-item').forEach(item => {
 ['recyclableBin', 'hazardousBin'].forEach(binId => {
   const bin = document.getElementById(binId);
   const lid = bin.querySelector('.bin-lid');
-  
+
   bin.addEventListener('dragover', e => {
     e.preventDefault();
     bin.classList.add('over');
-    gsap.to(lid, { rotationX: -110, duration: 0.7, ease: "back.out(1.4)" });
+    gsap.to(lid, { rotationX: -110, duration: 0.5, ease: "back.out(1.4)" });
   });
-  
+
   bin.addEventListener('dragleave', () => {
     bin.classList.remove('over');
-    gsap.to(lid, { rotationX: 0, duration: 0.5, ease: "power2.out" });
+    gsap.to(lid, { rotationX: 0, duration: 0.4 });
   });
-  
+
   bin.addEventListener('drop', e => {
     e.preventDefault();
     bin.classList.remove('over');
-    
-    if (draggedItem) {
-      const clone = draggedItem.cloneNode(true);
-      clone.draggable = false;
-      clone.style.cursor = "default";
-      clone.classList.remove('draggable-item');
-      clone.classList.add('dropped-item');
-      bin.appendChild(clone);
-      draggedItem.style.display = 'none';
-      draggedItem = null;
-    }
-    
-    gsap.killTweensOf(lid);
-    gsap.to(lid, { rotationX: 0, duration: 0.6, ease: "bounce.out" });
+
+    if (!draggedItem) return;
+
+    const clone = draggedItem.cloneNode(true);
+    clone.draggable = false;
+    clone.classList.remove('draggable-item');
+    clone.classList.add('dropped-item');
+    bin.appendChild(clone);
+
+    draggedItem.style.display = 'none';
+    draggedItem = null;
+
+    gsap.to(lid, { rotationX: 0, duration: 0.5, ease: "bounce.out" });
   });
 });
 
-// Check & Reset - Updated to use label text for identification
+// =========================
+// SCORE-BASED ANIMATION
+// =========================
+function scoreAnimation(score, total) {
+  const intensity = score / total;
+
+  gsap.fromTo(".content-card",
+    { boxShadow: "0 0 0 rgba(0,0,0,0)" },
+    {
+      boxShadow: `0 0 ${40 + intensity * 80}px rgba(37,99,235,${0.3 + intensity})`,
+      duration: 0.8,
+      yoyo: true,
+      repeat: 1
+    }
+  );
+
+  if (score < total) {
+    gsap.to(".wrong-placement", {
+      x: -10,
+      duration: 0.08,
+      repeat: 6,
+      yoyo: true
+    });
+  }
+}
+
+// =========================
+// CHECK SEGREGATION
+// =========================
 document.getElementById('checkBtn').addEventListener('click', () => {
   let correct = 0;
   const total = 8;
   const misplaced = [];
-  
+
   const recBin = document.getElementById('recyclableBin');
   const hazBin = document.getElementById('hazardousBin');
   const feedbackArea = document.getElementById('feedbackArea');
-  
+
   recBin.classList.remove('correct', 'wrong');
   hazBin.classList.remove('correct', 'wrong');
   feedbackArea.innerHTML = '';
-  document.querySelectorAll('.dropped-item').forEach(item => item.classList.remove('wrong-placement'));
-  
-  recBin.querySelectorAll('.dropped-item').forEach(child => {
-    const text = child.querySelector('.label').textContent.trim();
-    if (recyclables.includes(text)) correct++;
+  document.querySelectorAll('.dropped-item').forEach(i => i.classList.remove('wrong-placement'));
+
+  recBin.querySelectorAll('.dropped-item').forEach(item => {
+    const label = item.querySelector('.label').textContent.trim();
+    if (recyclables.includes(label)) correct++;
     else {
-      child.classList.add('wrong-placement');
-      misplaced.push(`<strong>${text}</strong> should go to <strong>Hazardous E-Waste</strong>`);
+      item.classList.add('wrong-placement');
+      misplaced.push(`${label} → Hazardous E-Waste`);
     }
   });
-  
-  hazBin.querySelectorAll('.dropped-item').forEach(child => {
-    const text = child.querySelector('.label').textContent.trim();
-    if (hazardous.includes(text)) correct++;
+
+  hazBin.querySelectorAll('.dropped-item').forEach(item => {
+    const label = item.querySelector('.label').textContent.trim();
+    if (hazardous.includes(label)) correct++;
     else {
-      child.classList.add('wrong-placement');
-      misplaced.push(`<strong>${text}</strong> should go to <strong>Recyclable E-Waste</strong>`);
+      item.classList.add('wrong-placement');
+      misplaced.push(`${label} → Recyclable E-Waste`);
     }
   });
-  
+
+  scoreAnimation(correct, total);
+
   if (correct === total) {
     recBin.classList.add('correct');
     hazBin.classList.add('correct');
@@ -402,78 +472,83 @@ document.getElementById('checkBtn').addEventListener('click', () => {
   } else {
     if (recBin.querySelector('.wrong-placement')) recBin.classList.add('wrong');
     if (hazBin.querySelector('.wrong-placement')) hazBin.classList.add('wrong');
-    
-    let feedbackHTML = `<p class="text-3xl font-bold text-orange-500 mb-6">${correct}/${total} Correct</p>`;
-    if (misplaced.length > 0) {
-      feedbackHTML += `<div class="feedback-list"><p class="font-bold mb-3">Misplaced items:</p><ul class="list-disc list-inside space-y-2 text-left">`;
-      misplaced.forEach(item => feedbackHTML += `<li>${item}</li>`);
-      feedbackHTML += `</ul></div>`;
-    }
-    feedbackArea.innerHTML = feedbackHTML;
+
+    feedbackArea.innerHTML = `
+      <p class="text-3xl font-bold text-orange-500 mb-6">${correct}/${total} Correct</p>
+      <ul class="list-disc list-inside text-left space-y-2">
+        ${misplaced.map(m => `<li>${m}</li>`).join('')}
+      </ul>
+    `;
   }
 });
 
+// =========================
+// RESET
+// =========================
 document.getElementById('resetBtn').addEventListener('click', () => {
-  document.querySelectorAll('.draggable-item').forEach(item => {
-    item.style.display = 'flex';
-    item.style.opacity = '1';
-  });
-  
-  document.getElementById('recyclableBin').innerHTML = `
-    <div class="bin-lid"><div class="bin-handle"></div></div>
-    <div class="bin-body"></div>
-    <h3 class="dustbin-label text-[#2563eb]">Recyclable E-Waste</h3>
-    <p class="dustbin-sublabel">Recover • Reuse • Recycle</p>
-  `;
-  document.getElementById('hazardousBin').innerHTML = `
-    <div class="bin-lid"><div class="bin-handle"></div></div>
-    <div class="bin-body"></div>
-    <h3 class="dustbin-label text-[#ef4444]">Hazardous E-Waste</h3>
-    <p class="dustbin-sublabel">Handle With Care • Special Disposal</p>
-  `;
-  
-  document.getElementById('feedbackArea').innerHTML = '';
-  document.getElementById('recyclableBin').classList.remove('correct', 'wrong', 'over');
-  document.getElementById('hazardousBin').classList.remove('correct', 'wrong', 'over');
+  location.reload();
 });
 
+// =========================
+// VICTORY (SYNCED)
+// =========================
 function triggerVictory() {
   const modal = document.getElementById('victoryModal');
   const gif = document.getElementById('victoryGif');
   const audio = document.getElementById('victoryAudio');
-  
+
   modal.style.display = 'flex';
-  
-  gif.style.opacity = '0.8';
+  modal.style.opacity = 1;
+
+  // Hard reset for replay safety
+  audio.pause();
   audio.currentTime = 0;
-  audio.play().catch(() => {});
-  
-  gsap.to(modal, {opacity: 1, duration: 1});
-  gsap.fromTo('.modal-content', 
-    {scale: 0.5, rotate: -10},
-    {scale: 1, rotate: 0, duration: 1.2, ease: "elastic.out(1,0.5)"}
+  audio.volume = 0;
+  gif.style.opacity = 0.8;
+
+  // Play audio once, safely
+  audio.oncanplaythrough = null;
+  audio.addEventListener("canplaythrough", function playOnce() {
+    audio.play().catch(() => {});
+    audio.removeEventListener("canplaythrough", playOnce);
+  });
+
+  // Smooth audio fade-in
+  gsap.to(audio, {
+    volume: 0.6,
+    duration: 1.2,
+    ease: "power2.out"
+  });
+
+  // Modal animation
+  gsap.fromTo('.modal-content',
+    { scale: 0.5, rotate: -10 },
+    { scale: 1, rotate: 0, duration: 1.1, ease: "elastic.out(1,0.5)" }
   );
-  
+
+  // Fade GIF after impact
   gsap.to(gif, {
     opacity: 0,
-    duration: 6,
-    ease: "power1.out"
+    delay: 0.4,
+    duration: 5
   });
-  
+
+  // Confetti burst
   tsParticles.confetti('tsparticles', {
     particles: {
-      number: {value: 200},
-      color: {value: ['#2563eb', '#3b82f6', '#60a5fa', '#22c55e']},
-      shape: {type: 'circle'},
-      opacity: {value: 1},
-      size: {value: {min: 4, max: 12}},
-      move: {enable: true, speed: 6, direction: 'none', outModes: 'out'}
+      number: { value: 200 },
+      color: { value: ['#2563eb', '#3b82f6', '#60a5fa', '#22c55e'] },
+      size: { value: { min: 4, max: 10 } },
+      move: { enable: true, speed: 6 }
     },
-    duration: 3,
-    fullScreen: {enable: true, zIndex: -1}
+    duration: 2.5,
+    fullScreen: { enable: true, zIndex: -1 }
   });
 }
 
+// =========================
+// NAV
+// =========================ss
 function replayLevel() {
   location.reload();
 }
